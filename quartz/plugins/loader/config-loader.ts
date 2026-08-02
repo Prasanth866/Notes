@@ -256,8 +256,20 @@ export async function loadQuartzConfig(
     return oldConfig.default
   }
 
+  let tsConfig: Partial<GlobalConfiguration> | undefined
+  const tsConfigPath = path.join(process.cwd(), "quartz.config.ts")
+  if (fs.existsSync(tsConfigPath)) {
+    try {
+      const tsModule = await import(toFileUrl(tsConfigPath))
+      tsConfig = tsModule.default?.configuration ?? tsModule.configuration
+    } catch {
+      // ignore ts load error
+    }
+  }
+
   const configuration = {
     ...(json.configuration as unknown as GlobalConfiguration),
+    ...tsConfig,
     ...configOverrides,
   }
 
