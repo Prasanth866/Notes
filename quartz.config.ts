@@ -1,4 +1,4 @@
 configuration: {
   pageTitle: "Prasanth's Notes",
-  baseUrl: "prasanth866.github.io\Notes",
+  baseUrl: "prasanth866.github.io/Notes",
 },
