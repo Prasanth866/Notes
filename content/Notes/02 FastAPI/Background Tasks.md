@@ -767,7 +767,6 @@ Receptionist later:
 The guest gets a fast response, while the receptionist finishes the non-essential work afterward.
 
 ---
-
 # Key Takeaways
 
 - `BackgroundTasks` schedules work **after the HTTP response is sent**.
