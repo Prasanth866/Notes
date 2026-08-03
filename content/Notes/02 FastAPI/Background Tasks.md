@@ -1,777 +1,112 @@
+---
+title: "FastAPI Background Tasks"
+description: "Detailed guide to FastAPI BackgroundTasks, post-response execution, thread pool offloading, and Celery task queue boundaries."
+tags:
+  - fastapi/background
+  - python/asyncio
+aliases:
+  - Background Tasks
+---
 
-> **Essential Reference | FastAPI | Background Processing**
->
-> Background tasks allow FastAPI to **return an HTTP response immediately** while scheduling **small, non-critical work** to run **after the response has been sent**.
+# 🚀 FastAPI Background Tasks
+
+> [!summary]
+> FastAPI provides a `BackgroundTasks` class (inherited from Starlette) that allows endpoints to **return an HTTP response immediately** while scheduling small, post-response tasks to run in the background.
 
 ---
 
-# What are Background Tasks?
+## ⏱️ Execution Timeline Comparison
 
-Normally, an HTTP request waits until **all processing is complete** before sending a response.
+### 1. Synchronous Request Handling (Traditional)
 
-Example:
-
-```python
-@app.post("/signup")
-async def signup():
-    create_user()
-    send_email()
-    write_log()
-
-    return {"status": "success"}
+```
+Client ──> [HTTP Request] ──> Create User ──> Send Email (5s) ──> Return Response (Total: 5.5s)
 ```
 
-Timeline
+The HTTP client must wait for every operation (including email delivery) to complete before receiving a status response.
 
-```text
-Client
+### 2. Post-Response Background Task (FastAPI)
 
-↓
-
-Create User
-
-↓
-
-Send Email
-
-↓
-
-Write Log
-
-↓
-
-Return Response
+```
+Client ──> [HTTP Request] ──> Create User ──> Return Response Immediately (0.05s)
+                                                    │
+                                                    ▼
+                                           [Background Tasks]
+                                                    │
+                                                    ▼
+                                            Send Email (5s)
 ```
 
-If sending the email takes 5 seconds,
-
-the client waits 5 seconds.
+The response is sent to the client **before** the email task starts execution!
 
 ---
 
-Background tasks change this behavior.
+## 💻 Implementation Pattern
 
-```python
-@app.post("/signup")
-async def signup(background_tasks: BackgroundTasks):
-
-    create_user()
-
-    background_tasks.add_task(send_email)
-
-    return {"status": "success"}
-```
-
-Timeline
-
-```text
-Client
-
-↓
-
-Create User
-
-↓
-
-Return Response Immediately
-
-↓
-
-Background Task
-
-↓
-
-Send Email
-```
-
-The response is sent **before** the email starts.
-
----
-
-# When Should You Use Background Tasks?
-
-Good use cases:
-
-- Sending emails
-- Writing logs
-- Updating analytics
-- Cleaning temporary files
-- Generating thumbnails
-- Sending notifications
-- Cache invalidation
-- Recording audit logs
-
-Not suitable for:
-
-- Long-running AI jobs
-- Video processing
-- Machine learning training
-- Heavy report generation
-- Multi-minute tasks
-
-Those should use task queues like:
-
-- Celery
-- Dramatiq
-- RQ
-- Arq
-
----
-
-# How Background Tasks Work
-
-FastAPI provides the `BackgroundTasks` class.
-
-```python
-from fastapi import BackgroundTasks
-```
-
-Inject it into your endpoint.
-
-```python
-@app.post("/send")
-async def send(background_tasks: BackgroundTasks):
-    ...
-```
-
-FastAPI creates an instance automatically.
-
----
-
-# Adding a Task
-
-```python
-background_tasks.add_task(function, *args, **kwargs)
-```
-
-Example
-
-```python
-background_tasks.add_task(send_email, user.email)
-```
-
-Equivalent conceptually to
-
-```text
-After response:
-
-send_email(user.email)
-```
-
----
-
-# Simple Example
+FastAPI injects an instance of `BackgroundTasks` automatically via dependency injection:
 
 ```python
 from fastapi import FastAPI, BackgroundTasks
+import asyncio
+import time
 
 app = FastAPI()
 
-def write_log(message):
-    with open("log.txt", "a") as f:
-        f.write(message + "\n")
+def write_audit_log(user_id: int, action: str):
+    """Synchronous task running in Starlette threadpool."""
+    time.sleep(1)  # Simulate file I/O
+    with open("audit.log", "a") as f:
+        f.write(f"[{time.strftime('%X')}] User {user_id}: {action}\n")
 
-@app.post("/log")
-async def log(background_tasks: BackgroundTasks):
+async def send_welcome_email(email: str):
+    """Asynchronous coroutine task running directly on Event Loop."""
+    await asyncio.sleep(2)  # Non-blocking async email dispatch
+    print(f"Welcome email sent to {email}")
 
-    background_tasks.add_task(
-        write_log,
-        "User logged in"
-    )
+@app.post("/users/{user_id}")
+async def create_user(user_id: int, email: str, background_tasks: BackgroundTasks):
+    # Enqueue tasks for execution AFTER response is returned
+    background_tasks.add_task(write_audit_log, user_id, "ACCOUNT_CREATED")
+    background_tasks.add_task(send_welcome_email, email)
 
-    return {"status": "accepted"}
-```
-
-Flow
-
-```text
-Request
-
-↓
-
-Schedule write_log()
-
-↓
-
-Return Response
-
-↓
-
-Execute write_log()
+    return {"status": "success", "message": "User created. Notifications enqueued."}
 ```
 
 ---
 
-# Background Task Lifecycle
+## ⚙️ Async vs Sync Task Execution
 
-```text
-HTTP Request
+When passing functions to `background_tasks.add_task(func)`:
 
-        │
+| Function Type | Execution Strategy | Reference Note |
+| :--- | :--- | :--- |
+| `async def` | Executed directly on the **[[Notes/01 AsyncIO/Event Loop|Event Loop]]** | [[Notes/01 AsyncIO/Coroutine\|Coroutine]] |
+| Standard `def` | Offloaded to Starlette's background **Thread Pool** (`anyio.to_thread`) | [[Notes/01 AsyncIO/Non-blocking IO\|Non-blocking I/O]] |
 
-        ▼
+---
 
-Endpoint Executes
+## ⚖️ When to Use FastAPI BackgroundTasks vs Celery/Task Queues
 
-        │
+> [!warning]
+> FastAPI `BackgroundTasks` run **in-process** inside the ASGI web server worker. If the web server process crashes, uncompleted background tasks are lost!
 
-        ▼
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                   In-Process: FastAPI BackgroundTasks                 │
+│  - Ideal for: Audit logging, analytics pings, simple email dispatches  │
+│  - Duration: < 10 seconds                                              │
+└────────────────────────────────────────────────────────────────────────┘
 
-background_tasks.add_task()
-
-        │
-
-        ▼
-
-Response Returned
-
-        │
-
-        ▼
-
-Background Task Starts
-
-        │
-
-        ▼
-
-Task Completes
+┌────────────────────────────────────────────────────────────────────────┐
+│               Distributed Task Queue: Celery / Dramatiq / RQ           │
+│  - Ideal for: Heavy AI inference, video encoding, multi-minute jobs   │
+│  - Guarantees: Redis/RabbitMQ persistence, retries, worker scaling     │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-# Multiple Background Tasks
-
-You can register multiple tasks.
-
-```python
-background_tasks.add_task(send_email)
-
-background_tasks.add_task(write_log)
-
-background_tasks.add_task(update_metrics)
-```
-
-Execution order:
-
-```text
-Response
-
-↓
-
-Task 1
-
-↓
-
-Task 2
-
-↓
-
-Task 3
-```
-
-Tasks execute **in the order they were added**.
-
----
-
-# Passing Arguments
-
-```python
-def send_email(email, subject):
-    ...
-
-background_tasks.add_task(
-    send_email,
-    "alice@example.com",
-    "Welcome"
-)
-```
-
-Equivalent to
-
-```python
-send_email(
-    "alice@example.com",
-    "Welcome"
-)
-```
-
-after the response.
-
----
-
-# Async vs Sync Tasks
-
-Background tasks can call:
-
-## Normal Functions
-
-```python
-def write_log():
-    ...
-```
-
-or
-
-## Async Functions
-
-```python
-async def notify():
-    ...
-```
-
-FastAPI handles both.
-
----
-
-# Complete Example
-
-```python
-from fastapi import FastAPI, BackgroundTasks
-
-app = FastAPI()
-
-def send_email(email):
-    print(f"Sending email to {email}")
-
-@app.post("/signup")
-async def signup(background_tasks: BackgroundTasks):
-
-    user_email = "alice@example.com"
-
-    background_tasks.add_task(
-        send_email,
-        user_email
-    )
-
-    return {
-        "message": "User created"
-    }
-```
-
-Timeline
-
-```text
-Client
-
-↓
-
-POST /signup
-
-↓
-
-Create User
-
-↓
-
-Register Background Task
-
-↓
-
-Return JSON
-
-↓
-
-Run send_email()
-```
-
----
-
-# Dependency Injection Support
-
-Background tasks work inside dependencies.
-
-```python
-from fastapi import Depends
-
-def log_dependency(
-    background_tasks: BackgroundTasks
-):
-    background_tasks.add_task(write_log)
-
-@app.get("/")
-async def home(
-    _: None = Depends(log_dependency)
-):
-    return {"message": "Hello"}
-```
-
-FastAPI collects all tasks
-
-↓
-
-Runs them after sending the response.
-
----
-
-# Exception Handling
-
-If a background task fails,
-
-the client has already received the response.
-
-Example
-
-```python
-background_tasks.add_task(send_email)
-
-return {"status": "ok"}
-```
-
-Later
-
-```python
-send_email()
-
-↓
-
-Exception
-```
-
-Client still receives
-
-```json
-{
-    "status": "ok"
-}
-```
-
-The exception is logged by the server but **cannot change the already-sent response**.
-
----
-
-# Background Tasks are Request-Scoped
-
-Every HTTP request gets its own BackgroundTasks object.
-
-```text
-Request A
-
-↓
-
-BackgroundTasks A
-
-↓
-
-Tasks
-```
-
-```text
-Request B
-
-↓
-
-BackgroundTasks B
-
-↓
-
-Tasks
-```
-
-Tasks are **not shared** between requests.
-
----
-
-# Background Tasks vs asyncio.create_task()
-
-Many beginners confuse these.
-
-## BackgroundTasks
-
-```python
-background_tasks.add_task(send_email)
-```
-
-- Runs **after the response**
-- Managed by FastAPI
-- Tied to the current request
-- Best for small post-response work
-
----
-
-## asyncio.create_task()
-
-```python
-asyncio.create_task(worker())
-```
-
-- Starts immediately
-- Runs concurrently while the request is still active
-- Managed by the event loop
-- Useful for concurrent async workflows
-
----
-
-Timeline
-
-### BackgroundTasks
-
-```text
-Request
-
-↓
-
-Response
-
-↓
-
-Background Task
-```
-
----
-
-### create_task()
-
-```text
-Request
-
-↓
-
-Task Starts
-
-↓
-
-Response
-
-↓
-
-Task Continues
-```
-
----
-
-# BackgroundTasks vs Task Queue
-
-## BackgroundTasks
-
-```text
-FastAPI Process
-
-↓
-
-Background Task
-```
-
-If the process crashes,
-
-the task is lost.
-
----
-
-## Celery / Dramatiq / RQ
-
-```text
-FastAPI
-
-↓
-
-Redis / RabbitMQ
-
-↓
-
-Worker Process
-
-↓
-
-Task
-```
-
-Advantages
-
-- Retries
-- Scheduling
-- Persistence
-- Multiple workers
-- Survives server restarts
-- Horizontal scaling
-
----
-
-# Limitations
-
-BackgroundTasks:
-
-- Execute in the same application process
-- No retries
-- No scheduling
-- Lost if server crashes
-- Not distributed
-- Suitable only for lightweight work
-
----
-
-# Internal Flow
-
-```text
-HTTP Request
-
-        │
-
-        ▼
-
-FastAPI Endpoint
-
-        │
-
-        ▼
-
-background_tasks.add_task()
-
-        │
-
-        ▼
-
-Store Task
-
-        │
-
-        ▼
-
-Return Response
-
-        │
-
-        ▼
-
-ASGI Response Finished
-
-        │
-
-        ▼
-
-Execute Stored Tasks
-
-        │
-
-        ▼
-
-Task Completed
-```
-
----
-
-# Typical Use Cases
-
-| Task | Good Candidate |
-|--------|----------------|
-| Send welcome email | ✅ |
-| Write audit log | ✅ |
-| Analytics tracking | ✅ |
-| Push notification | ✅ |
-| Delete temp files | ✅ |
-| Generate thumbnail | ✅ |
-| Export large PDF | ❌ |
-| AI inference | ❌ |
-| ML training | ❌ |
-| Video rendering | ❌ |
-
----
-
-# Comparison
-
-| Feature | BackgroundTasks | `asyncio.create_task()` | Celery/RQ/Dramatiq |
-|----------|----------------|------------------------|--------------------|
-| Managed by | FastAPI | Event Loop | Worker Queue |
-| Starts | After response | Immediately | Worker process |
-| Same process | ✅ | ✅ | ❌ |
-| Retry support | ❌ | ❌ | ✅ |
-| Persistent | ❌ | ❌ | ✅ |
-| Distributed | ❌ | ❌ | ✅ |
-| Best for | Small post-response work | Concurrent async work | Long-running jobs |
-
----
-
-# Best Practices
-
-✅ Use for lightweight work (< a few seconds)
-
-✅ Keep tasks idempotent when possible
-
-✅ Handle exceptions inside the task
-
-✅ Log failures
-
-❌ Don't perform CPU-intensive work
-
-❌ Don't rely on BackgroundTasks for critical business operations
-
-❌ Don't use for long-running workflows
-
----
-
-# Mental Model
-
-Imagine a receptionist at a hotel.
-
-Without Background Tasks:
-
-```text
-Guest arrives
-
-↓
-
-Check in
-
-↓
-
-Print receipt
-
-↓
-
-Call housekeeping
-
-↓
-
-Prepare welcome gift
-
-↓
-
-Send welcome email
-
-↓
-
-Guest leaves
-```
-
-The guest waits for everything.
-
----
-
-With Background Tasks:
-
-```text
-Guest arrives
-
-↓
-
-Check in
-
-↓
-
-Hand room key
-
-↓
-
-Guest leaves
-
-↓
-
-Receptionist later:
-
-• Send email
-• Notify housekeeping
-• Record analytics
-• Write logs
-```
-
-The guest gets a fast response, while the receptionist finishes the non-essential work afterward.
-
----
-# Key Takeaways
-
-- `BackgroundTasks` schedules work **after the HTTP response is sent**.
-- It is ideal for **small, non-critical, post-response operations**.
-- Tasks run in the **same FastAPI process**.
-- If the application crashes, queued background tasks are **lost**.
-- Background tasks are **not** a replacement for Celery or other distributed task queues.
-- Use `BackgroundTasks` for lightweight operations like emails, logging, and notifications, not for heavy or long-running jobs.
+## 🔗 Related Notes
+- [[Notes/01 AsyncIO/asyncio.create_task()|⚡ asyncio.create_task()]] — In-loop background task creation
+- [[Notes/02 FastAPI/WebSockets|🚀 FastAPI WebSockets]] — Real-time event streaming alternative
+- [[Notes/02 FastAPI/index|🚀 FastAPI Systems MOC]]

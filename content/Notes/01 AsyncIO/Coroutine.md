@@ -1,97 +1,146 @@
-## Definition
-- A **coroutine** is a special kind of function that can **pause (suspend)** its execution and later **resume** from where it left off.
-- Coroutines are the fundamental building blocks of asynchronous programming in Python.
+---
+title: "Coroutines in Python AsyncIO"
+description: "Detailed guide on Python coroutines, async/await mechanics, execution lifecycle, generator roots, and suspension points."
+tags:
+  - python/asyncio
+  - coroutine
+aliases:
+  - Coroutine
+  - Coroutines
+---
 
-## Creating a Coroutine
-- A coroutine function is defined using `async def`.
+# ⚡ Coroutines in Python AsyncIO
 
-```python
-async def fetch_data():
-    ...
-```
+> [!summary]
+> A **coroutine** is a specialized, pausable function that can suspend its execution at explicit cooperative yield points (`await`) and resume execution later without blocking the OS thread.
+>
+> Coroutines are the fundamental building blocks of asynchronous programming in Python.
 
-## Calling a Coroutine
-- Calling a coroutine function **does not execute it immediately**.
-- Instead, it returns a **coroutine object**, which represents the pending computation.
+---
 
-```python
-coro = fetch_data()   # Nothing runs yet
-print(type(coro))
-```
+## 🔍 Core Concepts
 
-## Running a Coroutine
-A coroutine executes only when it is:
-
-- Awaited using `await`
-- Scheduled as a Task using `asyncio.create_task()`
-- Passed to `asyncio.run()` (typically the program's entry point)
+### 1. Definition & Declaration
+Coroutines are declared using the `async def` keyword syntax:
 
 ```python
-async def main():
-    await fetch_data()
-
-asyncio.run(main())
+async def fetch_data(url: str) -> dict:
+    # Performs asynchronous work
+    return {"status": "ok"}
 ```
 
-## Suspending Execution
-- A coroutine can suspend its execution using the `await` keyword.
-- While suspended, the event loop can run other coroutines.
-
-```python
-await asyncio.sleep(1)
-```
-
-## What Can Be Awaited?
-`await` works with **awaitables**, including:
-- Coroutine objects
-- `asyncio.Task`
-- `asyncio.Future`
-- Any object implementing `__await__()`
-
-## Coroutine Function vs Coroutine Object
+### 2. Coroutine Function vs Coroutine Object
+Calling a coroutine function **does not execute its body immediately**. Instead, it instantiates and returns a **coroutine object**:
 
 ```python
 async def greet():
     print("Hello")
+
+# greet      -> Coroutine Function (<function greet at ...>)
+# greet()    -> Coroutine Object (<coroutine object greet at ...>)
+
+coro = greet()  # Nothing executes yet!
+print(type(coro)) # <class 'coroutine'>
 ```
 
-- `greet` → **Coroutine Function**
+> [!warning]
+> A common beginner bug is invoking `fetch_data()` without `await` or `asyncio.create_task()`. This triggers a runtime warning: `RuntimeWarning: Enable tracemalloc to get the object allocation traceback`.
+
+---
+
+## ⚙️ Execution & Suspension Lifecycle
+
+Coroutines can only execute when scheduled on an active **[[Notes/01 AsyncIO/Event Loop|Event Loop]]**.
+
+```
+  async def worker()
+          │
+          ▼
+   Coroutine Object
+          │
+          ├───────────────────────────────┐
+          ▼                               ▼
+    await worker()               asyncio.create_task()
+  (Cooperative Yield)           (Scheduled on Event Loop)
+          │                               │
+          └───────────────┬───────────────┘
+                          │
+                          ▼
+               Executed by Event Loop
+```
+
+### Methods of Execution
+1. **Top-Level Entry**: `asyncio.run(main())` creates an event loop, runs `main()`, and closes the loop.
+2. **Cooperative Awaiting**: `await coro` suspends the calling coroutine until `coro` finishes.
+3. **Concurrent Scheduling**: `asyncio.create_task(coro)` wraps `coro` into a **[[Notes/01 AsyncIO/Tasks|Task]]** for background loop execution.
+
+---
+
+## ⏸️ What Happens at `await`?
+
+When Python encounters `await awaitable`:
 
 ```python
-coro = greet()
+async def process():
+    print("Step 1: Starting")
+    await asyncio.sleep(2)  # Yields control back to the Event Loop
+    print("Step 2: Resumed")
 ```
 
-- `coro` → **Coroutine Object**
+1. `process()` pauses immediately at `await`.
+2. It saves its local variable state and stack pointer.
+3. Control returns to the **[[Notes/01 AsyncIO/Event Loop|Event Loop]]**.
+4. The event loop executes other ready tasks during the 2-second delay.
+5. Once the timer elapses, the event loop marks `process()` as **Ready** and resumes execution at Step 2.
 
-## Key Points
-- Defined using `async def`
-- Calling it returns a coroutine object
-- Does **not** execute immediately
-- Can pause using `await`
-- Resumes after the awaited operation completes
-- Runs only when awaited or scheduled on an event loop
+---
 
-## Example
+## 📋 What Can Be Awaitable?
+
+The `await` keyword only accepts **awaitable objects**, which implement the `__await__()` magic method:
+
+| Awaitable Type | Purpose | Reference Note |
+| :--- | :--- | :--- |
+| **Coroutine Objects** | Returned by `async def` function calls | [[Notes/01 AsyncIO/Coroutine\|Coroutine]] |
+| **Tasks** | Event-loop scheduled coroutine wrappers | [[Notes/01 AsyncIO/Tasks\|Tasks]] |
+| **Futures** | Low-level result placeholders | [[Notes/01 AsyncIO/Future\|Future]] |
+
+---
+
+## 💡 Practical Example
 
 ```python
 import asyncio
+import time
 
-async def hello():
-    print("Start")
-    await asyncio.sleep(2)
-    print("End")
+async def fetch_user(user_id: int) -> dict:
+    print(f"[{time.strftime('%X')}] Fetching user {user_id}...")
+    await asyncio.sleep(1)  # Non-blocking IO delay
+    print(f"[{time.strftime('%X')}] User {user_id} fetched.")
+    return {"id": user_id, "name": f"User_{user_id}"}
 
-asyncio.run(hello())
+async def main():
+    start = time.time()
+    # Execute sequential coroutine awaits
+    u1 = await fetch_user(1)
+    u2 = await fetch_user(2)
+    print(f"Total time elapsed: {time.time() - start:.2f}s")
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
-### Execution Flow
-1. `hello()` returns a coroutine object.
-2. `asyncio.run()` creates an event loop.
-3. The coroutine starts executing.
-4. It pauses at `await asyncio.sleep(2)`.
-5. The event loop runs other ready tasks (if any).
-6. After 2 seconds, the coroutine resumes.
-7. The coroutine finishes and the event loop exits.
+---
 
-## Mental Model
->A coroutine is a **pausable function** whose execution is managed by the **asyncio event loop**.
+## 🧠 Mental Model
+
+> **Think of a coroutine as a pausable state machine.**
+> It does not run continuously like a standard synchronous function. Instead, it yields control at every `await` boundary, allowing the **[[Notes/01 AsyncIO/Event Loop|Event Loop]]** to multiplex thousands of concurrent tasks on a single OS thread.
+
+---
+
+## 🔗 Related Notes
+- [[Notes/01 AsyncIO/Event Loop|⚡ Event Loop]] — The scheduler behind coroutine execution
+- [[Notes/01 AsyncIO/Tasks|📋 Tasks]] — Wrapping coroutines into concurrent tasks
+- [[Notes/01 AsyncIO/Future|🔮 Futures]] — Low-level result promises
+- [[Notes/01 AsyncIO/index|⚡ AsyncIO Map of Content]]

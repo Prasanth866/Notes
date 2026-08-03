@@ -1,647 +1,107 @@
+---
+title: "asyncio.gather() in Python"
+description: "Detailed breakdown of asyncio.gather, batch concurrent awaitable execution, error handling with return_exceptions, and comparison with TaskGroup."
+tags:
+  - python/asyncio
+  - concurrency
+aliases:
+  - asyncio.gather()
+  - gather
+---
+
+# ⚡ `asyncio.gather()` in Python
 
 > [!summary]
-> `asyncio.gather()` is a high-level function that **runs multiple coroutines concurrently**, **waits for all of them to finish**, and **returns their results in the same order they were passed**.
-
-> **Remember:**
->
-> - `await` → Run one coroutine.
-> - `create_task()` → Start one coroutine concurrently.
-> - `gather()` → Start **multiple coroutines together** and collect all their results.
+> `asyncio.gather(*aws, return_exceptions=False)` takes multiple **awaitable objects** (coroutines, tasks, futures), runs them concurrently on the **[[Notes/01 AsyncIO/Event Loop|Event Loop]]**, and returns a list of their aggregated results in the exact order passed.
 
 ---
 
-# Why use `asyncio.gather()`?
-
-Suppose you need to fetch:
-
-- User profile
-- Orders
-- Notifications
-
-Sequential approach:
-
-```python
-await get_user()
-await get_orders()
-await get_notifications()
-```
-
-Execution:
-
-```
-User
- │
- ▼
-Orders
- │
- ▼
-Notifications
-```
-
-Everything waits.
-
----
-
-Using `gather()`:
-
-```python
-await asyncio.gather(
-    get_user(),
-    get_orders(),
-    get_notifications()
-)
-```
-
-Execution:
-
-```
-User
-Orders
-Notifications
-        │
-        ▼
-Run Together
-        │
-        ▼
-Wait for All
-```
-
-The total runtime is approximately the time of the **slowest** coroutine.
-
----
-
-# Syntax
+## ⚙️ How `asyncio.gather()` Works
 
 ```python
 results = await asyncio.gather(
-    coro1(),
-    coro2(),
-    coro3()
+    fetch_user(1),    # 2 seconds
+    fetch_orders(1),  # 1 second
+    fetch_avatar(1)   # 3 seconds
 )
+# Overall time elapsed ≈ 3 seconds (Longest task)
+# results -> [user_data, orders_data, avatar_data]
 ```
 
-Or
-
-```python
-results = await asyncio.gather(*coroutines)
+```
+fetch_user(1)    ─────── (2s) ───────┐
+fetch_orders(1)  ── (1s) ──┐         │
+fetch_avatar(1)  ──────────┼─ (3s) ──┴──> All Complete ──> Return Ordered List
 ```
 
-Returns
-
-```python
-list_of_results
-```
-
-where each result corresponds to the coroutine at the same position.
+Even though `fetch_orders` completes first, `gather()` preserves the original positional order of the inputs in the returned list.
 
 ---
 
-# Sequential vs Concurrent
+## 🛡️ Exception Handling & `return_exceptions`
 
-## Sequential
+The `return_exceptions` boolean parameter completely changes how `gather()` handles runtime errors.
 
-```python
-await work("A", 3)
-await work("B", 2)
-await work("C", 1)
-```
-
-Timeline
-
-```
-A starts
-(wait 3)
-
-A finishes
-
-B starts
-(wait 2)
-
-B finishes
-
-C starts
-(wait 1)
-
-C finishes
-```
-
-Total ≈ **6 seconds**
-
----
-
-## Concurrent (`gather()`)
+### 1. `return_exceptions=False` (Default)
+The first exception raised by any awaitable immediately bubbles up to the caller. However, **other pending tasks are NOT automatically cancelled** and continue running in the background!
 
 ```python
-await asyncio.gather(
-    work("A", 3),
-    work("B", 2),
-    work("C", 1)
-)
+import asyncio
+
+async def bad_task():
+    await asyncio.sleep(0.5)
+    raise ValueError("Database connection failed!")
+
+async def slow_task():
+    await asyncio.sleep(2)
+    print("Slow task finished!")
+
+async def main():
+    try:
+        results = await asyncio.gather(bad_task(), slow_task(), return_exceptions=False)
+    except ValueError as exc:
+        print("Gather caught error:", exc)
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
-
-Timeline
-
-```
-A starts
-B starts
-C starts
-
-(wait 1)
-
-C finishes
-
-(wait 1)
-
-B finishes
-
-(wait 1)
-
-A finishes
-```
-
-Total ≈ **3 seconds**
-
----
-
-# How `gather()` Works Internally
-
-Conceptually,
-
-```python
-await asyncio.gather(
-    work("A"),
-    work("B"),
-    work("C")
-)
-```
-
-does something like:
-
-```
-Coroutine A
-Coroutine B
-Coroutine C
-      │
-      ▼
-Create Tasks
-      │
-      ▼
-Run Concurrently
-      │
-      ▼
-Wait Until All Complete
-      │
-      ▼
-Return Results
-```
-
-You don't need to call `create_task()` manually.
-
----
-
-# Return Values
-
-```python
-async def square(x):
-    await asyncio.sleep(1)
-    return x * x
-```
-
-```python
-results = await asyncio.gather(
-    square(2),
-    square(3),
-    square(4)
-)
-
-print(results)
-```
-
-Output
-
-```
-[4, 9, 16]
-```
-
-All three calculations finish together.
-
----
-
-# Results Preserve Input Order
-
-Even if coroutines finish in different orders,
-
-```python
-results = await asyncio.gather(
-    square(3),
-    square(1),
-    square(2)
-)
-```
-
-Output
-
-```
-[9, 1, 4]
-```
-
-> [!important]
-> Results are returned in the **order of the arguments**, **not** the order in which the coroutines complete.
-
----
-
-# Execution Flow
-
-```
-gather()
-
-      │
-
-Start Task A
-Start Task B
-Start Task C
-
-      │
-
-Run Concurrently
-
-      │
-
-Task C finishes
-Task B finishes
-Task A finishes
-
-      │
-
-Return Results
-```
-
----
-
-# Example: Downloading Files
-
-```python
-files = await asyncio.gather(
-    download("A", 3),
-    download("B", 2),
-    download("C", 1)
-)
-
-print(files)
-```
-
-Output
-
-```
-Downloading A
-Downloading B
-Downloading C
-
-C downloaded
-B downloaded
-A downloaded
-
-['A', 'B', 'C']
-```
-
-Downloads finish independently, but results remain ordered.
-
----
-
-# Mixing Different Coroutines
-
-```python
-user, orders, notifications = await asyncio.gather(
-    get_user(),
-    get_orders(),
-    get_notifications()
-)
-```
-
-Each coroutine can return a different type.
-
-Example:
-
-```
-User
-
-["Book", "Phone"]
-
-10
-```
-
-Perfect for fetching unrelated data simultaneously.
-
----
-
-# Error Handling
-
-Suppose
-
-```python
-await asyncio.gather(
-    good(),
-    bad()
-)
-```
-
-where
-
-```python
-bad()
-```
-
-raises
-
-```python
-ValueError
-```
-
-Result
-
-```
-ValueError
-```
-
-The **first exception** is propagated to the caller.
-
----
-
-# `return_exceptions=True`
-
-Sometimes you want every coroutine to complete, even if some fail.
-
-```python
-results = await asyncio.gather(
-    good(),
-    bad(),
-    return_exceptions=True
-)
-```
-
-Output
-
-```
-[
-    "Good",
-    ValueError("Boom")
-]
-```
-
-Now you can inspect each result individually.
-
-```python
-for result in results:
-    if isinstance(result, Exception):
-        ...
-```
-
-> [!tip]
-> Useful when partial success is acceptable.
-
----
-
-# Running Many Coroutines
-
-```python
-tasks = []
-
-for i in range(10):
-    tasks.append(square(i))
-
-results = await asyncio.gather(*tasks)
-```
-
-The `*` operator expands the list into separate arguments.
-
----
-
-# `gather()` vs `create_task()`
-
-## `create_task()`
-
-```python
-task = asyncio.create_task(download())
-
-# Do other work...
-
-await task
-```
-
-You manually manage:
-
-- Task references
-- Awaiting
-- Cancellation
-- Monitoring
-
----
-
-## `gather()`
-
-```python
-await asyncio.gather(
-    download(),
-    upload()
-)
-```
-
-Everything is managed for you.
-
-Best when:
-
-- Start multiple coroutines together.
-- Wait for all.
-- Collect all results.
-
----
-
-# `gather()` vs `TaskGroup`
-
-## `gather()`
-
-```python
-results = await asyncio.gather(
-    download(),
-    upload()
-)
-```
-
-Advantages
-
-- Very concise
-- Returns results directly
-- Excellent for independent work
-
----
-
-## `TaskGroup`
-
-```python
-async with asyncio.TaskGroup() as tg:
-    t1 = tg.create_task(download())
-    t2 = tg.create_task(upload())
-```
-
-Advantages
-
-- Structured concurrency
-- Better lifecycle management
-- Automatically cancels sibling tasks
-- Safer cleanup
-
-> [!tip]
-> Use **TaskGroup** when tasks belong to the same logical operation.
-
----
-
-# When Should You Use `gather()`?
-
-Use it when:
-
-- Multiple independent coroutines.
-- You want everything to start immediately.
-- You need all return values.
-- No complex task management is required.
-
-Common examples:
-
-- Multiple API requests
-- Reading several files
-- Downloading multiple pages
-- Database queries
-- Independent computations
-
----
-
-# Common Pitfalls
 
 > [!warning]
-> Avoid these mistakes
+> With `return_exceptions=False`, an error does not cancel other tasks. If you require automatic sibling cancellation on failure, prefer **[[Notes/01 AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]]**.
 
-❌ Expecting results in completion order.
-
-```python
-gather(A, B, C)
-```
-
-Returns
-
-```
-[A_result, B_result, C_result]
-```
-
-even if C finishes first.
-
----
-
-❌ Forgetting to unpack a list.
-
-Wrong
+### 2. `return_exceptions=True` (Safe Result Aggregation)
+Exceptions are treated as valid return values and placed directly into the results list at their corresponding index:
 
 ```python
-await asyncio.gather(tasks)
+async def main():
+    results = await asyncio.gather(
+        bad_task(),
+        slow_task(),
+        return_exceptions=True
+    )
+    # results -> [ValueError('Database connection failed!'), None]
+    for res in results:
+        if isinstance(res, Exception):
+            print("Captured exception:", res)
+        else:
+            print("Success result:", res)
 ```
 
-Correct
+---
 
-```python
-await asyncio.gather(*tasks)
-```
+## ⚖️ `asyncio.gather()` vs `asyncio.TaskGroup()`
+
+| Feature | `asyncio.gather()` | `asyncio.TaskGroup()` |
+| :--- | :--- | :--- |
+| **Python Compatibility** | Python 3.4+ | Python 3.11+ |
+| **Sibling Cancellation** | ❌ No (Pending tasks keep running) | ✅ Yes (Automatic cancellation of all siblings) |
+| **Return Format** | Ordered `list` of results | Task objects via `task.result()` |
+| **Exception Handling** | `return_exceptions=True/False` | `ExceptionGroup` via `except*` |
 
 ---
 
-❌ Using `gather()` for long-running background tasks.
-
-Use `create_task()` instead.
-
----
-
-❌ Using `gather()` when tasks should automatically cancel together on failure.
-
-Prefer `TaskGroup`.
-
----
-
-# Mental Model
-
-Imagine ordering food.
-
-Without `gather()`
-
-```
-Order Pizza
-
-Wait
-
-Order Burger
-
-Wait
-
-Order Dessert
-```
-
-Total = Sum of all preparation times.
-
----
-
-With `gather()`
-
-```
-Order Pizza
-Order Burger
-Order Dessert
-
-All kitchens cook simultaneously
-
-Wait
-
-Everything arrives together
-```
-
-Total = Time of the slowest dish.
-
----
-
-# Quick Summary
-
-> [!tip]
-> - Runs multiple coroutines concurrently.
-> - Automatically schedules them.
-> - Waits until all finish.
-> - Returns results in input order.
-> - Excellent for independent concurrent operations.
-> - Supports `return_exceptions=True`.
-> - Simpler than manually creating tasks.
-> - Prefer `TaskGroup` for structured concurrency in Python 3.11+.
-
----
-
-# `await` vs `create_task()` vs `gather()` vs `TaskGroup`
-
-| Feature | `await` | `create_task()` | `gather()` | `TaskGroup` |
-|---------|---------|-----------------|------------|-------------|
-| Run one coroutine | ✅ | ✅ | ❌ | ❌ |
-| Run multiple concurrently | ❌ | ✅ | ✅ | ✅ |
-| Returns results directly | ✅ | Via `await task` | ✅ | Via `task.result()` |
-| Starts immediately | When awaited | ✅ | ✅ | ✅ |
-| Automatic task management | N/A | ❌ | Partial | ✅ |
-| Cancels sibling tasks on failure | N/A | ❌ | ❌* | ✅ |
-| Best for related concurrent work | ❌ | Sometimes | Good | ⭐ Best |
-
-> *Exception propagation and cancellation behavior in `gather()` differ from `TaskGroup`.
-
----
-
-# Cheat Sheet
-
-| Need | Use |
-|------|-----|
-| Run one coroutine | ✅ `await` |
-| Start one coroutine in background | ✅ `create_task()` |
-| Run many coroutines and collect results | ✅ `gather()` |
-| Run related concurrent tasks safely | ✅ `TaskGroup` |
-| Get results in input order | ✅ `gather()` |
-| Handle partial failures | ✅ `gather(return_exceptions=True)` |
-| Manage individual task lifecycle | ✅ `create_task()` |
-| Structured concurrency | ✅ `TaskGroup` |
+## 🔗 Related Notes
+- [[Notes/01 AsyncIO/asyncio.TaskGroup()|⚡ asyncio.TaskGroup()]] — Python 3.11+ structured concurrency alternative
+- [[Notes/01 AsyncIO/Tasks|📋 Tasks]] — Concurrent execution objects
+- [[Notes/01 AsyncIO/Coroutine|⚡ Coroutine]] — Pausable code executed by gather
+- [[Notes/01 AsyncIO/index|⚡ AsyncIO Map of Content]]

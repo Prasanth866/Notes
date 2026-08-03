@@ -1,701 +1,146 @@
-> **Essential Reference | asyncio Internals | Python 3.11+**
-
+---
+title: "Futures in Python AsyncIO"
+description: "Detailed breakdown of asyncio.Future, state machine transitions, callbacks, thread safety, and relation to Tasks."
+tags:
+  - python/asyncio
+  - future
+aliases:
+  - Future
+  - Futures
 ---
 
-## What is a Future?
+# 🔮 Futures in Python AsyncIO
 
-`asyncio.Future` is a **low-level awaitable object** that represents **a value that will become available later**.
-
-It acts as a bridge between:
-
-- the code **producing** a result
-- the code **waiting** for that result
-
-A Future itself **does not perform any work**.
-
-It is simply a **placeholder for a future result**.
-
-```text
-Producer
-    │
-    ▼
- Future
-    │
-    ▼
-Consumer
-```
-
----
-
-## Mental Model
-
-Imagine ordering food.
-
-```text
-Order Pizza
-      │
-      ▼
-Receipt (Future)
-      │
-      ▼
-Kitchen cooks
-      │
-      ▼
-Pizza Ready
-      │
-      ▼
-Receive Pizza
-```
-
-The receipt isn't the pizza.
-
-It only promises:
-
-> "You'll receive the pizza later."
-
-A Future is exactly that promise.
-
----
-
-# Why does asyncio need Futures?
-
-Many asynchronous operations take time.
-
-Examples:
-
-- HTTP requests
-- Database queries
-- Reading files
-- Waiting for another coroutine
-- Waiting for an external event
-
-Instead of blocking,
-
-the coroutine waits on a Future.
-
-```text
-Coroutine
-
-↓
-
-await Future
-
-↓
-
-Paused
-
-↓
-
-Event Loop
-
-↓
-
-Future completed
-
-↓
-
-Resume coroutine
-```
-
----
-
-# Important
-
-A Future **does not execute code**.
-
-It only stores:
-
-- a result
-- an exception
-- cancellation state
-
-Something else must complete it.
-
----
-
-# Future Lifecycle
-
-```text
-           create_future()
-
-                 │
-
-                 ▼
-
-             PENDING
-
-       ┌────────┴────────┐
-
-       ▼                 ▼
-
-set_result()     set_exception()
-
-       │                 │
-
-       ▼                 ▼
-
-            FINISHED
-```
-
-Possible states:
-
-- Pending
-- Finished
-- Cancelled
-
----
-
-# Creating a Future
-
-```python
-import asyncio
-
-async def main():
-    loop = asyncio.get_running_loop()
-
-    future = loop.create_future()
-
-    print(future)
-
-asyncio.run(main())
-```
-
-Output
-
-```text
-<Future pending>
-```
-
-At this point,
-
-- no work is running
-- no value exists
-- nothing will happen until someone completes it
-
----
-
-# Completing a Future
-
-```python
-future.set_result("Hello")
-```
-
-Now
-
-```python
-result = await future
-```
-
-returns immediately.
-
-Example
-
-```python
-future.set_result("Done")
-
-print(await future)
-```
-
-Output
-
-```text
-Done
-```
-
----
-
-# Setting an Exception
-
-Instead of returning a value,
-
-a Future may fail.
-
-```python
-future.set_exception(ValueError("Boom"))
-```
-
-Later
-
-```python
-await future
-```
-
-raises
-
-```text
-ValueError("Boom")
-```
-
----
-
-# Cancelling a Future
-
-```python
-future.cancel()
-```
-
-Now
-
-```python
-await future
-```
-
-raises
-
-```python
-asyncio.CancelledError
-```
-
-Useful when shutting down tasks or timing out operations.
-
----
-
-# Waiting for a Future
-
-Suppose
-
-```python
-future = loop.create_future()
-
-await future
-```
-
-Nothing resumes it.
-
-The coroutine waits forever.
-
-```text
-Future
-
-Pending
-
-Pending
-
-Pending
-
-...
-```
-
-Someone must call
-
-```python
-future.set_result(...)
-```
-
-or
-
-```python
-future.set_exception(...)
-```
-
----
-
-# Producer–Consumer Example
-
-```python
-import asyncio
-
-async def producer(future):
-    await asyncio.sleep(2)
-    future.set_result("Finished")
-
-async def consumer(future):
-    result = await future
-    print(result)
-
-async def main():
-    loop = asyncio.get_running_loop()
-
-    future = loop.create_future()
-
-    await asyncio.gather(
-        producer(future),
-        consumer(future)
-    )
-
-asyncio.run(main())
-```
-
-Timeline
-
-```text
-Consumer
-
-↓
-
-await future
-
-↓
-
-Paused
-
-Producer
-
-↓
-
-sleep(2)
-
-↓
-
-set_result()
-
-↓
-
-Consumer resumes
-
-↓
-
-Finished
-```
-
----
-
-# Relationship with Task
-
-A Task is built on top of Future.
-
-```text
-Awaitable
-
-│
-
-├── Coroutine
-
-├── Future
-
-└── Task
-```
-
-More precisely
-
-```text
-Task
-    │
-inherits
-    ▼
-Future
-```
-
-That means every Task is also a Future.
-
-```python
-task = asyncio.create_task(work())
-```
-
-You can
-
-```python
-await task
-```
-
-because Task inherits Future.
-
----
-
-# Future vs Task
-
-## Future
-
-Represents
-
-> "A result will exist later."
-
-It does **not** run code.
-
-```python
-future = loop.create_future()
-```
-
----
-
-## Task
-
-Represents
-
-> "A coroutine is currently running."
-
-```python
-task = asyncio.create_task(worker())
-```
-
-The Task executes the coroutine and completes itself automatically.
-
----
-
-Comparison
-
-| Future | Task |
-|----------|------|
-| Placeholder | Running coroutine |
-| Doesn't execute code | Executes coroutine |
-| Someone else completes it | Completes automatically |
-| Low-level primitive | High-level API |
-| Rarely created manually | Used constantly |
-
----
-
-# How the Event Loop Uses Futures
-
-Suppose
-
-```python
-await future
-```
-
-Internally
-
-```text
-Coroutine
-
-↓
-
-Checks Future
-
-↓
-
-Pending?
-
-↓
-
-Yes
-
-↓
-
-Pause coroutine
-
-↓
-
-Register callback
-
-↓
-
-Run other tasks
-
-↓
-
-Future completed
-
-↓
-
-Move coroutine to Ready Queue
-
-↓
-
-Resume coroutine
-```
-
-The event loop watches the Future.
-
-Once it finishes,
-
-the coroutine continues.
-
----
-
-# Futures Power Async Libraries
-
-Most async libraries internally create Futures.
-
-Examples
-
-```python
-await websocket.receive_text()
-
-await database.fetch()
-
-await http_client.get()
-
-await asyncio.sleep()
-```
-
-Internally,
-
-they suspend the coroutine until a Future is completed by the event loop or an I/O callback.
-
----
-
-# When should you create a Future manually?
-
-Almost never.
-
-Typical application code uses
-
-```python
-await
-
-create_task()
-
-gather()
-
-TaskGroup()
-```
-
-Manual Futures are mainly useful for:
-
-- building async libraries
-- wrapping callback-based APIs
-- integrating external event systems
-- implementing synchronization primitives
-
----
-
-# Common Methods
-
-## Create
-
-```python
-loop.create_future()
-```
-
----
-
-## Complete
-
-```python
-future.set_result(value)
-```
-
----
-
-## Raise Error
-
-```python
-future.set_exception(exc)
-```
-
----
-
-## Cancel
-
-```python
-future.cancel()
-```
-
----
-
-## Await
-
-```python
-await future
-```
-
----
-
-## Check State
-
-```python
-future.done()
-
-future.cancelled()
-```
-
----
-
-## Get Result
-
-```python
-future.result()
-```
-
-Raises an exception if the Future failed.
-
----
-
-# Future State Machine
-
-```text
-                create_future()
-
-                       │
-
-                       ▼
-
-                 Pending Future
-
-             ┌─────────┼──────────┐
-
-             ▼         ▼          ▼
-
-     set_result   set_exception   cancel
-
-             │         │          │
-
-             ▼         ▼          ▼
-
-          Finished  Finished   Cancelled
-
-             │
-
-             ▼
-
-      await returns result
-```
-
----
-
-# When You Encounter Futures
-
-You'll indirectly use Futures whenever you write:
-
-```python
-await asyncio.sleep()
-
-await websocket.receive_text()
-
-await redis.get()
-
-await database.fetch()
-
-await asyncio.gather(...)
-
-await task
-```
-
-Although you rarely create them yourself,
-
-they are one of the core building blocks of asyncio.
-
----
-
-# Key Takeaways
-
-- `Future` represents a **result that will exist later**.
-- It **does not execute work**.
-- Coroutines **await Futures**.
-- Another task or the event loop **completes the Future**.
-- A **Task is a subclass of Future** that executes a coroutine.
-- Most application developers **rarely create Futures manually**.
-- Futures are primarily used by **async frameworks and library authors**.
-
----
-
-# Mental Model
-
-```text
-                    Event Loop
-                         │
-          ┌──────────────┴──────────────┐
-          │                             │
-          ▼                             ▼
-
-    Producer Task                 Consumer Task
-
-          │                             │
-          │ set_result()                │ await future
-          ▼                             │
-      +-------------------------------+  │
-      |           Future              |◄─┘
-      |                               |
-      |  Pending → Finished           |
-      +-------------------------------+
-                    │
-                    ▼
-          Resume Waiting Coroutine
-```
-
-> **Remember:**
+> [!summary]
+> An `asyncio.Future` is a **low-level awaitable object** that acts as a **placeholder for a result that will become available in the future**.
 >
-> - **Coroutine** → defines work.
-> - **Task** → runs work.
-> - **Future** → stores the eventual result of that work.
-> - **Event Loop** → coordinates everything.
+> A Future itself performs no execution logic; it serves purely as a state container bridging a result producer and a result consumer.
+
+---
+
+## 💡 Conceptual Analogy
+
+Imagine receiving a claim receipt at a dry cleaner:
+
+```
+                  Order Placed
+                       │
+                       ▼
+              Receipt Issued (Future)
+                       │
+             ┌─────────┴─────────┐
+             │                   │
+             ▼                   ▼
+      Cleaner washes       Customer waits
+      (Producer)           (Consumer: `await future`)
+             │                   │
+             └─────────┬─────────┘
+                       │
+                       ▼
+             Receipt Claimed (Result)
+```
+
+The claim receipt is not the cleaned clothes. It is a promise that clean clothes (or an exception notice) will be available later.
+
+---
+
+## 🔄 Future Lifecycle & State Machine
+
+A Future progresses through three distinct states:
+
+```
+                   create_future()
+                          │
+                          ▼
+                       PENDING
+                  ┌───────┴───────┐
+    set_result()  │               │  set_exception()
+                  ▼               ▼
+              FINISHED        FINISHED (Failed)
+                  ▲
+   cancel()       │
+  ────────────────┘ (CANCELLED)
+```
+
+1. **PENDING**: The result is not yet available. Awaiting a pending Future pauses the calling coroutine.
+2. **FINISHED**: The producer has invoked `.set_result(val)` or `.set_exception(exc)`. Awaiting resumes immediately.
+3. **CANCELLED**: The Future was cancelled via `.cancel()`. Awaiting raises `asyncio.CancelledError`.
+
+---
+
+## 💻 Manual Future Manipulation
+
+While high-level application code typically uses [[Notes/01 AsyncIO/Tasks|Tasks]], library authors use Futures to bridge async and callback-based code:
+
+```python
+import asyncio
+
+async def async_producer(fut: asyncio.Future):
+    await asyncio.sleep(1)
+    # Complete the Future with a result
+    fut.set_result("Data loaded successfully!")
+
+async def main():
+    loop = asyncio.get_running_loop()
+    # Create an empty, pending Future
+    fut: asyncio.Future[str] = loop.create_future()
+
+    print("Future status:", fut.done())  # False
+
+    # Schedule producer
+    loop.create_task(async_producer(fut))
+
+    # Wait for completion
+    result = await fut
+    print("Result received:", result)
+    print("Future status after await:", fut.done())  # True
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+---
+
+## ⚡ Callbacks & Thread Safety
+
+### 1. Registering Done Callbacks
+You can attach callbacks to trigger immediately when a Future completes:
+
+```python
+def on_complete(fut: asyncio.Future):
+    print("Callback fired! Result:", fut.result())
+
+fut.add_done_callback(on_complete)
+```
+
+### 2. Thread-Safe Completion (`call_soon_threadsafe`)
+When completing a Future from a background OS thread, use `loop.call_soon_threadsafe()`:
+
+```python
+import threading
+
+def background_thread_worker(loop: asyncio.AbstractEventLoop, fut: asyncio.Future):
+    # Perform heavy blocking thread work
+    data = "Result from OS Thread"
+    # Thread-safe result assignment
+    loop.call_soon_threadsafe(fut.set_result, data)
+```
+
+---
+
+## ⚖️ Future vs Task
+
+| Feature | `asyncio.Future` | `asyncio.Task` |
+| :--- | :--- | :--- |
+| **Inheritance** | Base class | Subclass of `asyncio.Future` |
+| **Execution** | Performs NO execution | Wraps and executes a [[Notes/01 AsyncIO/Coroutine\|Coroutine]] |
+| **Instantiation** | `loop.create_future()` | `asyncio.create_task(coro)` |
+| **Purpose** | Passive result placeholder | Active concurrent execution wrapper |
+
+---
+
+## 🔗 Related Notes
+- [[Notes/01 AsyncIO/Tasks|📋 Tasks]] — Active sub-class of Future executing coroutines
+- [[Notes/01 AsyncIO/Coroutine|⚡ Coroutine]] — Pausable functions that produce results for Futures
+- [[Notes/01 AsyncIO/Event Loop|⚡ Event Loop]] — Manages Future resolution and callbacks
+- [[Notes/01 AsyncIO/index|⚡ AsyncIO Map of Content]]

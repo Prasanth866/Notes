@@ -1,936 +1,118 @@
+---
+title: "Pydantic Event Models"
+description: "Designing type-safe event schemas using Pydantic v2 discriminated unions, JSON schema generation, and strict payload validation."
+tags:
+  - architecture/event-driven
+  - python/pydantic
+aliases:
+  - Event Models
+  - Event Model
+---
 
-> Event Streaming is a pattern where the server continuously emits **events** over time instead of returning a single response.
+# 📡 Pydantic Event Models
 
-Instead of:
-
-```
-Request
-↓
-Processing
-↓
-One Response
-↓
-Done
-```
-
-Event streaming looks like:
-
-```
-Client Connects
-      │
-      ▼
-Server emits Event 1
-      │
-      ▼
-Server emits Event 2
-      │
-      ▼
-Server emits Event 3
-      │
-      ▼
-...
-```
-
-The connection stays open.
+> [!summary]
+> In an event-driven streaming system, incoming and outgoing JSON payloads must adhere to strict schemas.
+>
+> Using **Pydantic v2 Discriminated Unions**, Python applications can automatically parse, validate, and serialize polymorphically typed JSON events based on a single `event` discriminator field.
 
 ---
 
-# Why Event Streaming?
-
-Many modern applications don't return a single result.
-
-Instead they continuously send updates.
-
-Examples:
-
-## AI Chat
+## 🏛️ Polymorphic Event Architecture
 
 ```
-Thinking...
-
-↓
-
-Token: "Hel"
-
-↓
-
-Token: "lo"
-
-↓
-
-Token: "!"
-
-↓
-
-Completed
+                                 Incoming Raw JSON String
+                                            │
+                                            ▼
+                              TypeAdapter(StreamEvent)
+                                            │
+                                  Discriminator Match:
+                                    `"event": "..."`
+                                            │
+         ┌────────────────────────┬─────────┴──────────────┬────────────────────────┐
+         ▼                        ▼                        ▼                        ▼
+┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
+│   StatusEvent    │    │  ProgressEvent   │    │    TokenEvent    │    │    ErrorEvent    │
+└──────────────────┘    └──────────────────┘    └──────────────────┘    └──────────────────┘
 ```
 
 ---
 
-## Cryptocurrency App
-
-```
-BTC Price
-
-↓
-
-101000
-
-↓
-
-101020
-
-↓
-
-101050
-
-↓
-
-100980
-
-↓
-
-...
-```
-
----
-
-## File Upload
-
-```
-Uploading...
-
-↓
-
-10%
-
-↓
-
-35%
-
-↓
-
-72%
-
-↓
-
-100%
-```
-
----
-
-## Build System
-
-```
-Starting build
-
-↓
-
-Installing packages
-
-↓
-
-Compiling
-
-↓
-
-Running tests
-
-↓
-
-Finished
-```
-
----
-
-# Traditional HTTP vs Event Streaming
-
-## HTTP
-
-```
-Client
-
-↓
-
-POST /chat
-
-↓
-
-Wait
-
-↓
-
-Wait
-
-↓
-
-Wait
-
-↓
-
-Entire response
-```
-
----
-
-## Streaming
-
-```
-Client
-
-↓
-
-POST /chat
-
-↓
-
-Token
-
-↓
-
-Token
-
-↓
-
-Token
-
-↓
-
-Finished
-```
-
-The user sees progress immediately.
-
----
-
-# What is an Event?
-
-An **event** is a message describing **something that happened**.
-
-Examples:
-
-```
-User Connected
-
-Price Updated
-
-Agent Started
-
-Token Generated
-
-Tool Executed
-
-File Uploaded
-
-Job Completed
-
-Error Occurred
-```
-
-Instead of sending random strings:
+## 💻 Pydantic v2 Discriminated Union Code
 
 ```python
-await websocket.send_text("hello")
-```
-
-we usually send structured events.
-
----
-
-# Event Structure
-
-An event generally contains:
-
-```
-What happened?
-
-↓
-
-Data
-
-↓
-
-Metadata
-```
-
-Example:
-
-```json
-{
-    "type": "price_update",
-    "data": {
-        "symbol": "BTC",
-        "price": 101234
-    }
-}
-```
-
-The client immediately knows:
-
-```
-Event Type
-
-↓
-
-price_update
-```
-
-and how to process it.
-
----
-
-# Why Not Send Plain Strings?
-
-Suppose the server sends:
-
-```
-101200
-```
-
-What does it mean?
-
-```
-Price?
-
-Temperature?
-
-User ID?
-
-Score?
-```
-
-Impossible to know.
-
-Instead:
-
-```json
-{
-    "type": "price_update",
-    "price": 101200
-}
-```
-
-Now the client knows exactly what it represents.
-
----
-
-# Event Model
-
-An **Event Model** is a structured representation of an event.
-
-In FastAPI we typically use **Pydantic models**.
-
-Example:
-
-```python
-from pydantic import BaseModel
-
-class PriceEvent(BaseModel):
-    type: str
-    symbol: str
-    price: float
-```
-
-Instead of dictionaries:
-
-```python
-{
-    "symbol": "BTC",
-    "price": 100000
-}
-```
-
-we create:
-
-```python
-PriceEvent(
-    type="price_update",
-    symbol="BTC",
-    price=100000
-)
-```
-
-Benefits:
-
-- Validation
-- Type safety
-- Autocomplete
-- Documentation
-- Easier refactoring
-
----
-
-# Generic Event Envelope
-
-Most production systems use a common wrapper.
-
-```
-Event
-
-├── event
-├── timestamp
-├── id
-└── payload
-```
-
-Example:
-
-```json
-{
-    "id": "evt_123",
-    "event": "price_update",
-    "timestamp": "2026-08-01T12:30:00Z",
-    "payload": {
-        "symbol": "BTC",
-        "price": 101000
-    }
-}
-```
-
-This is called an **Event Envelope**.
-
----
-
-# Recommended Base Event Model
-
-```python
-from datetime import datetime
-from uuid import UUID, uuid4
-
-from pydantic import BaseModel, Field
-
-class Event(BaseModel):
-    id: UUID = Field(default_factory=uuid4)
-    event: str
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
-    payload: dict
-```
-
-Every event now has:
-
-- unique id
-- event type
-- timestamp
-- payload
-
----
-
-# Specialized Events
-
-Instead of one huge model:
-
-```python
-{
-    "type": "...",
-    "..."
-}
-```
-
-create one model per event.
-
-```python
-class PriceUpdate(BaseModel):
-    symbol: str
-    price: float
-```
-
-```
-class ChatToken(BaseModel):
-    token: str
-```
-
-```
-class ErrorEvent(BaseModel):
-    code: str
+from datetime import datetime, timezone
+from typing import Annotated, Literal, Union
+from pydantic import BaseModel, Field, TypeAdapter, ValidationError
+
+# Base Envelope Metadata
+class BaseEvent(BaseModel):
+    timestamp: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    session_id: str
+
+# 1. Status Change Event
+class StatusEvent(BaseEvent):
+    event: Literal["status"] = "status"
+    state: Literal["idle", "running", "completed", "failed"]
     message: str
-```
 
-Each represents one event.
+# 2. Progress Percentage Event
+class ProgressEvent(BaseEvent):
+    event: Literal["progress"] = "progress"
+    progress: int = Field(ge=0, le=100)
+    current_step: str
 
----
+# 3. Streaming Text Token Event
+class TokenEvent(BaseEvent):
+    event: Literal["token"] = "token"
+    content: str
 
-# Streaming AI Responses
+# 4. Error Event
+class ErrorEvent(BaseEvent):
+    event: Literal["error"] = "error"
+    error_code: str
+    message: str
 
-Instead of:
+# Discriminated Union definition using "event" field
+StreamEvent = Annotated[
+    Union[StatusEvent, ProgressEvent, TokenEvent, ErrorEvent],
+    Field(discriminator="event")
+]
 
-```
-Entire answer
-```
+# TypeAdapter for parsing raw JSON into the polymorphic Union
+event_adapter = TypeAdapter(StreamEvent)
 
-stream:
+# --- Example Usage ---
 
-```
-Agent Started
+def parse_incoming_json(raw_json: str) -> StreamEvent:
+    try:
+        # Automatically parses into the correct model instance (e.g. ProgressEvent)
+        parsed_event: StreamEvent = event_adapter.validate_json(raw_json)
+        return parsed_event
+    except ValidationError as e:
+        print("Invalid event schema:", e)
+        raise
 
-↓
-
-Thinking
-
-↓
-
-Token
-
-↓
-
-Token
-
-↓
-
-Token
-
-↓
-
-Finished
-```
-
-Possible events:
-
-```text
-agent_started
-
-thinking
-
-token
-
-tool_started
-
-tool_finished
-
-completed
-
-error
+# Testing
+raw_input = '{"event": "progress", "session_id": "s_123", "progress": 75, "current_step": "Downloading weights"}'
+event_obj = parse_incoming_json(raw_input)
+print(type(event_obj))  # <class '__main__.ProgressEvent'>
+print(f"Step: {event_obj.current_step}, Progress: {event_obj.progress}%")
 ```
 
 ---
 
-# Example AI Stream
+## 💡 Benefits of Pydantic v2 Event Schemas
 
-Server emits:
-
-```json
-{
-    "event":"agent_started"
-}
-```
-
-↓
-
-```json
-{
-    "event":"token",
-    "payload":{
-        "text":"Hel"
-    }
-}
-```
-
-↓
-
-```json
-{
-    "event":"token",
-    "payload":{
-        "text":"lo"
-    }
-}
-```
-
-↓
-
-```json
-{
-    "event":"completed"
-}
-```
+> [!tip]
+> 1. **Zero-Boilerplate Parsing**: No nested `if payload['event'] == 'status'` chains required.
+> 2. **Automatic Data Validation**: Rejects invalid field types (e.g., negative progress percentages or invalid state strings) before business logic executes.
+> 3. **OpenAPI / JSON Schema Export**: Easily export schemas for client code generation (`event_adapter.json_schema()`).
 
 ---
 
-# Client Handling
-
-Instead of:
-
-```python
-if message == "done":
-```
-
-use:
-
-```python
-match event["event"]:
-
-    case "token":
-        ...
-
-    case "error":
-        ...
-
-    case "completed":
-        ...
-```
-
-Each event has a dedicated handler.
-
----
-
-# FastAPI Example
-
-Server:
-
-```python
-event = {
-    "event": "price_update",
-    "payload": {
-        "symbol": "BTC",
-        "price": 101200
-    }
-}
-
-await websocket.send_json(event)
-```
-
-Client receives:
-
-```json
-{
-    "event":"price_update",
-    "payload":{
-        "symbol":"BTC",
-        "price":101200
-    }
-}
-```
-
----
-
-# Event Flow
-
-```
-Price Worker
-
-↓
-
-Creates PriceUpdate Event
-
-↓
-
-Redis Pub/Sub (optional)
-
-↓
-
-Connection Manager
-
-↓
-
-WebSocket
-
-↓
-
-Browser
-
-↓
-
-UI updates
-```
-
-Notice that the worker never talks directly to the browser.
-
-Everything communicates through events.
-
----
-
-# Why Event Models Matter
-
-Imagine changing:
-
-```python
-{
-    "price":101000
-}
-```
-
-to
-
-```python
-{
-    "current_price":101000
-}
-```
-
-Without models:
-
-Every consumer breaks silently.
-
-With Pydantic:
-
-Type errors appear immediately.
-
----
-
-# Common Event Types
-
-## Chat
-
-```
-message
-
-typing
-
-joined
-
-left
-
-error
-```
-
----
-
-## AI
-
-```
-agent_started
-
-thinking
-
-token
-
-tool_started
-
-tool_finished
-
-completed
-
-cancelled
-
-error
-```
-
----
-
-## Trading
-
-```
-price_update
-
-portfolio_update
-
-order_created
-
-order_filled
-
-order_cancelled
-
-alert_triggered
-```
-
----
-
-## Job Queue
-
-```
-job_started
-
-job_progress
-
-job_completed
-
-job_failed
-```
-
----
-
-# Event-Driven Architecture
-
-Instead of:
-
-```
-Worker
-
-↓
-
-WebSocket
-
-↓
-
-Client
-```
-
-use
-
-```
-Worker
-
-↓
-
-Event
-
-↓
-
-Broker (optional)
-
-↓
-
-Connection Manager
-
-↓
-
-WebSocket
-
-↓
-
-Client
-```
-
-Every component only knows about events.
-
-This makes the system loosely coupled.
-
----
-
-# Best Practices
-
-## Always include an event type
-
-Good:
-
-```json
-{
-    "event":"price_update"
-}
-```
-
-Bad:
-
-```json
-{
-    "price":100000
-}
-```
-
----
-
-## Version events
-
-Useful for long-lived APIs.
-
-```json
-{
-    "version":1,
-    "event":"price_update"
-}
-```
-
----
-
-## Keep payloads focused
-
-Good:
-
-```json
-{
-    "event":"price_update",
-    "payload":{
-        "symbol":"BTC",
-        "price":100000
-    }
-}
-```
-
-Avoid huge payloads with unrelated data.
-
----
-
-## Make events immutable
-
-Treat an emitted event as a historical fact.
-
-Don't mutate it after publishing.
-
----
-
-# Relationship to Connection Manager
-
-```
-Price Worker
-
-↓
-
-Price Event
-
-↓
-
-Connection Manager
-
-↓
-
-Broadcast
-
-↓
-
-Clients
-```
-
-The Connection Manager doesn't care **what** the event is.
-
-It simply delivers it.
-
----
-
-# Relationship to Redis Pub/Sub
-
-```
-Worker
-
-↓
-
-Publish Event
-
-↓
-
-Redis Channel
-
-↓
-
-Connection Manager
-
-↓
-
-Broadcast
-
-↓
-
-Browser
-```
-
-Redis transports events between processes.
-
-The Connection Manager transports events to clients.
-
----
-
-# Mental Model
-
-Think of an airport.
-
-```
-Flight takes off
-
-↓
-
-Airport creates an event
-
-↓
-
-Departure Board updates
-
-↓
-
-Passengers see the update
-```
-
-The airport doesn't call every passenger individually.
-
-It publishes an event, and every interested system reacts.
-
-Your FastAPI application should work the same way.
-
-Workers produce events, infrastructure transports them, and clients react based on the event type.
+## 🔗 Related Notes
+- [[Notes/03 Event Streaming/JSON Event Design|📡 JSON Event Protocol Design]] — Principles of envelope design
+- [[Notes/02 FastAPI/WebSockets|🚀 FastAPI WebSockets]] — Transporting Pydantic events over sockets
+- [[Notes/04 Projects/Real-Time Event Streamer|🛠️ Capstone Integration Project]] — Real-world engine
+- [[Notes/03 Event Streaming/index|📡 Event Streaming MOC]]
