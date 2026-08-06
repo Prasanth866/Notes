@@ -22,6 +22,7 @@ Event-driven architecture decouples producers from consumers by communicating st
 ## Key Architectural Principles
 
 > [!tip]
+>
 > 1. **Events express facts**: Name events after completed actions or status changes (`task_started`, `token_generated`, `error_occurred`), never UI instructions.
 > 2. **Consistent Envelope**: Standardize top-level envelope fields across all event types for uniform routing.
 > 3. **Type Safety**: Enforce strict serialization schemas on both Python backend and frontend client receivers.
@@ -29,6 +30,7 @@ Event-driven architecture decouples producers from consumers by communicating st
 ---
 
 ## Related Resources
+
 - [[Notes/02 FastAPI/WebSockets|FastAPI WebSockets]]
 - [[Notes/01 AsyncIO/asyncio.Queue()|AsyncIO Event Queues]]
 - [[Notes/04 Projects/Real-Time Event Streamer|Capstone Integration Project]]

@@ -22,6 +22,7 @@ aliases:
 ## Synchronous Blocking I/O vs ⚡ Non-blocking I/O
 
 ### 1. Blocking I/O (Traditional)
+
 In blocking mode, calling `socket.recv()` halts thread execution completely until data arrives over the network interface card (NIC):
 
 ```
@@ -31,6 +32,7 @@ Thread  ─────> socket.recv() ─────> [BLOCKED WAITING ON OS N
 To handle multiple clients, synchronous servers must spawn thousands of OS threads, incurring severe context-switching overhead and memory consumption (typically ~1MB to 8MB per thread stack).
 
 ### 2. Non-blocking I/O (Event Loop)
+
 In non-blocking mode (`socket.setblocking(False)`), system calls return immediately with an `EWOULDBLOCK` or `EAGAIN` status if no data is available:
 
 ```
@@ -45,12 +47,12 @@ Event Loop  ───> Executes other tasks ───> OS signals socket READY �
 
 Operating systems provide kernel-level event notification interfaces to monitor thousands of file descriptors simultaneously:
 
-| OS Platform | Multiplexing Primitive | Algorithmic Complexity |
-| :--- | :--- | :--- |
-| **Linux** | `epoll` | $O(1)$ event notifications |
-| **macOS / BSD** | `kqueue` | $O(1)$ event notifications |
-| **Windows** | `IOCP` (I/O Completion Ports) | Asynchronous I/O Overlapped Model |
-| **POSIX Fallback** | `select` / `poll` | $O(N)$ scanning cost |
+| OS Platform        | Multiplexing Primitive        | Algorithmic Complexity            |
+| :----------------- | :---------------------------- | :-------------------------------- |
+| **Linux**          | `epoll`                       | $O(1)$ event notifications        |
+| **macOS / BSD**    | `kqueue`                      | $O(1)$ event notifications        |
+| **Windows**        | `IOCP` (I/O Completion Ports) | Asynchronous I/O Overlapped Model |
+| **POSIX Fallback** | `select` / `poll`             | $O(N)$ scanning cost              |
 
 The **[[Notes/01 AsyncIO/Event Loop|Event Loop]]** selects the optimal OS primitive automatically using Python's `selectors` module.
 
@@ -124,6 +126,7 @@ if __name__ == "__main__":
 ---
 
 ## Related Notes
+
 - [[Notes/01 AsyncIO/Event Loop|Event Loop]] — The scheduler driven by non-blocking OS selectors
 - [[Notes/01 AsyncIO/Coroutine|Coroutine]] — Pausable user code running atop non-blocking I/O
 - [[Notes/02 FastAPI/WebSockets|FastAPI WebSockets]] — High-concurrency socket handling

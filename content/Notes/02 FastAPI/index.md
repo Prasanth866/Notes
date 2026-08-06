@@ -49,6 +49,7 @@ FastAPI is natively built on **ASGI** (Asynchronous Server Gateway Interface) vi
 ---
 
 ## Related Topics & Guides
+
 - [[Notes/01 AsyncIO/index|AsyncIO Core Concepts]]
 - [[Notes/03 Event Streaming/index|Event Streaming & JSON Protocols]]
 - [[Notes/04 Projects/Real-Time Event Streamer|Capstone Integration Project]]

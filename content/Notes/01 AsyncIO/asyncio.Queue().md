@@ -104,10 +104,10 @@ if __name__ == "__main__":
 > [!tip]
 > Always specify `maxsize` in production queues (`asyncio.Queue(maxsize=100)`). Unbounded queues (`maxsize=0`) will consume unlimited RAM if producers generate data faster than consumers process it.
 
-| Queue Method | Behavior when Full/Empty | Non-blocking Alternative |
-| :--- | :--- | :--- |
-| `put(item)` | Suspends until space is available | `put_nowait(item)` (Raises `QueueFull`) |
-| `get()` | Suspends until item arrives | `get_nowait()` (Raises `QueueEmpty`) |
+| Queue Method | Behavior when Full/Empty          | Non-blocking Alternative                |
+| :----------- | :-------------------------------- | :-------------------------------------- |
+| `put(item)`  | Suspends until space is available | `put_nowait(item)` (Raises `QueueFull`) |
+| `get()`      | Suspends until item arrives       | `get_nowait()` (Raises `QueueEmpty`)    |
 
 ---
 
@@ -120,6 +120,7 @@ if __name__ == "__main__":
 ---
 
 ## Related Notes
+
 - [[Notes/01 AsyncIO/Tasks|Tasks]] — Worker tasks consuming from queues
 - [[Notes/01 AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]] — Managing worker pools
 - [[Notes/04 Projects/Real-Time Event Streamer|Capstone Project]] — Using Queue for streaming event dispatch

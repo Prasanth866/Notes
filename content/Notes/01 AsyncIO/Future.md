@@ -104,6 +104,7 @@ if __name__ == "__main__":
 ## ⚡ Callbacks & Thread Safety
 
 ### 1. Registering Done Callbacks
+
 You can attach callbacks to trigger immediately when a Future completes:
 
 ```python
@@ -114,6 +115,7 @@ fut.add_done_callback(on_complete)
 ```
 
 ### 2. Thread-Safe Completion (`call_soon_threadsafe`)
+
 When completing a Future from a background OS thread, use `loop.call_soon_threadsafe()`:
 
 ```python
@@ -130,16 +132,17 @@ def background_thread_worker(loop: asyncio.AbstractEventLoop, fut: asyncio.Futur
 
 ## Future vs Task
 
-| Feature | `asyncio.Future` | `asyncio.Task` |
-| :--- | :--- | :--- |
-| **Inheritance** | Base class | Subclass of `asyncio.Future` |
-| **Execution** | Performs NO execution | Wraps and executes a [[Notes/01 AsyncIO/Coroutine\|Coroutine]] |
-| **Instantiation** | `loop.create_future()` | `asyncio.create_task(coro)` |
-| **Purpose** | Passive result placeholder | Active concurrent execution wrapper |
+| Feature           | `asyncio.Future`           | `asyncio.Task`                                                 |
+| :---------------- | :------------------------- | :------------------------------------------------------------- |
+| **Inheritance**   | Base class                 | Subclass of `asyncio.Future`                                   |
+| **Execution**     | Performs NO execution      | Wraps and executes a [[Notes/01 AsyncIO/Coroutine\|Coroutine]] |
+| **Instantiation** | `loop.create_future()`     | `asyncio.create_task(coro)`                                    |
+| **Purpose**       | Passive result placeholder | Active concurrent execution wrapper                            |
 
 ---
 
 ## Related Notes
+
 - [[Notes/01 AsyncIO/Tasks|Tasks]] — Active sub-class of Future executing coroutines
 - [[Notes/01 AsyncIO/Coroutine|Coroutine]] — Pausable functions that produce results for Futures
 - [[Notes/01 AsyncIO/Event Loop|Event Loop]] — Manages Future resolution and callbacks

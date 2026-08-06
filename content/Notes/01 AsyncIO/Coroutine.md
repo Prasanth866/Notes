@@ -21,6 +21,7 @@ aliases:
 ## Core Concepts
 
 ### 1. Definition & Declaration
+
 Coroutines are declared using the `async def` keyword syntax:
 
 ```python
@@ -30,6 +31,7 @@ async def fetch_data(url: str) -> dict:
 ```
 
 ### 2. Coroutine Function vs Coroutine Object
+
 Calling a coroutine function **does not execute its body immediately**. Instead, it instantiates and returns a **coroutine object**:
 
 ```python
@@ -70,6 +72,7 @@ Coroutines can only execute when scheduled on an active **[[Notes/01 AsyncIO/Eve
 ```
 
 ### Methods of Execution
+
 1. **Top-Level Entry**: `asyncio.run(main())` creates an event loop, runs `main()`, and closes the loop.
 2. **Cooperative Awaiting**: `await coro` suspends the calling coroutine until `coro` finishes.
 3. **Concurrent Scheduling**: `asyncio.create_task(coro)` wraps `coro` into a **[[Notes/01 AsyncIO/Tasks|Task]]** for background loop execution.
@@ -99,11 +102,11 @@ async def process():
 
 The `await` keyword only accepts **awaitable objects**, which implement the `__await__()` magic method:
 
-| Awaitable Type | Purpose | Reference Note |
-| :--- | :--- | :--- |
-| **Coroutine Objects** | Returned by `async def` function calls | [[Notes/01 AsyncIO/Coroutine\|Coroutine]] |
-| **Tasks** | Event-loop scheduled coroutine wrappers | [[Notes/01 AsyncIO/Tasks\|Tasks]] |
-| **Futures** | Low-level result placeholders | [[Notes/01 AsyncIO/Future\|Future]] |
+| Awaitable Type        | Purpose                                 | Reference Note                            |
+| :-------------------- | :-------------------------------------- | :---------------------------------------- |
+| **Coroutine Objects** | Returned by `async def` function calls  | [[Notes/01 AsyncIO/Coroutine\|Coroutine]] |
+| **Tasks**             | Event-loop scheduled coroutine wrappers | [[Notes/01 AsyncIO/Tasks\|Tasks]]         |
+| **Futures**           | Low-level result placeholders           | [[Notes/01 AsyncIO/Future\|Future]]       |
 
 ---
 
@@ -140,6 +143,7 @@ if __name__ == "__main__":
 ---
 
 ## Related Notes
+
 - [[Notes/01 AsyncIO/Event Loop|Event Loop]] — The scheduler behind coroutine execution
 - [[Notes/01 AsyncIO/Tasks|Tasks]] — Wrapping coroutines into concurrent tasks
 - [[Notes/01 AsyncIO/Future|Futures]] — Low-level result promises

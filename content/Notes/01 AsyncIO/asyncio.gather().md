@@ -43,6 +43,7 @@ Even though `fetch_orders` completes first, `gather()` preserves the original po
 The `return_exceptions` boolean parameter completely changes how `gather()` handles runtime errors.
 
 ### 1. `return_exceptions=False` (Default)
+
 The first exception raised by any awaitable immediately bubbles up to the caller. However, **other pending tasks are NOT automatically cancelled** and continue running in the background!
 
 ```python
@@ -70,6 +71,7 @@ if __name__ == "__main__":
 > With `return_exceptions=False`, an error does not cancel other tasks. If you require automatic sibling cancellation on failure, prefer **[[Notes/01 AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]]**.
 
 ### 2. `return_exceptions=True` (Safe Result Aggregation)
+
 Exceptions are treated as valid return values and placed directly into the results list at their corresponding index:
 
 ```python
@@ -91,16 +93,17 @@ async def main():
 
 ## `asyncio.gather()` vs `asyncio.TaskGroup()`
 
-| Feature | `asyncio.gather()` | `asyncio.TaskGroup()` |
-| :--- | :--- | :--- |
-| **Python Compatibility** | Python 3.4+ | Python 3.11+ |
+| Feature                  | `asyncio.gather()`              | `asyncio.TaskGroup()`                        |
+| :----------------------- | :------------------------------ | :------------------------------------------- |
+| **Python Compatibility** | Python 3.4+                     | Python 3.11+                                 |
 | **Sibling Cancellation** | No (Pending tasks keep running) | Yes (Automatic cancellation of all siblings) |
-| **Return Format** | Ordered `list` of results | Task objects via `task.result()` |
-| **Exception Handling** | `return_exceptions=True/False` | `ExceptionGroup` via `except*` |
+| **Return Format**        | Ordered `list` of results       | Task objects via `task.result()`             |
+| **Exception Handling**   | `return_exceptions=True/False`  | `ExceptionGroup` via `except*`               |
 
 ---
 
 ## Related Notes
+
 - [[Notes/01 AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]] — Python 3.11+ structured concurrency alternative
 - [[Notes/01 AsyncIO/Tasks|Tasks]] — Concurrent execution objects
 - [[Notes/01 AsyncIO/Coroutine|Coroutine]] — Pausable code executed by gather

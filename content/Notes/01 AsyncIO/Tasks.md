@@ -65,6 +65,7 @@ A task progresses through several operational states managed by the loop:
 ## Task Cancellation & Shielding
 
 ### 1. Cancelling a Task
+
 Invoke `.cancel()` to request task cancellation. This injects an `asyncio.CancelledError` at the task's next `await` boundary:
 
 ```python
@@ -95,6 +96,7 @@ if __name__ == "__main__":
 > Always re-raise `asyncio.CancelledError` when catching it in a coroutine, unless you explicitly intend to suppress cancellation.
 
 ### 2. Shielding Tasks (`asyncio.shield`)
+
 To prevent an outer cancellation request from aborting a critical background operation, wrap it in `asyncio.shield()`:
 
 ```python
@@ -112,6 +114,7 @@ await asyncio.shield(save_db_record(data))
 > If you do not retain a strong reference to the returned `Task` object, Python's garbage collector may delete the task mid-execution!
 
 ### Incorrect (Vulnerable to GC destruction):
+
 ```python
 async def main():
     # Danger! Un-referenced background task may be garbage collected mid-flight
@@ -119,6 +122,7 @@ async def main():
 ```
 
 ### Correct (Retaining strong reference):
+
 ```python
 background_tasks = set()
 
@@ -132,6 +136,7 @@ async def main():
 ---
 
 ## Related Notes
+
 - [[Notes/01 AsyncIO/asyncio.create_task()|asyncio.create_task()]] — Function for creating background tasks
 - [[Notes/01 AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]] — Structured concurrency for task management
 - [[Notes/01 AsyncIO/Coroutine|Coroutine]] — The underlying code wrapped by a Task

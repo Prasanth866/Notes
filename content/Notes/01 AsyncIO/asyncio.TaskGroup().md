@@ -95,17 +95,18 @@ except* KeyError as eg:
 
 ## `asyncio.TaskGroup()` vs `asyncio.gather()`
 
-| Feature | `asyncio.TaskGroup()` | `asyncio.gather()` |
-| :--- | :--- | :--- |
-| **Python Version** | Python 3.11+ | Python 3.4+ |
-| **Concurrency Paradigm** | Structured Concurrency | Unstructured / Flexible |
-| **Failure Behavior** | Cancels ALL sibling tasks on first error | Continues or returns results based on `return_exceptions` |
-| **Exception Type** | Raises `ExceptionGroup` | Raises first exception or returns exceptions list |
-| **GC Reference Safety** | Built-in context manager protection | Manual reference management required |
+| Feature                  | `asyncio.TaskGroup()`                    | `asyncio.gather()`                                        |
+| :----------------------- | :--------------------------------------- | :-------------------------------------------------------- |
+| **Python Version**       | Python 3.11+                             | Python 3.4+                                               |
+| **Concurrency Paradigm** | Structured Concurrency                   | Unstructured / Flexible                                   |
+| **Failure Behavior**     | Cancels ALL sibling tasks on first error | Continues or returns results based on `return_exceptions` |
+| **Exception Type**       | Raises `ExceptionGroup`                  | Raises first exception or returns exceptions list         |
+| **GC Reference Safety**  | Built-in context manager protection      | Manual reference management required                      |
 
 ---
 
 ## Related Notes
+
 - [[Notes/01 AsyncIO/asyncio.gather()|asyncio.gather()]] — Legacy/Flexible concurrent execution
 - [[Notes/01 AsyncIO/Tasks|Tasks]] — Underlying task execution objects
 - [[Notes/01 AsyncIO/Coroutine|Coroutine]] — Pausable code executed within task groups

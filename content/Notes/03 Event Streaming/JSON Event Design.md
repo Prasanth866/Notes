@@ -20,12 +20,15 @@ aliases:
 ## Messages vs Events
 
 ### Unstructured Message Design (Anti-Pattern)
+
 ```json
 {
   "message": "Downloading repository..."
 }
 ```
-*Problems:*
+
+_Problems:_
+
 - No explicit event type.
 - The frontend client cannot determine whether this string represents a log message, a UI progress label, an error, or a chat output.
 - Forces brittle frontend string parsing (`if (msg.includes("Downloading")) ...`).
@@ -33,6 +36,7 @@ aliases:
 ---
 
 ### Structured Event Design (Best Practice)
+
 ```json
 {
   "event": "status",
@@ -44,7 +48,9 @@ aliases:
   }
 }
 ```
-*Benefits:*
+
+_Benefits:_
+
 - Self-documenting domain fact.
 - Frontend switches directly on `event: "status"`.
 - Clean separation between transport envelope and event data payload.
@@ -75,50 +81,50 @@ On the client frontend, process incoming WebSocket frames using a type-safe `swi
 ```typescript
 // TypeScript Types matching backend Pydantic models
 type StatusEvent = {
-  event: "status";
-  timestamp: string;
-  data: { state: string; message: string };
-};
+  event: "status"
+  timestamp: string
+  data: { state: string; message: string }
+}
 
 type ProgressEvent = {
-  event: "progress";
-  timestamp: string;
-  data: { progress: number; step: string };
-};
+  event: "progress"
+  timestamp: string
+  data: { progress: number; step: string }
+}
 
 type TokenEvent = {
-  event: "token";
-  timestamp: string;
-  data: { content: string };
-};
+  event: "token"
+  timestamp: string
+  data: { content: string }
+}
 
 type ErrorEvent = {
-  event: "error";
-  timestamp: string;
-  data: { error_code: string; details: str };
-};
+  event: "error"
+  timestamp: string
+  data: { error_code: string; details: str }
+}
 
-type StreamEvent = StatusEvent | ProgressEvent | TokenEvent | ErrorEvent;
+type StreamEvent = StatusEvent | ProgressEvent | TokenEvent | ErrorEvent
 
 // Client WebSocket Message Handler
 function handleServerEvent(rawMessage: string) {
-  const event: StreamEvent = JSON.parse(rawMessage);
+  const event: StreamEvent = JSON.parse(rawMessage)
 
   switch (event.event) {
     case "status":
-      updateStatusBadge(event.data.state, event.data.message);
-      break;
+      updateStatusBadge(event.data.state, event.data.message)
+      break
     case "progress":
-      updateProgressBar(event.data.progress);
-      break;
+      updateProgressBar(event.data.progress)
+      break
     case "token":
-      appendTokenToChat(event.data.content);
-      break;
+      appendTokenToChat(event.data.content)
+      break
     case "error":
-      showErrorToast(event.data.error_code, event.data.details);
-      break;
+      showErrorToast(event.data.error_code, event.data.details)
+      break
     default:
-      console.warn("Unhandled event type:", event);
+      console.warn("Unhandled event type:", event)
   }
 }
 ```
@@ -128,6 +134,7 @@ function handleServerEvent(rawMessage: string) {
 ## Best Practices Checklist
 
 > [!tip]
+>
 > - **Describe facts, not UI**: Name events after domain facts (`repository_cloned`, `token_generated`), never UI rendering instructions (`show_red_box`).
 > - **Sequence Numbers**: Include a incremental `sequence` integer to detect out-of-order delivery over networks.
 > - **Granular Events**: Prefer multiple lightweight, specific event types (`tool_started`, `tool_finished`) over a giant monolithic state payload.
@@ -135,6 +142,7 @@ function handleServerEvent(rawMessage: string) {
 ---
 
 ## Related Notes
+
 - [[Notes/03 Event Streaming/Event Models|Pydantic Event Models]] — Server-side Python implementation
 - [[Notes/02 FastAPI/WebSockets|FastAPI WebSockets]] — Transporting JSON event streams
 - [[Notes/04 Projects/Real-Time Event Streamer|Capstone Integration Project]] — End-to-end engine

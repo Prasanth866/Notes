@@ -49,7 +49,7 @@ class ConnectionManager:
     async def connect(self, client_id: str, websocket: WebSocket, room_id: str = "default"):
         await websocket.accept()
         self.active_connections[client_id] = websocket
-        
+
         if room_id not in self.rooms:
             self.rooms[room_id] = set()
         self.rooms[room_id].add(websocket)
@@ -124,6 +124,7 @@ async def redis_broadcast_listener(manager: ConnectionManager, redis_pubsub):
 ---
 
 ## Related Notes
+
 - [[Notes/02 FastAPI/WebSockets|FastAPI WebSockets]] — Core WebSocket endpoint mechanics
 - [[Notes/03 Event Streaming/JSON Event Design|JSON Event Design]] — Message payload protocols
 - [[Notes/04 Projects/Real-Time Event Streamer|Capstone Project]] — Full implementation

@@ -63,5 +63,6 @@ content/
 ## Bidirectional Linking Standard
 
 All notes adhere to strict wikilink hygiene:
+
 1. Every conceptual note must link back to its parent **Map of Content (MOC)** (`[[Notes/01 AsyncIO/index|01 AsyncIO]]`, etc.).
 2. Cross-references link technical dependencies (e.g. `Tasks` linking to `Future` and `Coroutine`).

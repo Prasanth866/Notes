@@ -55,6 +55,7 @@ create_task(job()) ──> Submits job() to Event Loop ──> main() continues 
 > The event loop holds only **weak references** to tasks. If you create a task without storing a reference in a variable or collection, Python's garbage collector may delete the task mid-execution!
 
 ### Dangerous (Un-referenced background task):
+
 ```python
 async def main():
     # Bug! GC may destroy this task while it sleeps!
@@ -62,6 +63,7 @@ async def main():
 ```
 
 ### Safe (Strong reference set):
+
 ```python
 # Set for storing active background task references
 active_tasks = set()
@@ -78,6 +80,7 @@ def fire_and_forget(coro):
 ## Named Tasks & Error Handling
 
 ### 1. Naming Tasks (Python 3.8+)
+
 Assign human-readable names to tasks for clean debugging and tracebacks:
 
 ```python
@@ -86,6 +89,7 @@ print(f"Executing task: {task.get_name()}")
 ```
 
 ### 2. Handling Task Exceptions
+
 If a background task raises an exception and is never awaited, the event loop logs an unhandled exception warning when destroyed. Handle exceptions explicitly:
 
 ```python
@@ -101,14 +105,15 @@ async def safe_worker():
 
 ## When to Use `create_task()` vs `await`
 
-| Operation | Use `await coro()` | Use `asyncio.create_task(coro())` |
-| :--- | :--- | :--- |
-| **Execution Order** | Sequential (Pauses caller until done) | Concurrent (Fires immediately in background) |
-| **Use Case** | Dependent data operations | Independent background jobs, analytics, notifications |
+| Operation           | Use `await coro()`                    | Use `asyncio.create_task(coro())`                     |
+| :------------------ | :------------------------------------ | :---------------------------------------------------- |
+| **Execution Order** | Sequential (Pauses caller until done) | Concurrent (Fires immediately in background)          |
+| **Use Case**        | Dependent data operations             | Independent background jobs, analytics, notifications |
 
 ---
 
 ## Related Notes
+
 - [[Notes/01 AsyncIO/Tasks|Tasks]] — Deep dive into task lifecycle and states
 - [[Notes/01 AsyncIO/Coroutine|Coroutine]] — The underlying pausable function
 - [[Notes/01 AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]] — Structured alternative for managing groups of tasks

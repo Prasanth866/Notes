@@ -14,6 +14,7 @@ aliases:
 > The **Event Loop** is the core engine and scheduler of `asyncio`. It manages all asynchronous execution by deciding **which task runs, which task waits, and when paused tasks resume**.
 >
 > **Core Concept Hierarchy:**
+>
 > > **[[Notes/01 AsyncIO/Coroutine|Coroutines]] describe work → [[Notes/01 AsyncIO/Tasks|Tasks]] wrap work → The Event Loop schedules work.**
 
 ---
@@ -43,6 +44,7 @@ Instead of idling, the event loop immediately switches CPU execution to any task
 ## How the Event Loop Works
 
 The event loop is a single-threaded loop that continuously:
+
 1. Executes tasks in the **Ready Queue**.
 2. Polls OS I/O selectors (`epoll`, `kqueue`, `select`) for completed operations.
 3. Moves completed waiting tasks back into the **Ready Queue**.
@@ -126,6 +128,7 @@ async def heavy_computation():
 ```
 
 ### Offloading CPU-Bound Work
+
 To prevent blocking the event loop during heavy CPU calculations, offload execution to a thread or process pool:
 
 ```python
@@ -147,15 +150,16 @@ async def main():
 
 ## Common Pitfalls
 
-| Anti-Pattern | Issue | Solution |
-| :--- | :--- | :--- |
-| `time.sleep(2)` | Blocks the OS thread and halts the entire loop | `await asyncio.sleep(2)` |
-| `requests.get(url)` | Synchronous socket I/O blocks loop | `httpx.AsyncClient()` or `aiohttp` |
-| Un-awaited tasks | Orphaned tasks can swallow exceptions | Use [[Notes/01 AsyncIO/asyncio.TaskGroup()\|TaskGroup]] |
+| Anti-Pattern        | Issue                                          | Solution                                                |
+| :------------------ | :--------------------------------------------- | :------------------------------------------------------ |
+| `time.sleep(2)`     | Blocks the OS thread and halts the entire loop | `await asyncio.sleep(2)`                                |
+| `requests.get(url)` | Synchronous socket I/O blocks loop             | `httpx.AsyncClient()` or `aiohttp`                      |
+| Un-awaited tasks    | Orphaned tasks can swallow exceptions          | Use [[Notes/01 AsyncIO/asyncio.TaskGroup()\|TaskGroup]] |
 
 ---
 
 ## Related Notes
+
 - [[Notes/01 AsyncIO/Coroutine|Coroutine]] — Pausable functions executed by the loop
 - [[Notes/01 AsyncIO/Tasks|Tasks]] — Event loop scheduled tasks
 - [[Notes/01 AsyncIO/Non-blocking IO|Non-blocking I/O]] — OS selector mechanics underlying the loop

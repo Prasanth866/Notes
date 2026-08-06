@@ -113,15 +113,16 @@ async def heartbeat_ping(websocket: WebSocket, interval: float = 30.0):
 
 ## Security & Authentication Strategies
 
-| Auth Method | Transmission | Best Practice |
-| :--- | :--- | :--- |
+| Auth Method          | Transmission                             | Best Practice                                 |
+| :------------------- | :--------------------------------------- | :-------------------------------------------- |
 | **Query Parameters** | `wss://api.domain.com/ws?token=JWT_HERE` | Useful for standard browser `WebSocket()` API |
-| **HTTP Headers** | Sec-WebSocket-Protocol or Cookie | More secure against access log leaks |
-| **Handshake Ticket** | Temporary single-use ticket exchange | Safest enterprise pattern |
+| **HTTP Headers**     | Sec-WebSocket-Protocol or Cookie         | More secure against access log leaks          |
+| **Handshake Ticket** | Temporary single-use ticket exchange     | Safest enterprise pattern                     |
 
 ---
 
 ## Related Notes
+
 - [[Notes/02 FastAPI/Connection Manager|Connection Manager Pattern]] — Pooling and room broadcasting
 - [[Notes/03 Event Streaming/JSON Event Design|JSON Event Design]] — Designing structured WebSocket event payloads
 - [[Notes/01 AsyncIO/Non-blocking IO|Non-blocking I/O]] — Underpinning socket mechanics

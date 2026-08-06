@@ -60,6 +60,7 @@ async def tight_cpu_loop():
 ## Return Values & High-Resolution Timers
 
 ### 1. Returning Results on Delay Completion
+
 You can pass an optional `result` argument to `asyncio.sleep()`:
 
 ```python
@@ -68,11 +69,13 @@ print(data)  # {"status": "cache_expired"}
 ```
 
 ### 2. Timer Precision
+
 `asyncio.sleep()` uses the OS high-resolution monotonic timer (`time.monotonic()`). However, timer resolution is subject to OS scheduling granularity and event loop workload.
 
 ---
 
 ## Related Notes
+
 - [[Notes/01 AsyncIO/Event Loop|Event Loop]] — Manages timer callbacks and ready queue
 - [[Notes/01 AsyncIO/Coroutine|Coroutine]] — Pauses execution during sleep
 - [[Notes/01 AsyncIO/Non-blocking IO|Non-blocking I/O]] — Non-blocking systems foundation

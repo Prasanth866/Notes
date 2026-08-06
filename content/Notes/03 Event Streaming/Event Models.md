@@ -105,6 +105,7 @@ print(f"Step: {event_obj.current_step}, Progress: {event_obj.progress}%")
 ## Benefits of Pydantic v2 Event Schemas
 
 > [!tip]
+>
 > 1. **Zero-Boilerplate Parsing**: No nested `if payload['event'] == 'status'` chains required.
 > 2. **Automatic Data Validation**: Rejects invalid field types (e.g., negative progress percentages or invalid state strings) before business logic executes.
 > 3. **OpenAPI / JSON Schema Export**: Easily export schemas for client code generation (`event_adapter.json_schema()`).
@@ -112,6 +113,7 @@ print(f"Step: {event_obj.current_step}, Progress: {event_obj.progress}%")
 ---
 
 ## Related Notes
+
 - [[Notes/03 Event Streaming/JSON Event Design|JSON Event Protocol Design]] — Principles of envelope design
 - [[Notes/02 FastAPI/WebSockets|FastAPI WebSockets]] — Transporting Pydantic events over sockets
 - [[Notes/04 Projects/Real-Time Event Streamer|Capstone Integration Project]] — Real-world engine
