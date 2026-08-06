@@ -8,7 +8,7 @@ aliases:
   - Event Loop
 ---
 
-# ⚡ The AsyncIO Event Loop
+# The AsyncIO Event Loop
 
 > [!summary]
 > The **Event Loop** is the core engine and scheduler of `asyncio`. It manages all asynchronous execution by deciding **which task runs, which task waits, and when paused tasks resume**.
@@ -18,7 +18,7 @@ aliases:
 
 ---
 
-## ❓ Why is the Event Loop Needed?
+## Why is the Event Loop Needed?
 
 In traditional synchronous programming, operations execute sequentially, blocking the thread during I/O delays:
 
@@ -40,7 +40,7 @@ Instead of idling, the event loop immediately switches CPU execution to any task
 
 ---
 
-## ⚙️ How the Event Loop Works
+## How the Event Loop Works
 
 The event loop is a single-threaded loop that continuously:
 1. Executes tasks in the **Ready Queue**.
@@ -61,7 +61,7 @@ while ready_queue or waiting_queue:
 
 ---
 
-## 🔄 Event Loop Lifecycle
+## Event Loop Lifecycle
 
 When invoking `asyncio.run(main())`, Python executes the following workflow:
 
@@ -92,7 +92,7 @@ When invoking `asyncio.run(main())`, Python executes the following workflow:
 
 ---
 
-## 📊 Task Queue State Machine
+## Task Queue State Machine
 
 The event loop moves tasks dynamically between states:
 
@@ -113,13 +113,13 @@ The event loop moves tasks dynamically between states:
 
 ---
 
-## ⚖️ Concurrency vs CPU Parallelism
+## Concurrency vs CPU Parallelism
 
 > [!warning]
 > Asyncio provides **single-threaded concurrency**, NOT multi-core CPU parallelism. Only **one coroutine executes Python code at any single instant**.
 
 ```python
-# ❌ BAD: CPU-bound loop blocks the entire Event Loop
+# BAD: CPU-bound loop blocks the entire Event Loop
 async def heavy_computation():
     for i in range(100_000_000):
         pass  # No await! Blocks loop completely.
@@ -145,7 +145,7 @@ async def main():
 
 ---
 
-## 🚫 Common Pitfalls
+## Common Pitfalls
 
 | Anti-Pattern | Issue | Solution |
 | :--- | :--- | :--- |
@@ -155,8 +155,8 @@ async def main():
 
 ---
 
-## 🔗 Related Notes
-- [[Notes/01 AsyncIO/Coroutine|⚡ Coroutine]] — Pausable functions executed by the loop
-- [[Notes/01 AsyncIO/Tasks|📋 Tasks]] — Event loop scheduled tasks
-- [[Notes/01 AsyncIO/Non-blocking IO|🔌 Non-blocking I/O]] — OS selector mechanics underlying the loop
-- [[Notes/01 AsyncIO/index|⚡ AsyncIO Map of Content]]
+## Related Notes
+- [[Notes/01 AsyncIO/Coroutine|Coroutine]] — Pausable functions executed by the loop
+- [[Notes/01 AsyncIO/Tasks|Tasks]] — Event loop scheduled tasks
+- [[Notes/01 AsyncIO/Non-blocking IO|Non-blocking I/O]] — OS selector mechanics underlying the loop
+- [[Notes/01 AsyncIO/index|AsyncIO Map of Content]]

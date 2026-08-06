@@ -9,7 +9,7 @@ aliases:
   - Task
 ---
 
-# 📋 Tasks in Python AsyncIO
+# Tasks in Python AsyncIO
 
 > [!summary]
 > An `asyncio.Task` is a high-level, concurrent object that wraps a **[[Notes/01 AsyncIO/Coroutine|Coroutine]]** and schedules its execution on the **[[Notes/01 AsyncIO/Event Loop|Event Loop]]**.
@@ -18,7 +18,7 @@ aliases:
 
 ---
 
-## ⚙️ Coroutine vs Task
+## Coroutine vs Task
 
 ```
                   async def my_func()
@@ -39,7 +39,7 @@ aliases:
 
 ---
 
-## 🔄 Task Lifecycle States
+## Task Lifecycle States
 
 A task progresses through several operational states managed by the loop:
 
@@ -62,7 +62,7 @@ A task progresses through several operational states managed by the loop:
 
 ---
 
-## 🛡️ Task Cancellation & Shielding
+## Task Cancellation & Shielding
 
 ### 1. Cancelling a Task
 Invoke `.cancel()` to request task cancellation. This injects an `asyncio.CancelledError` at the task's next `await` boundary:
@@ -104,21 +104,21 @@ await asyncio.shield(save_db_record(data))
 
 ---
 
-## ⚠️ Task Garbage Collection (GC) Bug
+## Task Garbage Collection (GC) Bug
 
 > [!danger]
 > **Critical Python 3.8+ Gotcha:** The event loop only keeps **weak references** to tasks created by `asyncio.create_task()`.
 >
 > If you do not retain a strong reference to the returned `Task` object, Python's garbage collector may delete the task mid-execution!
 
-### ❌ Incorrect (Vulnerable to GC destruction):
+### Incorrect (Vulnerable to GC destruction):
 ```python
 async def main():
     # Danger! Un-referenced background task may be garbage collected mid-flight
     asyncio.create_task(background_worker())
 ```
 
-### ✅ Correct (Retaining strong reference):
+### Correct (Retaining strong reference):
 ```python
 background_tasks = set()
 
@@ -131,9 +131,9 @@ async def main():
 
 ---
 
-## 🔗 Related Notes
-- [[Notes/01 AsyncIO/asyncio.create_task()|⚡ asyncio.create_task()]] — Function for creating background tasks
-- [[Notes/01 AsyncIO/asyncio.TaskGroup()|⚡ asyncio.TaskGroup()]] — Structured concurrency for task management
-- [[Notes/01 AsyncIO/Coroutine|⚡ Coroutine]] — The underlying code wrapped by a Task
-- [[Notes/01 AsyncIO/Future|🔮 Future]] — The parent class of Task
-- [[Notes/01 AsyncIO/index|⚡ AsyncIO Map of Content]]
+## Related Notes
+- [[Notes/01 AsyncIO/asyncio.create_task()|asyncio.create_task()]] — Function for creating background tasks
+- [[Notes/01 AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]] — Structured concurrency for task management
+- [[Notes/01 AsyncIO/Coroutine|Coroutine]] — The underlying code wrapped by a Task
+- [[Notes/01 AsyncIO/Future|Future]] — The parent class of Task
+- [[Notes/01 AsyncIO/index|AsyncIO Map of Content]]

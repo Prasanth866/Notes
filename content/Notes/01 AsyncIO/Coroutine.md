@@ -9,7 +9,7 @@ aliases:
   - Coroutines
 ---
 
-# ⚡ Coroutines in Python AsyncIO
+# Coroutines in Python AsyncIO
 
 > [!summary]
 > A **coroutine** is a specialized, pausable function that can suspend its execution at explicit cooperative yield points (`await`) and resume execution later without blocking the OS thread.
@@ -18,7 +18,7 @@ aliases:
 
 ---
 
-## 🔍 Core Concepts
+## Core Concepts
 
 ### 1. Definition & Declaration
 Coroutines are declared using the `async def` keyword syntax:
@@ -48,7 +48,7 @@ print(type(coro)) # <class 'coroutine'>
 
 ---
 
-## ⚙️ Execution & Suspension Lifecycle
+## Execution & Suspension Lifecycle
 
 Coroutines can only execute when scheduled on an active **[[Notes/01 AsyncIO/Event Loop|Event Loop]]**.
 
@@ -76,7 +76,7 @@ Coroutines can only execute when scheduled on an active **[[Notes/01 AsyncIO/Eve
 
 ---
 
-## ⏸️ What Happens at `await`?
+## What Happens at `await`?
 
 When Python encounters `await awaitable`:
 
@@ -95,7 +95,7 @@ async def process():
 
 ---
 
-## 📋 What Can Be Awaitable?
+## What Can Be Awaitable?
 
 The `await` keyword only accepts **awaitable objects**, which implement the `__await__()` magic method:
 
@@ -107,7 +107,7 @@ The `await` keyword only accepts **awaitable objects**, which implement the `__a
 
 ---
 
-## 💡 Practical Example
+## Practical Example
 
 ```python
 import asyncio
@@ -132,15 +132,15 @@ if __name__ == "__main__":
 
 ---
 
-## 🧠 Mental Model
+## Mental Model
 
 > **Think of a coroutine as a pausable state machine.**
 > It does not run continuously like a standard synchronous function. Instead, it yields control at every `await` boundary, allowing the **[[Notes/01 AsyncIO/Event Loop|Event Loop]]** to multiplex thousands of concurrent tasks on a single OS thread.
 
 ---
 
-## 🔗 Related Notes
-- [[Notes/01 AsyncIO/Event Loop|⚡ Event Loop]] — The scheduler behind coroutine execution
-- [[Notes/01 AsyncIO/Tasks|📋 Tasks]] — Wrapping coroutines into concurrent tasks
-- [[Notes/01 AsyncIO/Future|🔮 Futures]] — Low-level result promises
-- [[Notes/01 AsyncIO/index|⚡ AsyncIO Map of Content]]
+## Related Notes
+- [[Notes/01 AsyncIO/Event Loop|Event Loop]] — The scheduler behind coroutine execution
+- [[Notes/01 AsyncIO/Tasks|Tasks]] — Wrapping coroutines into concurrent tasks
+- [[Notes/01 AsyncIO/Future|Futures]] — Low-level result promises
+- [[Notes/01 AsyncIO/index|AsyncIO Map of Content]]

@@ -9,14 +9,14 @@ aliases:
   - gather
 ---
 
-# ⚡ `asyncio.gather()` in Python
+# `asyncio.gather()` in Python
 
 > [!summary]
 > `asyncio.gather(*aws, return_exceptions=False)` takes multiple **awaitable objects** (coroutines, tasks, futures), runs them concurrently on the **[[Notes/01 AsyncIO/Event Loop|Event Loop]]**, and returns a list of their aggregated results in the exact order passed.
 
 ---
 
-## ⚙️ How `asyncio.gather()` Works
+## How `asyncio.gather()` Works
 
 ```python
 results = await asyncio.gather(
@@ -38,7 +38,7 @@ Even though `fetch_orders` completes first, `gather()` preserves the original po
 
 ---
 
-## 🛡️ Exception Handling & `return_exceptions`
+## Exception Handling & `return_exceptions`
 
 The `return_exceptions` boolean parameter completely changes how `gather()` handles runtime errors.
 
@@ -89,19 +89,19 @@ async def main():
 
 ---
 
-## ⚖️ `asyncio.gather()` vs `asyncio.TaskGroup()`
+## `asyncio.gather()` vs `asyncio.TaskGroup()`
 
 | Feature | `asyncio.gather()` | `asyncio.TaskGroup()` |
 | :--- | :--- | :--- |
 | **Python Compatibility** | Python 3.4+ | Python 3.11+ |
-| **Sibling Cancellation** | ❌ No (Pending tasks keep running) | ✅ Yes (Automatic cancellation of all siblings) |
+| **Sibling Cancellation** | No (Pending tasks keep running) | Yes (Automatic cancellation of all siblings) |
 | **Return Format** | Ordered `list` of results | Task objects via `task.result()` |
 | **Exception Handling** | `return_exceptions=True/False` | `ExceptionGroup` via `except*` |
 
 ---
 
-## 🔗 Related Notes
-- [[Notes/01 AsyncIO/asyncio.TaskGroup()|⚡ asyncio.TaskGroup()]] — Python 3.11+ structured concurrency alternative
-- [[Notes/01 AsyncIO/Tasks|📋 Tasks]] — Concurrent execution objects
-- [[Notes/01 AsyncIO/Coroutine|⚡ Coroutine]] — Pausable code executed by gather
-- [[Notes/01 AsyncIO/index|⚡ AsyncIO Map of Content]]
+## Related Notes
+- [[Notes/01 AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]] — Python 3.11+ structured concurrency alternative
+- [[Notes/01 AsyncIO/Tasks|Tasks]] — Concurrent execution objects
+- [[Notes/01 AsyncIO/Coroutine|Coroutine]] — Pausable code executed by gather
+- [[Notes/01 AsyncIO/index|AsyncIO Map of Content]]

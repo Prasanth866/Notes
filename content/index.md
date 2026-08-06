@@ -9,27 +9,27 @@ tags:
   - event-streaming
 ---
 
-# 🌿 Welcome to My Digital Garden
+# Welcome to My Digital Garden
 
 Welcome! This digital garden serves as a structured, living repository of knowledge focused on **high-performance Python asynchronous systems**, **FastAPI web backends**, and **event-driven streaming protocols**.
 
 ---
 
-## 🗺️ Knowledge Map & Index Pages
+## Knowledge Map & Index Pages
 
 Explore topic clusters through dedicated Maps of Content (MOCs):
 
 | Topic Cluster | Core Focus | Quick Link |
 | :--- | :--- | :--- |
-| **01 AsyncIO** | Python event loop mechanics, coroutines, tasks, futures, and concurrency primitives | [[Notes/01 AsyncIO/index\|⚡ AsyncIO MOC]] |
-| **02 FastAPI** | Real-time WebSockets, connection managers, and non-blocking background tasks | [[Notes/02 FastAPI/index\|🚀 FastAPI Systems MOC]] |
-| **03 Event Streaming** | JSON event schemas, envelope design, and event-driven architecture | [[Notes/03 Event Streaming/index\|📡 Event Streaming MOC]] |
-| **04 Projects** | Practical capstone architectures & real-world streaming implementations | [[Notes/04 Projects/Real-Time Event Streamer\|🛠️ Capstone Project]] |
-| **00 Meta** | Garden structure, tagging taxonomies, and note-taking principles | [[Notes/00 Meta/index\|⚙️ Meta & Taxonomy]] |
+| **01 AsyncIO** | Python event loop mechanics, coroutines, tasks, futures, and concurrency primitives | [[Notes/01 AsyncIO/index\|AsyncIO MOC]] |
+| **02 FastAPI** | Real-time WebSockets, connection managers, and non-blocking background tasks | [[Notes/02 FastAPI/index\|FastAPI Systems MOC]] |
+| **03 Event Streaming** | JSON event schemas, envelope design, and event-driven architecture | [[Notes/03 Event Streaming/index\|Event Streaming MOC]] |
+| **04 Projects** | Practical capstone architectures & real-world streaming implementations | [[Notes/04 Projects/Real-Time Event Streamer\|Capstone Project]] |
+| **00 Meta** | Garden structure, tagging taxonomies, and note-taking principles | [[Notes/00 Meta/index\|Meta & Taxonomy]] |
 
 ---
 
-## 🚀 Core Learning Path
+## Core Learning Path
 
 ```
                     ┌─────────────────────────┐
@@ -60,7 +60,7 @@ Explore topic clusters through dedicated Maps of Content (MOCs):
 
 ---
 
-## ⚡ Quick Concept Index
+## Quick Concept Index
 
 ### Python AsyncIO Fundamentals
 - [[Notes/01 AsyncIO/Coroutine|Coroutines]] — Pausable async functions (`async def` / `await`)

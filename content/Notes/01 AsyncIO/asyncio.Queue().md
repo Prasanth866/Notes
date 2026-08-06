@@ -10,7 +10,7 @@ aliases:
   - Queue
 ---
 
-# 📦 `asyncio.Queue()` in Python
+# `asyncio.Queue()` in Python
 
 > [!summary]
 > `asyncio.Queue` is a FIFO (First-In, First-Out) synchronization primitive designed for transferring data between **[[Notes/01 AsyncIO/Coroutine|Coroutines]]** running on the same **[[Notes/01 AsyncIO/Event Loop|Event Loop]]**.
@@ -19,7 +19,7 @@ aliases:
 
 ---
 
-## ⚙️ Producer-Consumer Architecture
+## Producer-Consumer Architecture
 
 ```
                     ┌─────────────────────────┐
@@ -51,7 +51,7 @@ aliases:
 
 ---
 
-## 💡 Complete Producer-Consumer Example
+## Complete Producer-Consumer Example
 
 ```python
 import asyncio
@@ -99,7 +99,7 @@ if __name__ == "__main__":
 
 ---
 
-## 🛑 Managing Backpressure & Sizing
+## Managing Backpressure & Sizing
 
 > [!tip]
 > Always specify `maxsize` in production queues (`asyncio.Queue(maxsize=100)`). Unbounded queues (`maxsize=0`) will consume unlimited RAM if producers generate data faster than consumers process it.
@@ -111,7 +111,7 @@ if __name__ == "__main__":
 
 ---
 
-## 🔀 Queue Variants in `asyncio`
+## Queue Variants in `asyncio`
 
 1. **`asyncio.Queue`**: Standard FIFO queue.
 2. **`asyncio.PriorityQueue`**: Retrieves lowest-valued items first (`tuple(priority_number, data)`).
@@ -119,8 +119,8 @@ if __name__ == "__main__":
 
 ---
 
-## 🔗 Related Notes
-- [[Notes/01 AsyncIO/Tasks|📋 Tasks]] — Worker tasks consuming from queues
-- [[Notes/01 AsyncIO/asyncio.TaskGroup()|⚡ asyncio.TaskGroup()]] — Managing worker pools
-- [[Notes/04 Projects/Real-Time Event Streamer|🛠️ Capstone Project]] — Using Queue for streaming event dispatch
-- [[Notes/01 AsyncIO/index|⚡ AsyncIO Map of Content]]
+## Related Notes
+- [[Notes/01 AsyncIO/Tasks|Tasks]] — Worker tasks consuming from queues
+- [[Notes/01 AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]] — Managing worker pools
+- [[Notes/04 Projects/Real-Time Event Streamer|Capstone Project]] — Using Queue for streaming event dispatch
+- [[Notes/01 AsyncIO/index|AsyncIO Map of Content]]

@@ -8,7 +8,7 @@ tags:
   - architecture/event-driven
 ---
 
-# 🛠️ Capstone Project: Real-Time Event Streaming Engine
+# Capstone Project: Real-Time Event Streaming Engine
 
 > [!abstract]
 > This capstone project integrates concepts from across the digital garden:
@@ -18,7 +18,7 @@ tags:
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```
                   ┌──────────────────────────────────────────────┐
@@ -44,7 +44,7 @@ tags:
 
 ---
 
-## 💻 Full Implementation
+## Full Implementation
 
 ```python
 import asyncio
@@ -158,7 +158,7 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
 
 ---
 
-## 🎯 Verification & Next Steps
+## Verification & Next Steps
 - Combine this backend with a client frontend event switcher (`switch (event.event)`).
 - See [[Notes/02 FastAPI/WebSockets|FastAPI WebSockets]] and [[Notes/03 Event Streaming/JSON Event Design|JSON Event Design]] for deep protocol specifications.
-- Return to [[index|🌿 Digital Garden Home]].
+- Return to [[index|Digital Garden Home]].

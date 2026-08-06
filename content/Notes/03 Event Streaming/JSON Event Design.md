@@ -8,7 +8,7 @@ aliases:
   - JSON Event Design
 ---
 
-# 📡 JSON Event Protocol Design
+# JSON Event Protocol Design
 
 > [!summary]
 > Designing a structured event protocol is a critical architectural decision in real-time streaming systems.
@@ -17,9 +17,9 @@ aliases:
 
 ---
 
-## ❓ Messages vs Events
+## Messages vs Events
 
-### ❌ Unstructured Message Design (Anti-Pattern)
+### Unstructured Message Design (Anti-Pattern)
 ```json
 {
   "message": "Downloading repository..."
@@ -32,7 +32,7 @@ aliases:
 
 ---
 
-### ✅ Structured Event Design (Best Practice)
+### Structured Event Design (Best Practice)
 ```json
 {
   "event": "status",
@@ -51,7 +51,7 @@ aliases:
 
 ---
 
-## ✉️ The Standard Event Envelope
+## The Standard Event Envelope
 
 Every event in your system should share a top-level **Envelope**:
 
@@ -68,7 +68,7 @@ Every event in your system should share a top-level **Envelope**:
 
 ---
 
-## 🖥️ TypeScript Client Event Dispatcher
+## TypeScript Client Event Dispatcher
 
 On the client frontend, process incoming WebSocket frames using a type-safe `switch` block:
 
@@ -125,7 +125,7 @@ function handleServerEvent(rawMessage: string) {
 
 ---
 
-## 🎯 Best Practices Checklist
+## Best Practices Checklist
 
 > [!tip]
 > - **Describe facts, not UI**: Name events after domain facts (`repository_cloned`, `token_generated`), never UI rendering instructions (`show_red_box`).
@@ -134,8 +134,8 @@ function handleServerEvent(rawMessage: string) {
 
 ---
 
-## 🔗 Related Notes
-- [[Notes/03 Event Streaming/Event Models|📡 Pydantic Event Models]] — Server-side Python implementation
-- [[Notes/02 FastAPI/WebSockets|🚀 FastAPI WebSockets]] — Transporting JSON event streams
-- [[Notes/04 Projects/Real-Time Event Streamer|🛠️ Capstone Integration Project]] — End-to-end engine
-- [[Notes/03 Event Streaming/index|📡 Event Streaming MOC]]
+## Related Notes
+- [[Notes/03 Event Streaming/Event Models|Pydantic Event Models]] — Server-side Python implementation
+- [[Notes/02 FastAPI/WebSockets|FastAPI WebSockets]] — Transporting JSON event streams
+- [[Notes/04 Projects/Real-Time Event Streamer|Capstone Integration Project]] — End-to-end engine
+- [[Notes/03 Event Streaming/index|Event Streaming MOC]]

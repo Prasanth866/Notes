@@ -10,7 +10,7 @@ aliases:
   - Non-blocking I/O
 ---
 
-# 🔌 Non-blocking I/O Mechanics
+# Non-blocking I/O Mechanics
 
 > [!summary]
 > **Non-blocking I/O** is an OS-level mechanism where system calls (like `read()` or `write()`) on sockets or file descriptors return immediately rather than stalling the calling thread until data arrives.
@@ -19,7 +19,7 @@ aliases:
 
 ---
 
-## 🐢 Synchronous Blocking I/O vs ⚡ Non-blocking I/O
+## Synchronous Blocking I/O vs ⚡ Non-blocking I/O
 
 ### 1. Blocking I/O (Traditional)
 In blocking mode, calling `socket.recv()` halts thread execution completely until data arrives over the network interface card (NIC):
@@ -41,7 +41,7 @@ Event Loop  ───> Executes other tasks ───> OS signals socket READY �
 
 ---
 
-## 🛠️ OS I/O Multiplexing Primitives
+## OS I/O Multiplexing Primitives
 
 Operating systems provide kernel-level event notification interfaces to monitor thousands of file descriptors simultaneously:
 
@@ -56,7 +56,7 @@ The **[[Notes/01 AsyncIO/Event Loop|Event Loop]]** selects the optimal OS primit
 
 ---
 
-## 💻 Low-Level Python Example
+## Low-Level Python Example
 
 Here is how non-blocking sockets and OS selectors work under the hood without high-level `asyncio`:
 
@@ -99,7 +99,7 @@ while True:
 
 ---
 
-## 🎯 How AsyncIO Builds on Non-blocking I/O
+## How AsyncIO Builds on Non-blocking I/O
 
 `asyncio` wraps OS selectors into friendly `async`/`await` interfaces:
 
@@ -123,8 +123,8 @@ if __name__ == "__main__":
 
 ---
 
-## 🔗 Related Notes
-- [[Notes/01 AsyncIO/Event Loop|⚡ Event Loop]] — The scheduler driven by non-blocking OS selectors
-- [[Notes/01 AsyncIO/Coroutine|⚡ Coroutine]] — Pausable user code running atop non-blocking I/O
-- [[Notes/02 FastAPI/WebSockets|🚀 FastAPI WebSockets]] — High-concurrency socket handling
-- [[Notes/01 AsyncIO/index|⚡ AsyncIO Map of Content]]
+## Related Notes
+- [[Notes/01 AsyncIO/Event Loop|Event Loop]] — The scheduler driven by non-blocking OS selectors
+- [[Notes/01 AsyncIO/Coroutine|Coroutine]] — Pausable user code running atop non-blocking I/O
+- [[Notes/02 FastAPI/WebSockets|FastAPI WebSockets]] — High-concurrency socket handling
+- [[Notes/01 AsyncIO/index|AsyncIO Map of Content]]

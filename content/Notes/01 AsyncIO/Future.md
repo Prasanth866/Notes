@@ -9,7 +9,7 @@ aliases:
   - Futures
 ---
 
-# 🔮 Futures in Python AsyncIO
+# Futures in Python AsyncIO
 
 > [!summary]
 > An `asyncio.Future` is a **low-level awaitable object** that acts as a **placeholder for a result that will become available in the future**.
@@ -18,7 +18,7 @@ aliases:
 
 ---
 
-## 💡 Conceptual Analogy
+## Conceptual Analogy
 
 Imagine receiving a claim receipt at a dry cleaner:
 
@@ -44,7 +44,7 @@ The claim receipt is not the cleaned clothes. It is a promise that clean clothes
 
 ---
 
-## 🔄 Future Lifecycle & State Machine
+## Future Lifecycle & State Machine
 
 A Future progresses through three distinct states:
 
@@ -68,7 +68,7 @@ A Future progresses through three distinct states:
 
 ---
 
-## 💻 Manual Future Manipulation
+## Manual Future Manipulation
 
 While high-level application code typically uses [[Notes/01 AsyncIO/Tasks|Tasks]], library authors use Futures to bridge async and callback-based code:
 
@@ -128,7 +128,7 @@ def background_thread_worker(loop: asyncio.AbstractEventLoop, fut: asyncio.Futur
 
 ---
 
-## ⚖️ Future vs Task
+## Future vs Task
 
 | Feature | `asyncio.Future` | `asyncio.Task` |
 | :--- | :--- | :--- |
@@ -139,8 +139,8 @@ def background_thread_worker(loop: asyncio.AbstractEventLoop, fut: asyncio.Futur
 
 ---
 
-## 🔗 Related Notes
-- [[Notes/01 AsyncIO/Tasks|📋 Tasks]] — Active sub-class of Future executing coroutines
-- [[Notes/01 AsyncIO/Coroutine|⚡ Coroutine]] — Pausable functions that produce results for Futures
-- [[Notes/01 AsyncIO/Event Loop|⚡ Event Loop]] — Manages Future resolution and callbacks
-- [[Notes/01 AsyncIO/index|⚡ AsyncIO Map of Content]]
+## Related Notes
+- [[Notes/01 AsyncIO/Tasks|Tasks]] — Active sub-class of Future executing coroutines
+- [[Notes/01 AsyncIO/Coroutine|Coroutine]] — Pausable functions that produce results for Futures
+- [[Notes/01 AsyncIO/Event Loop|Event Loop]] — Manages Future resolution and callbacks
+- [[Notes/01 AsyncIO/index|AsyncIO Map of Content]]

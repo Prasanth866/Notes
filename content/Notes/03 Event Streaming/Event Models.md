@@ -9,7 +9,7 @@ aliases:
   - Event Model
 ---
 
-# 📡 Pydantic Event Models
+# Pydantic Event Models
 
 > [!summary]
 > In an event-driven streaming system, incoming and outgoing JSON payloads must adhere to strict schemas.
@@ -18,7 +18,7 @@ aliases:
 
 ---
 
-## 🏛️ Polymorphic Event Architecture
+## Polymorphic Event Architecture
 
 ```
                                  Incoming Raw JSON String
@@ -38,7 +38,7 @@ aliases:
 
 ---
 
-## 💻 Pydantic v2 Discriminated Union Code
+## Pydantic v2 Discriminated Union Code
 
 ```python
 from datetime import datetime, timezone
@@ -102,7 +102,7 @@ print(f"Step: {event_obj.current_step}, Progress: {event_obj.progress}%")
 
 ---
 
-## 💡 Benefits of Pydantic v2 Event Schemas
+## Benefits of Pydantic v2 Event Schemas
 
 > [!tip]
 > 1. **Zero-Boilerplate Parsing**: No nested `if payload['event'] == 'status'` chains required.
@@ -111,8 +111,8 @@ print(f"Step: {event_obj.current_step}, Progress: {event_obj.progress}%")
 
 ---
 
-## 🔗 Related Notes
-- [[Notes/03 Event Streaming/JSON Event Design|📡 JSON Event Protocol Design]] — Principles of envelope design
-- [[Notes/02 FastAPI/WebSockets|🚀 FastAPI WebSockets]] — Transporting Pydantic events over sockets
-- [[Notes/04 Projects/Real-Time Event Streamer|🛠️ Capstone Integration Project]] — Real-world engine
-- [[Notes/03 Event Streaming/index|📡 Event Streaming MOC]]
+## Related Notes
+- [[Notes/03 Event Streaming/JSON Event Design|JSON Event Protocol Design]] — Principles of envelope design
+- [[Notes/02 FastAPI/WebSockets|FastAPI WebSockets]] — Transporting Pydantic events over sockets
+- [[Notes/04 Projects/Real-Time Event Streamer|Capstone Integration Project]] — Real-world engine
+- [[Notes/03 Event Streaming/index|Event Streaming MOC]]

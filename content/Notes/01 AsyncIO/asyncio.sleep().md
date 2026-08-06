@@ -18,14 +18,14 @@ aliases:
 
 ---
 
-## 🐢 `time.sleep()` vs ⚡ `asyncio.sleep()`
+## `time.sleep()` vs `asyncio.sleep()`
 
 ```python
-# ❌ INCORRECT: Blocks the entire OS thread!
+# INCORRECT: Blocks the entire OS thread!
 def bad_delay():
     time.sleep(2)  # Event Loop is frozen! No other task can run.
 
-# ✅ CORRECT: Non-blocking cooperative delay!
+# CORRECT: Non-blocking cooperative delay!
 async def good_delay():
     await asyncio.sleep(2)  # Event Loop immediately runs other tasks.
 ```
@@ -37,7 +37,7 @@ asyncio.sleep(2):  Task Paused ──> Event Loop runs B & C ──> Task Resume
 
 ---
 
-## 🔄 Cooperative Yielding: `await asyncio.sleep(0)`
+## Cooperative Yielding: `await asyncio.sleep(0)`
 
 Passing a delay of `0` to `asyncio.sleep()` serves a special architectural purpose in `asyncio`:
 
@@ -57,7 +57,7 @@ async def tight_cpu_loop():
 
 ---
 
-## 💻 Return Values & High-Resolution Timers
+## Return Values & High-Resolution Timers
 
 ### 1. Returning Results on Delay Completion
 You can pass an optional `result` argument to `asyncio.sleep()`:
@@ -72,8 +72,8 @@ print(data)  # {"status": "cache_expired"}
 
 ---
 
-## 🔗 Related Notes
-- [[Notes/01 AsyncIO/Event Loop|⚡ Event Loop]] — Manages timer callbacks and ready queue
-- [[Notes/01 AsyncIO/Coroutine|⚡ Coroutine]] — Pauses execution during sleep
-- [[Notes/01 AsyncIO/Non-blocking IO|🔌 Non-blocking I/O]] — Non-blocking systems foundation
-- [[Notes/01 AsyncIO/index|⚡ AsyncIO Map of Content]]
+## Related Notes
+- [[Notes/01 AsyncIO/Event Loop|Event Loop]] — Manages timer callbacks and ready queue
+- [[Notes/01 AsyncIO/Coroutine|Coroutine]] — Pauses execution during sleep
+- [[Notes/01 AsyncIO/Non-blocking IO|Non-blocking I/O]] — Non-blocking systems foundation
+- [[Notes/01 AsyncIO/index|AsyncIO Map of Content]]

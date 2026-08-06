@@ -8,14 +8,14 @@ aliases:
   - Connection Manager
 ---
 
-# 🚀 FastAPI Connection Manager Pattern
+# FastAPI Connection Manager Pattern
 
 > [!summary]
 > A **Connection Manager** is a centralized state manager in FastAPI that maintains active **[[Notes/02 FastAPI/WebSockets|WebSocket]]** client connections, handles registration/disconnection lifecycles, and routes targeted or room-wide event broadcasts.
 
 ---
 
-## 🏛️ System Architecture
+## System Architecture
 
 ```
                   ┌──────────────────────────────────────────────┐
@@ -33,7 +33,7 @@ aliases:
 
 ---
 
-## 💻 In-Memory Connection Manager Pattern
+## In-Memory Connection Manager Pattern
 
 ```python
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -99,7 +99,7 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str, client_id: str)
 
 ---
 
-## 🌐 Scaling Beyond a Single Process (Redis Pub/Sub)
+## Scaling Beyond a Single Process (Redis Pub/Sub)
 
 > [!important]
 > An in-memory `ConnectionManager` only tracks connections on a **single Uvicorn process**.
@@ -123,8 +123,8 @@ async def redis_broadcast_listener(manager: ConnectionManager, redis_pubsub):
 
 ---
 
-## 🔗 Related Notes
-- [[Notes/02 FastAPI/WebSockets|🚀 FastAPI WebSockets]] — Core WebSocket endpoint mechanics
-- [[Notes/03 Event Streaming/JSON Event Design|📡 JSON Event Design]] — Message payload protocols
-- [[Notes/04 Projects/Real-Time Event Streamer|🛠️ Capstone Project]] — Full implementation
-- [[Notes/02 FastAPI/index|🚀 FastAPI Systems MOC]]
+## Related Notes
+- [[Notes/02 FastAPI/WebSockets|FastAPI WebSockets]] — Core WebSocket endpoint mechanics
+- [[Notes/03 Event Streaming/JSON Event Design|JSON Event Design]] — Message payload protocols
+- [[Notes/04 Projects/Real-Time Event Streamer|Capstone Project]] — Full implementation
+- [[Notes/02 FastAPI/index|FastAPI Systems MOC]]

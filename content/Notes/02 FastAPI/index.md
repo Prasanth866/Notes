@@ -6,13 +6,13 @@ tags:
   - index
 ---
 
-# 🚀 FastAPI Asynchronous Systems Map of Content
+# FastAPI Asynchronous Systems Map of Content
 
 FastAPI is natively built on **ASGI** (Asynchronous Server Gateway Interface) via Starlette and Pydantic, enabling high-concurrency real-time features. This Map of Content covers building scalable asynchronous backends with WebSockets and background processing.
 
 ---
 
-## 📚 Core FastAPI Topics
+## Core FastAPI Topics
 
 - **[[Notes/02 FastAPI/WebSockets|WebSockets in FastAPI]]**: Full-duplex persistent connections, handshakes, frame transmission, ping/pong heartbeats, and lifecycle management.
 - **[[Notes/02 FastAPI/Connection Manager|Connection Manager Pattern]]**: Centralized connection pool manager handling client registration, room broadcasting, and disconnect cleanup.
@@ -20,7 +20,7 @@ FastAPI is natively built on **ASGI** (Asynchronous Server Gateway Interface) vi
 
 ---
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 ```
                       Client HTTP Request / WebSocket
@@ -48,8 +48,8 @@ FastAPI is natively built on **ASGI** (Asynchronous Server Gateway Interface) vi
 
 ---
 
-## 🔗 Related Topics & Guides
-- [[Notes/01 AsyncIO/index|⚡ AsyncIO Core Concepts]]
-- [[Notes/03 Event Streaming/index|📡 Event Streaming & JSON Protocols]]
-- [[Notes/04 Projects/Real-Time Event Streamer|🛠️ Capstone Integration Project]]
-- [[index|🌿 Digital Garden Home]]
+## Related Topics & Guides
+- [[Notes/01 AsyncIO/index|AsyncIO Core Concepts]]
+- [[Notes/03 Event Streaming/index|Event Streaming & JSON Protocols]]
+- [[Notes/04 Projects/Real-Time Event Streamer|Capstone Integration Project]]
+- [[index|Digital Garden Home]]

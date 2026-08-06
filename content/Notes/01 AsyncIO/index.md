@@ -6,13 +6,13 @@ tags:
   - index
 ---
 
-# ⚡ Python AsyncIO Map of Content
+# Python AsyncIO Map of Content
 
 `asyncio` is Python's standard library module for writing single-threaded concurrent code using the `async`/`await` syntax. This Map of Content organizes all foundational concepts, scheduling mechanics, and concurrency primitives.
 
 ---
 
-## 🧩 Core Architecture & Mechanics
+## Core Architecture & Mechanics
 
 Understanding how Python achieves non-blocking I/O on a single thread:
 
@@ -24,7 +24,7 @@ Understanding how Python achieves non-blocking I/O on a single thread:
 
 ---
 
-## 🛠️ Concurrency & Scheduling Primitives
+## Concurrency & Scheduling Primitives
 
 Tools for orchestrating, timing, and communicating between asynchronous tasks:
 
@@ -36,7 +36,7 @@ Tools for orchestrating, timing, and communicating between asynchronous tasks:
 
 ---
 
-## 🗺️ Concept Relationship Diagram
+## Concept Relationship Diagram
 
 ```
                              ┌────────────────────────┐
@@ -70,5 +70,5 @@ Tools for orchestrating, timing, and communicating between asynchronous tasks:
 
 ---
 
-## 🔙 Return to Garden Index
-- [[index|🌿 Digital Garden Home]]
+## Return to Garden Index
+- [[index|Digital Garden Home]]

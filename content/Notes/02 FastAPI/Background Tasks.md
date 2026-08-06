@@ -8,14 +8,14 @@ aliases:
   - Background Tasks
 ---
 
-# 🚀 FastAPI Background Tasks
+# FastAPI Background Tasks
 
 > [!summary]
 > FastAPI provides a `BackgroundTasks` class (inherited from Starlette) that allows endpoints to **return an HTTP response immediately** while scheduling small, post-response tasks to run in the background.
 
 ---
 
-## ⏱️ Execution Timeline Comparison
+## Execution Timeline Comparison
 
 ### 1. Synchronous Request Handling (Traditional)
 
@@ -41,7 +41,7 @@ The response is sent to the client **before** the email task starts execution!
 
 ---
 
-## 💻 Implementation Pattern
+## Implementation Pattern
 
 FastAPI injects an instance of `BackgroundTasks` automatically via dependency injection:
 
@@ -74,7 +74,7 @@ async def create_user(user_id: int, email: str, background_tasks: BackgroundTask
 
 ---
 
-## ⚙️ Async vs Sync Task Execution
+## Async vs Sync Task Execution
 
 When passing functions to `background_tasks.add_task(func)`:
 
@@ -85,7 +85,7 @@ When passing functions to `background_tasks.add_task(func)`:
 
 ---
 
-## ⚖️ When to Use FastAPI BackgroundTasks vs Celery/Task Queues
+## When to Use FastAPI BackgroundTasks vs Celery/Task Queues
 
 > [!warning]
 > FastAPI `BackgroundTasks` run **in-process** inside the ASGI web server worker. If the web server process crashes, uncompleted background tasks are lost!
@@ -106,7 +106,7 @@ When passing functions to `background_tasks.add_task(func)`:
 
 ---
 
-## 🔗 Related Notes
-- [[Notes/01 AsyncIO/asyncio.create_task()|⚡ asyncio.create_task()]] — In-loop background task creation
-- [[Notes/02 FastAPI/WebSockets|🚀 FastAPI WebSockets]] — Real-time event streaming alternative
-- [[Notes/02 FastAPI/index|🚀 FastAPI Systems MOC]]
+## Related Notes
+- [[Notes/01 AsyncIO/asyncio.create_task()|asyncio.create_task()]] — In-loop background task creation
+- [[Notes/02 FastAPI/WebSockets|FastAPI WebSockets]] — Real-time event streaming alternative
+- [[Notes/02 FastAPI/index|FastAPI Systems MOC]]

@@ -10,7 +10,7 @@ aliases:
   - TaskGroup
 ---
 
-# ⚡ `asyncio.TaskGroup()` in Python 3.11+
+# `asyncio.TaskGroup()` in Python 3.11+
 
 > [!summary]
 > `asyncio.TaskGroup` is an asynchronous context manager introduced in **Python 3.11** that implements **Structured Concurrency**.
@@ -19,7 +19,7 @@ aliases:
 
 ---
 
-## 🏛️ What is Structured Concurrency?
+## What is Structured Concurrency?
 
 In traditional unstructured concurrency (like un-managed `create_task()` calls), tasks can outlive the scope that spawned them, causing resource leaks and silent unhandled exceptions.
 
@@ -45,7 +45,7 @@ Structured Concurrency enforces a strict control boundary:
 
 ---
 
-## 💻 Production TaskGroup Pattern
+## Production TaskGroup Pattern
 
 ```python
 import asyncio
@@ -76,7 +76,7 @@ if __name__ == "__main__":
 
 ---
 
-## ⚡ Handling `ExceptionGroup` (`except*`)
+## Handling `ExceptionGroup` (`except*`)
 
 Python 3.11 introduced `except*` syntax specifically for matching exception types inside an `ExceptionGroup`:
 
@@ -93,7 +93,7 @@ except* KeyError as eg:
 
 ---
 
-## ⚖️ `asyncio.TaskGroup()` vs `asyncio.gather()`
+## `asyncio.TaskGroup()` vs `asyncio.gather()`
 
 | Feature | `asyncio.TaskGroup()` | `asyncio.gather()` |
 | :--- | :--- | :--- |
@@ -105,8 +105,8 @@ except* KeyError as eg:
 
 ---
 
-## 🔗 Related Notes
-- [[Notes/01 AsyncIO/asyncio.gather()|⚡ asyncio.gather()]] — Legacy/Flexible concurrent execution
-- [[Notes/01 AsyncIO/Tasks|📋 Tasks]] — Underlying task execution objects
-- [[Notes/01 AsyncIO/Coroutine|⚡ Coroutine]] — Pausable code executed within task groups
-- [[Notes/01 AsyncIO/index|⚡ AsyncIO Map of Content]]
+## Related Notes
+- [[Notes/01 AsyncIO/asyncio.gather()|asyncio.gather()]] — Legacy/Flexible concurrent execution
+- [[Notes/01 AsyncIO/Tasks|Tasks]] — Underlying task execution objects
+- [[Notes/01 AsyncIO/Coroutine|Coroutine]] — Pausable code executed within task groups
+- [[Notes/01 AsyncIO/index|AsyncIO Map of Content]]

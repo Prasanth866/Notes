@@ -10,7 +10,7 @@ aliases:
   - WebSocket
 ---
 
-# 🚀 WebSockets in FastAPI
+# WebSockets in FastAPI
 
 > [!summary]
 > **WebSockets** provide a persistent, full-duplex TCP communication channel between client browsers and server backends over a single socket connection.
@@ -19,7 +19,7 @@ aliases:
 
 ---
 
-## 🔁 HTTP vs WebSocket Protocol Lifecycle
+## HTTP vs WebSocket Protocol Lifecycle
 
 ```
 HTTP Protocol:
@@ -37,7 +37,7 @@ Client <────────────── 101 Switching Protocols <─�
 
 ---
 
-## 💻 Production FastAPI WebSocket Endpoint
+## Production FastAPI WebSocket Endpoint
 
 ```python
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, status, Query, HTTPException
@@ -84,7 +84,7 @@ async def websocket_notifications(
 
 ---
 
-## 💓 Heartbeat & Ping/Pong Protocols
+## Heartbeat & Ping/Pong Protocols
 
 > [!important]
 > Firewalls, reverse proxies (Nginx/Cloudflare), and load balancers often close idle TCP connections after 60 seconds of inactivity.
@@ -111,7 +111,7 @@ async def heartbeat_ping(websocket: WebSocket, interval: float = 30.0):
 
 ---
 
-## 🔒 Security & Authentication Strategies
+## Security & Authentication Strategies
 
 | Auth Method | Transmission | Best Practice |
 | :--- | :--- | :--- |
@@ -121,8 +121,8 @@ async def heartbeat_ping(websocket: WebSocket, interval: float = 30.0):
 
 ---
 
-## 🔗 Related Notes
-- [[Notes/02 FastAPI/Connection Manager|🚀 Connection Manager Pattern]] — Pooling and room broadcasting
-- [[Notes/03 Event Streaming/JSON Event Design|📡 JSON Event Design]] — Designing structured WebSocket event payloads
-- [[Notes/01 AsyncIO/Non-blocking IO|🔌 Non-blocking I/O]] — Underpinning socket mechanics
-- [[Notes/02 FastAPI/index|🚀 FastAPI Systems MOC]]
+## Related Notes
+- [[Notes/02 FastAPI/Connection Manager|Connection Manager Pattern]] — Pooling and room broadcasting
+- [[Notes/03 Event Streaming/JSON Event Design|JSON Event Design]] — Designing structured WebSocket event payloads
+- [[Notes/01 AsyncIO/Non-blocking IO|Non-blocking I/O]] — Underpinning socket mechanics
+- [[Notes/02 FastAPI/index|FastAPI Systems MOC]]

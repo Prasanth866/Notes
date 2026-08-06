@@ -6,13 +6,13 @@ tags:
   - documentation
 ---
 
-# ⚙️ Digital Garden Meta & Taxonomy
+# Digital Garden Meta & Taxonomy
 
 This meta page details the structural rules, tagging taxonomy, and design conventions used across this digital garden.
 
 ---
 
-## 🏷️ Tagging Hierarchy
+## Tagging Hierarchy
 
 Every note in this garden includes structured YAML frontmatter. Tags follow a categorized namespace:
 
@@ -25,7 +25,7 @@ Every note in this garden includes structured YAML frontmatter. Tags follow a ca
 
 ---
 
-## 📁 Directory Structure
+## Directory Structure
 
 ```
 content/
@@ -60,7 +60,7 @@ content/
 
 ---
 
-## 🔗 Bidirectional Linking Standard
+## Bidirectional Linking Standard
 
 All notes adhere to strict wikilink hygiene:
 1. Every conceptual note must link back to its parent **Map of Content (MOC)** (`[[Notes/01 AsyncIO/index|01 AsyncIO]]`, etc.).
