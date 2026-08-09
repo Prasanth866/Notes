@@ -32,37 +32,6 @@ Explore topic clusters through dedicated Maps of Content (MOCs):
 
 ---
 
-## Core Learning Path
-
-```
-                    ┌─────────────────────────┐
-                    │     Non-blocking IO     │
-                    └────────────┬────────────┘
-                                 │
-                                 ▼
-                    ┌─────────────────────────┐
-                    │      Event Loop &       │
-                    │       Coroutines        │
-                    └────────────┬────────────┘
-                                 │
-            ┌────────────────────┴────────────────────┐
-            ▼                                         ▼
-┌───────────────────────┐                 ┌───────────────────────┐
-│ Tasks & Concurrency   │                 │ FastAPI WebSockets    │
-│ (Queue, TaskGroup)    │                 │ & Connection Manager  │
-└───────────┬───────────┘                 └───────────┬───────────┘
-            │                                         │
-            └────────────────────┬────────────────────┘
-                                 │
-                                 ▼
-                    ┌─────────────────────────┐
-                    │  JSON Event Streaming   │
-                    │      Architecture       │
-                    └─────────────────────────┘
-```
-
----
-
 ## Quick Concept Index
 
 ### Python AsyncIO Fundamentals
