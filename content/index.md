@@ -21,14 +21,14 @@ Welcome! This digital garden serves as a structured, living repository of knowle
 
 Explore topic clusters through dedicated Maps of Content (MOCs):
 
-| Topic Cluster          | Core Focus                                                                          | Quick Link                                                       |
-| :--------------------- | :---------------------------------------------------------------------------------- | :--------------------------------------------------------------- |
-| **01 AsyncIO**         | Python event loop mechanics, coroutines, tasks, futures, and concurrency primitives | [[Notes/AsyncIO/index\|AsyncIO MOC]]                          |
-| **02 FastAPI**         | Real-time WebSockets, connection managers, and non-blocking background tasks        | [[Notes/FastAPI/index\|FastAPI Systems MOC]]                  |
-| **03 Event Streaming** | JSON event schemas, envelope design, and event-driven architecture                  | [[Notes/Event Streaming/index\|Event Streaming MOC]]          |
-| **04 Projects**        | Practical capstone architectures & real-world streaming implementations             | [[Notes/Projects/Real-Time Event Streamer\|Capstone Project]] |
-| **05 Roadmap**         | 40-day systems engineering projects: HTTP server in C++ and production coding agent | [[Notes/Roadmap/ForgeHTTP\|ForgeHTTP]] · [[Notes/Roadmap/CodingAgent\|CodingAgent]] |
-| **00 Meta**            | Garden structure, tagging taxonomies, and note-taking principles                    | [[Notes/Meta/index\|Meta & Taxonomy]]                         |
+| Topic Cluster       | Core Focus                                                                          | Quick Link                                            |
+| :------------------ | :---------------------------------------------------------------------------------- | :---------------------------------------------------- |
+| **AsyncIO**         | Python event loop mechanics, coroutines, tasks, futures, and concurrency primitives | [[Notes/AsyncIO/index\|AsyncIO MOC]]                  |
+| **FastAPI**         | Real-time WebSockets, connection managers, and non-blocking background tasks        | [[Notes/FastAPI/index\|FastAPI Systems MOC]]          |
+| **Event Streaming** | JSON event schemas, envelope design, and event-driven architecture                  | [[Notes/Event Streaming/index\|Event Streaming MOC]]  |
+| **Projects**        | Practical capstone architectures & real-world streaming implementations             | [[Notes/Projects/index\|Projects MOC]]                |
+| **Roadmap**         | Multi-week systems engineering projects: C++ HTTP server, autonomous coding agent   | [[Notes/Roadmap/index\|Roadmap MOC]]                  |
+| **Meta**            | Garden structure, tagging taxonomies, and note-taking principles                    | [[Notes/Meta/index\|Meta & Taxonomy]]                 |
 
 ---
 
