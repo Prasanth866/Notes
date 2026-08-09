@@ -80,8 +80,8 @@ When passing functions to `background_tasks.add_task(func)`:
 
 | Function Type  | Execution Strategy                                                      | Reference Note                                         |
 | :------------- | :---------------------------------------------------------------------- | :----------------------------------------------------- |
-| `async def`    | Executed directly on the **[[Notes/01 AsyncIO/Event Loop                | Event Loop]]**                                         | [[Notes/01 AsyncIO/Coroutine\|Coroutine]] |
-| Standard `def` | Offloaded to Starlette's background **Thread Pool** (`anyio.to_thread`) | [[Notes/01 AsyncIO/Non-blocking IO\|Non-blocking I/O]] |
+| `async def`    | Executed directly on the **[[Notes/AsyncIO/Event Loop                | Event Loop]]**                                         | [[Notes/AsyncIO/Coroutine\|Coroutine]] |
+| Standard `def` | Offloaded to Starlette's background **Thread Pool** (`anyio.to_thread`) | [[Notes/AsyncIO/Non-blocking IO\|Non-blocking I/O]] |
 
 ---
 
@@ -108,6 +108,6 @@ When passing functions to `background_tasks.add_task(func)`:
 
 ## Related Notes
 
-- [[Notes/01 AsyncIO/asyncio.create_task()|asyncio.create_task()]] — In-loop background task creation
-- [[Notes/02 FastAPI/WebSockets|FastAPI WebSockets]] — Real-time event streaming alternative
-- [[Notes/02 FastAPI/index|FastAPI Systems MOC]]
+- [[Notes/AsyncIO/asyncio.create_task()|asyncio.create_task()]] — In-loop background task creation
+- [[Notes/FastAPI/WebSockets|FastAPI WebSockets]] — Real-time event streaming alternative
+- [[Notes/FastAPI/index|FastAPI Systems MOC]]

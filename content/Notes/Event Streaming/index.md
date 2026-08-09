@@ -14,8 +14,8 @@ Event-driven architecture decouples producers from consumers by communicating st
 
 ## Core Event Streaming Notes
 
-- **[[Notes/03 Event Streaming/JSON Event Design|JSON Event Protocol Design]]**: Transitioning from arbitrary unstructured text strings to typed JSON event envelopes (`event`, `timestamp`, `session_id`, `data`).
-- **[[Notes/03 Event Streaming/Event Models|Pydantic Event Models]]**: Using Pydantic v2 discriminated union schemas (`Field(discriminator='event')`) for type-safe event parsing and validation.
+- **[[Notes/Event Streaming/JSON Event Design|JSON Event Protocol Design]]**: Transitioning from arbitrary unstructured text strings to typed JSON event envelopes (`event`, `timestamp`, `session_id`, `data`).
+- **[[Notes/Event Streaming/Event Models|Pydantic Event Models]]**: Using Pydantic v2 discriminated union schemas (`Field(discriminator='event')`) for type-safe event parsing and validation.
 
 ---
 
@@ -31,7 +31,7 @@ Event-driven architecture decouples producers from consumers by communicating st
 
 ## Related Resources
 
-- [[Notes/02 FastAPI/WebSockets|FastAPI WebSockets]]
-- [[Notes/01 AsyncIO/asyncio.Queue()|AsyncIO Event Queues]]
-- [[Notes/04 Projects/Real-Time Event Streamer|Capstone Integration Project]]
+- [[Notes/FastAPI/WebSockets|FastAPI WebSockets]]
+- [[Notes/AsyncIO/asyncio.Queue()|AsyncIO Event Queues]]
+- [[Notes/Projects/Real-Time Event Streamer|Capstone Integration Project]]
 - [[index|Digital Garden Home]]

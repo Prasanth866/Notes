@@ -70,7 +70,7 @@ A Future progresses through three distinct states:
 
 ## Manual Future Manipulation
 
-While high-level application code typically uses [[Notes/01 AsyncIO/Tasks|Tasks]], library authors use Futures to bridge async and callback-based code:
+While high-level application code typically uses [[Notes/AsyncIO/Tasks|Tasks]], library authors use Futures to bridge async and callback-based code:
 
 ```python
 import asyncio
@@ -135,7 +135,7 @@ def background_thread_worker(loop: asyncio.AbstractEventLoop, fut: asyncio.Futur
 | Feature           | `asyncio.Future`           | `asyncio.Task`                                                 |
 | :---------------- | :------------------------- | :------------------------------------------------------------- |
 | **Inheritance**   | Base class                 | Subclass of `asyncio.Future`                                   |
-| **Execution**     | Performs NO execution      | Wraps and executes a [[Notes/01 AsyncIO/Coroutine\|Coroutine]] |
+| **Execution**     | Performs NO execution      | Wraps and executes a [[Notes/AsyncIO/Coroutine\|Coroutine]] |
 | **Instantiation** | `loop.create_future()`     | `asyncio.create_task(coro)`                                    |
 | **Purpose**       | Passive result placeholder | Active concurrent execution wrapper                            |
 
@@ -143,7 +143,7 @@ def background_thread_worker(loop: asyncio.AbstractEventLoop, fut: asyncio.Futur
 
 ## Related Notes
 
-- [[Notes/01 AsyncIO/Tasks|Tasks]] — Active sub-class of Future executing coroutines
-- [[Notes/01 AsyncIO/Coroutine|Coroutine]] — Pausable functions that produce results for Futures
-- [[Notes/01 AsyncIO/Event Loop|Event Loop]] — Manages Future resolution and callbacks
-- [[Notes/01 AsyncIO/index|AsyncIO Map of Content]]
+- [[Notes/AsyncIO/Tasks|Tasks]] — Active sub-class of Future executing coroutines
+- [[Notes/AsyncIO/Coroutine|Coroutine]] — Pausable functions that produce results for Futures
+- [[Notes/AsyncIO/Event Loop|Event Loop]] — Manages Future resolution and callbacks
+- [[Notes/AsyncIO/index|AsyncIO Map of Content]]

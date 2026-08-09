@@ -12,9 +12,9 @@ aliases:
 # Tasks in Python AsyncIO
 
 > [!summary]
-> An `asyncio.Task` is a high-level, concurrent object that wraps a **[[Notes/01 AsyncIO/Coroutine|Coroutine]]** and schedules its execution on the **[[Notes/01 AsyncIO/Event Loop|Event Loop]]**.
+> An `asyncio.Task` is a high-level, concurrent object that wraps a **[[Notes/AsyncIO/Coroutine|Coroutine]]** and schedules its execution on the **[[Notes/AsyncIO/Event Loop|Event Loop]]**.
 >
-> `Task` is a subclass of **[[Notes/01 AsyncIO/Future|Future]]**, allowing coroutines to run concurrently in the background and yield execution results or exceptions.
+> `Task` is a subclass of **[[Notes/AsyncIO/Future|Future]]**, allowing coroutines to run concurrently in the background and yield execution results or exceptions.
 
 ---
 
@@ -137,8 +137,8 @@ async def main():
 
 ## Related Notes
 
-- [[Notes/01 AsyncIO/asyncio.create_task()|asyncio.create_task()]] — Function for creating background tasks
-- [[Notes/01 AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]] — Structured concurrency for task management
-- [[Notes/01 AsyncIO/Coroutine|Coroutine]] — The underlying code wrapped by a Task
-- [[Notes/01 AsyncIO/Future|Future]] — The parent class of Task
-- [[Notes/01 AsyncIO/index|AsyncIO Map of Content]]
+- [[Notes/AsyncIO/asyncio.create_task()|asyncio.create_task()]] — Function for creating background tasks
+- [[Notes/AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]] — Structured concurrency for task management
+- [[Notes/AsyncIO/Coroutine|Coroutine]] — The underlying code wrapped by a Task
+- [[Notes/AsyncIO/Future|Future]] — The parent class of Task
+- [[Notes/AsyncIO/index|AsyncIO Map of Content]]

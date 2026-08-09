@@ -123,7 +123,7 @@ async def heartbeat_ping(websocket: WebSocket, interval: float = 30.0):
 
 ## Related Notes
 
-- [[Notes/02 FastAPI/Connection Manager|Connection Manager Pattern]] — Pooling and room broadcasting
-- [[Notes/03 Event Streaming/JSON Event Design|JSON Event Design]] — Designing structured WebSocket event payloads
-- [[Notes/01 AsyncIO/Non-blocking IO|Non-blocking I/O]] — Underpinning socket mechanics
-- [[Notes/02 FastAPI/index|FastAPI Systems MOC]]
+- [[Notes/FastAPI/Connection Manager|Connection Manager Pattern]] — Pooling and room broadcasting
+- [[Notes/Event Streaming/JSON Event Design|JSON Event Design]] — Designing structured WebSocket event payloads
+- [[Notes/AsyncIO/Non-blocking IO|Non-blocking I/O]] — Underpinning socket mechanics
+- [[Notes/FastAPI/index|FastAPI Systems MOC]]

@@ -11,7 +11,7 @@ aliases:
 # FastAPI Connection Manager Pattern
 
 > [!summary]
-> A **Connection Manager** is a centralized state manager in FastAPI that maintains active **[[Notes/02 FastAPI/WebSockets|WebSocket]]** client connections, handles registration/disconnection lifecycles, and routes targeted or room-wide event broadcasts.
+> A **Connection Manager** is a centralized state manager in FastAPI that maintains active **[[Notes/FastAPI/WebSockets|WebSocket]]** client connections, handles registration/disconnection lifecycles, and routes targeted or room-wide event broadcasts.
 
 ---
 
@@ -125,7 +125,7 @@ async def redis_broadcast_listener(manager: ConnectionManager, redis_pubsub):
 
 ## Related Notes
 
-- [[Notes/02 FastAPI/WebSockets|FastAPI WebSockets]] — Core WebSocket endpoint mechanics
-- [[Notes/03 Event Streaming/JSON Event Design|JSON Event Design]] — Message payload protocols
-- [[Notes/04 Projects/Real-Time Event Streamer|Capstone Project]] — Full implementation
-- [[Notes/02 FastAPI/index|FastAPI Systems MOC]]
+- [[Notes/FastAPI/WebSockets|FastAPI WebSockets]] — Core WebSocket endpoint mechanics
+- [[Notes/Event Streaming/JSON Event Design|JSON Event Design]] — Message payload protocols
+- [[Notes/Projects/Real-Time Event Streamer|Capstone Project]] — Full implementation
+- [[Notes/FastAPI/index|FastAPI Systems MOC]]

@@ -33,9 +33,9 @@ Every note in this garden includes structured YAML frontmatter. Tags follow a ca
 content/
 ├── index.md                        # Garden Home & Master Index
 └── Notes/
-    ├── 00 Meta/                    # Garden architecture & guidelines
+    ├── Meta/                       # Garden architecture & guidelines
     │   └── index.md
-    ├── 01 AsyncIO/                 # Core Python AsyncIO primitives & loop mechanics
+    ├── AsyncIO/                    # Core Python AsyncIO primitives & loop mechanics
     │   ├── index.md
     │   ├── Coroutine.md
     │   ├── Event Loop.md
@@ -47,18 +47,18 @@ content/
     │   ├── asyncio.create_task().md
     │   ├── asyncio.gather().md
     │   └── asyncio.sleep().md
-    ├── 02 FastAPI/                 # Real-time WebSockets & background tasks
+    ├── FastAPI/                    # Real-time WebSockets & background tasks
     │   ├── index.md
     │   ├── Background Tasks.md
     │   ├── Connection Manager.md
     │   └── WebSockets.md
-    ├── 03 Event Streaming/        # Event-driven protocol design & schemas
+    ├── Event Streaming/            # Event-driven protocol design & schemas
     │   ├── index.md
     │   ├── Event Models.md
     │   └── JSON Event Design.md
-    ├── 04 Projects/                # Capstone implementations
+    ├── Projects/                   # Capstone implementations
     │   └── Real-Time Event Streamer.md
-    └── 05 Roadmap/                 # Systems engineering project roadmaps
+    └── Roadmap/                    # Systems engineering project roadmaps
         ├── ForgeHTTP.md            # 40-day: HTTP server in C++ (TCP, epoll, Reactor, proxy)
         ├── CodingAgent.md          # 30-day: Production coding agent (LangGraph, Docker, FastAPI)
         └── DBMS.md                 # Database systems notes
@@ -70,9 +70,9 @@ content/
 
 All notes adhere to strict wikilink hygiene:
 
-1. Every conceptual note must link back to its parent **Map of Content (MOC)** (`[[Notes/01 AsyncIO/index|01 AsyncIO]]`, etc.).
+1. Every conceptual note must link back to its parent **Map of Content (MOC)** (`[[Notes/AsyncIO/index|AsyncIO]]`, etc.).
 2. Cross-references link technical dependencies (e.g. `Tasks` linking to `Future` and `Coroutine`).
-3. Roadmap notes in `05 Roadmap/` use Obsidian internal links (`[[TCP]]`, `[[epoll]]`, `[[LangGraph]]`) to connect concepts — create stub notes for these as you learn them.
+3. Roadmap notes in `Roadmap/` use Obsidian internal links (`[[TCP]]`, `[[epoll]]`, `[[LangGraph]]`) to connect concepts — create stub notes for these as you learn them.
 
 ---
 
@@ -80,5 +80,5 @@ All notes adhere to strict wikilink hygiene:
 
 | Roadmap | Description | Link |
 |---|---|---|
-| ForgeHTTP | 40-day C++ HTTP server: TCP sockets, epoll event loop, Reactor pattern, static files, reverse proxy, performance profiling | [[Notes/05 Roadmap/ForgeHTTP\|ForgeHTTP]] |
-| CodingAgent | 30-day production coding agent: FastAPI, LangGraph, Docker sandbox with security tests, AST indexing, semantic search, guardrails | [[Notes/05 Roadmap/CodingAgent\|CodingAgent]] |
+| ForgeHTTP | 40-day C++ HTTP server: TCP sockets, epoll event loop, Reactor pattern, static files, reverse proxy, performance profiling | [[Notes/Roadmap/ForgeHTTP\|ForgeHTTP]] |
+| CodingAgent | 30-day production coding agent: FastAPI, LangGraph, Docker sandbox with security tests, AST indexing, semantic search, guardrails | [[Notes/Roadmap/CodingAgent\|CodingAgent]] |

@@ -54,7 +54,7 @@ Operating systems provide kernel-level event notification interfaces to monitor 
 | **Windows**        | `IOCP` (I/O Completion Ports) | Asynchronous I/O Overlapped Model |
 | **POSIX Fallback** | `select` / `poll`             | $O(N)$ scanning cost              |
 
-The **[[Notes/01 AsyncIO/Event Loop|Event Loop]]** selects the optimal OS primitive automatically using Python's `selectors` module.
+The **[[Notes/AsyncIO/Event Loop|Event Loop]]** selects the optimal OS primitive automatically using Python's `selectors` module.
 
 ---
 
@@ -127,7 +127,7 @@ if __name__ == "__main__":
 
 ## Related Notes
 
-- [[Notes/01 AsyncIO/Event Loop|Event Loop]] — The scheduler driven by non-blocking OS selectors
-- [[Notes/01 AsyncIO/Coroutine|Coroutine]] — Pausable user code running atop non-blocking I/O
-- [[Notes/02 FastAPI/WebSockets|FastAPI WebSockets]] — High-concurrency socket handling
-- [[Notes/01 AsyncIO/index|AsyncIO Map of Content]]
+- [[Notes/AsyncIO/Event Loop|Event Loop]] — The scheduler driven by non-blocking OS selectors
+- [[Notes/AsyncIO/Coroutine|Coroutine]] — Pausable user code running atop non-blocking I/O
+- [[Notes/FastAPI/WebSockets|FastAPI WebSockets]] — High-concurrency socket handling
+- [[Notes/AsyncIO/index|AsyncIO Map of Content]]

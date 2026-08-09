@@ -12,7 +12,7 @@ aliases:
 # `asyncio.create_task()` in Python
 
 > [!summary]
-> `asyncio.create_task()` wraps a **[[Notes/01 AsyncIO/Coroutine|Coroutine]]** into a **[[Notes/01 AsyncIO/Tasks|Task]]** and immediately schedules its background execution on the **[[Notes/01 AsyncIO/Event Loop|Event Loop]]**.
+> `asyncio.create_task()` wraps a **[[Notes/AsyncIO/Coroutine|Coroutine]]** into a **[[Notes/AsyncIO/Tasks|Task]]** and immediately schedules its background execution on the **[[Notes/AsyncIO/Event Loop|Event Loop]]**.
 >
 > It enables concurrent non-blocking execution without pausing the calling coroutine immediately.
 
@@ -114,7 +114,7 @@ async def safe_worker():
 
 ## Related Notes
 
-- [[Notes/01 AsyncIO/Tasks|Tasks]] — Deep dive into task lifecycle and states
-- [[Notes/01 AsyncIO/Coroutine|Coroutine]] — The underlying pausable function
-- [[Notes/01 AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]] — Structured alternative for managing groups of tasks
-- [[Notes/01 AsyncIO/index|AsyncIO Map of Content]]
+- [[Notes/AsyncIO/Tasks|Tasks]] — Deep dive into task lifecycle and states
+- [[Notes/AsyncIO/Coroutine|Coroutine]] — The underlying pausable function
+- [[Notes/AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]] — Structured alternative for managing groups of tasks
+- [[Notes/AsyncIO/index|AsyncIO Map of Content]]

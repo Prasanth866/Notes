@@ -16,11 +16,11 @@ tags:
 
 Understanding how Python achieves non-blocking I/O on a single thread:
 
-- **[[Notes/01 AsyncIO/Non-blocking IO|Non-blocking I/O]]**: How OS event notification mechanisms (`epoll`, `kqueue`, `select`) allow single-threaded event loops to handle thousands of open sockets.
-- **[[Notes/01 AsyncIO/Event Loop|Event Loop]]**: The central scheduler managing task execution states (Ready vs Waiting), timer callbacks, and I/O event polling.
-- **[[Notes/01 AsyncIO/Coroutine|Coroutine]]**: Pausable functions created via `async def` that cooperatively yield control via `await`.
-- **[[Notes/01 AsyncIO/Future|Future]]**: Low-level placeholder objects representing eventual results of asynchronous operations.
-- **[[Notes/01 AsyncIO/Tasks|Tasks]]**: Event-loop wrapped coroutines executing concurrently.
+- **[[Notes/AsyncIO/Non-blocking IO|Non-blocking I/O]]**: How OS event notification mechanisms (`epoll`, `kqueue`, `select`) allow single-threaded event loops to handle thousands of open sockets.
+- **[[Notes/AsyncIO/Event Loop|Event Loop]]**: The central scheduler managing task execution states (Ready vs Waiting), timer callbacks, and I/O event polling.
+- **[[Notes/AsyncIO/Coroutine|Coroutine]]**: Pausable functions created via `async def` that cooperatively yield control via `await`.
+- **[[Notes/AsyncIO/Future|Future]]**: Low-level placeholder objects representing eventual results of asynchronous operations.
+- **[[Notes/AsyncIO/Tasks|Tasks]]**: Event-loop wrapped coroutines executing concurrently.
 
 ---
 
@@ -28,11 +28,11 @@ Understanding how Python achieves non-blocking I/O on a single thread:
 
 Tools for orchestrating, timing, and communicating between asynchronous tasks:
 
-- **[[Notes/01 AsyncIO/asyncio.create_task()|asyncio.create_task()]]**: Schedules a coroutine on the event loop immediately. Covers strong reference retention to prevent garbage collection bugs.
-- **[[Notes/01 AsyncIO/asyncio.gather()|asyncio.gather()]]**: Runs multiple awaitables concurrently and aggregates results into a single tuple.
-- **[[Notes/01 AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]]**: Python 3.11+ structured concurrency context manager with automatic cancellation and `ExceptionGroup` handling.
-- **[[Notes/01 AsyncIO/asyncio.Queue()|asyncio.Queue()]]**: Bounded producer-consumer queue for decoupling producers and managing system backpressure.
-- **[[Notes/01 AsyncIO/asyncio.sleep()|asyncio.sleep()]]**: Non-blocking delay function and cooperative yield point (`await asyncio.sleep(0)`).
+- **[[Notes/AsyncIO/asyncio.create_task()|asyncio.create_task()]]**: Schedules a coroutine on the event loop immediately. Covers strong reference retention to prevent garbage collection bugs.
+- **[[Notes/AsyncIO/asyncio.gather()|asyncio.gather()]]**: Runs multiple awaitables concurrently and aggregates results into a single tuple.
+- **[[Notes/AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]]**: Python 3.11+ structured concurrency context manager with automatic cancellation and `ExceptionGroup` handling.
+- **[[Notes/AsyncIO/asyncio.Queue()|asyncio.Queue()]]**: Bounded producer-consumer queue for decoupling producers and managing system backpressure.
+- **[[Notes/AsyncIO/asyncio.sleep()|asyncio.sleep()]]**: Non-blocking delay function and cooperative yield point (`await asyncio.sleep(0)`).
 
 ---
 

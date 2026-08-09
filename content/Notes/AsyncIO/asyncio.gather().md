@@ -12,7 +12,7 @@ aliases:
 # `asyncio.gather()` in Python
 
 > [!summary]
-> `asyncio.gather(*aws, return_exceptions=False)` takes multiple **awaitable objects** (coroutines, tasks, futures), runs them concurrently on the **[[Notes/01 AsyncIO/Event Loop|Event Loop]]**, and returns a list of their aggregated results in the exact order passed.
+> `asyncio.gather(*aws, return_exceptions=False)` takes multiple **awaitable objects** (coroutines, tasks, futures), runs them concurrently on the **[[Notes/AsyncIO/Event Loop|Event Loop]]**, and returns a list of their aggregated results in the exact order passed.
 
 ---
 
@@ -68,7 +68,7 @@ if __name__ == "__main__":
 ```
 
 > [!warning]
-> With `return_exceptions=False`, an error does not cancel other tasks. If you require automatic sibling cancellation on failure, prefer **[[Notes/01 AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]]**.
+> With `return_exceptions=False`, an error does not cancel other tasks. If you require automatic sibling cancellation on failure, prefer **[[Notes/AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]]**.
 
 ### 2. `return_exceptions=True` (Safe Result Aggregation)
 
@@ -104,7 +104,7 @@ async def main():
 
 ## Related Notes
 
-- [[Notes/01 AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]] — Python 3.11+ structured concurrency alternative
-- [[Notes/01 AsyncIO/Tasks|Tasks]] — Concurrent execution objects
-- [[Notes/01 AsyncIO/Coroutine|Coroutine]] — Pausable code executed by gather
-- [[Notes/01 AsyncIO/index|AsyncIO Map of Content]]
+- [[Notes/AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]] — Python 3.11+ structured concurrency alternative
+- [[Notes/AsyncIO/Tasks|Tasks]] — Concurrent execution objects
+- [[Notes/AsyncIO/Coroutine|Coroutine]] — Pausable code executed by gather
+- [[Notes/AsyncIO/index|AsyncIO Map of Content]]

@@ -12,7 +12,7 @@ aliases:
 # ⚡ `asyncio.sleep()` in Python
 
 > [!summary]
-> `asyncio.sleep(delay, result=None)` is a non-blocking coroutine that delays execution for a specified number of seconds while yielding control back to the **[[Notes/01 AsyncIO/Event Loop|Event Loop]]**.
+> `asyncio.sleep(delay, result=None)` is a non-blocking coroutine that delays execution for a specified number of seconds while yielding control back to the **[[Notes/AsyncIO/Event Loop|Event Loop]]**.
 >
 > Unlike `time.sleep()`, which freezes the entire thread, `asyncio.sleep()` allows the event loop to execute other ready coroutines during the wait period.
 
@@ -76,7 +76,7 @@ print(data)  # {"status": "cache_expired"}
 
 ## Related Notes
 
-- [[Notes/01 AsyncIO/Event Loop|Event Loop]] — Manages timer callbacks and ready queue
-- [[Notes/01 AsyncIO/Coroutine|Coroutine]] — Pauses execution during sleep
-- [[Notes/01 AsyncIO/Non-blocking IO|Non-blocking I/O]] — Non-blocking systems foundation
-- [[Notes/01 AsyncIO/index|AsyncIO Map of Content]]
+- [[Notes/AsyncIO/Event Loop|Event Loop]] — Manages timer callbacks and ready queue
+- [[Notes/AsyncIO/Coroutine|Coroutine]] — Pauses execution during sleep
+- [[Notes/AsyncIO/Non-blocking IO|Non-blocking I/O]] — Non-blocking systems foundation
+- [[Notes/AsyncIO/index|AsyncIO Map of Content]]

@@ -143,7 +143,7 @@ function handleServerEvent(rawMessage: string) {
 
 ## Related Notes
 
-- [[Notes/03 Event Streaming/Event Models|Pydantic Event Models]] — Server-side Python implementation
-- [[Notes/02 FastAPI/WebSockets|FastAPI WebSockets]] — Transporting JSON event streams
-- [[Notes/04 Projects/Real-Time Event Streamer|Capstone Integration Project]] — End-to-end engine
-- [[Notes/03 Event Streaming/index|Event Streaming MOC]]
+- [[Notes/Event Streaming/Event Models|Pydantic Event Models]] — Server-side Python implementation
+- [[Notes/FastAPI/WebSockets|FastAPI WebSockets]] — Transporting JSON event streams
+- [[Notes/Projects/Real-Time Event Streamer|Capstone Integration Project]] — End-to-end engine
+- [[Notes/Event Streaming/index|Event Streaming MOC]]

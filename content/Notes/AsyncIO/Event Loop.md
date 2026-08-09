@@ -15,7 +15,7 @@ aliases:
 >
 > **Core Concept Hierarchy:**
 >
-> > **[[Notes/01 AsyncIO/Coroutine|Coroutines]] describe work → [[Notes/01 AsyncIO/Tasks|Tasks]] wrap work → The Event Loop schedules work.**
+> > **[[Notes/AsyncIO/Coroutine|Coroutines]] describe work → [[Notes/AsyncIO/Tasks|Tasks]] wrap work → The Event Loop schedules work.**
 
 ---
 
@@ -111,7 +111,7 @@ The event loop moves tasks dynamically between states:
 
 - **Ready State**: Tasks waiting for CPU execution time.
 - **Running State**: The currently active task executing on the thread.
-- **Waiting State**: Tasks paused at an `await` boundary awaiting I/O, timers, or [[Notes/01 AsyncIO/Future|Futures]].
+- **Waiting State**: Tasks paused at an `await` boundary awaiting I/O, timers, or [[Notes/AsyncIO/Future|Futures]].
 
 ---
 
@@ -154,13 +154,13 @@ async def main():
 | :------------------ | :--------------------------------------------- | :------------------------------------------------------ |
 | `time.sleep(2)`     | Blocks the OS thread and halts the entire loop | `await asyncio.sleep(2)`                                |
 | `requests.get(url)` | Synchronous socket I/O blocks loop             | `httpx.AsyncClient()` or `aiohttp`                      |
-| Un-awaited tasks    | Orphaned tasks can swallow exceptions          | Use [[Notes/01 AsyncIO/asyncio.TaskGroup()\|TaskGroup]] |
+| Un-awaited tasks    | Orphaned tasks can swallow exceptions          | Use [[Notes/AsyncIO/asyncio.TaskGroup()\|TaskGroup]] |
 
 ---
 
 ## Related Notes
 
-- [[Notes/01 AsyncIO/Coroutine|Coroutine]] — Pausable functions executed by the loop
-- [[Notes/01 AsyncIO/Tasks|Tasks]] — Event loop scheduled tasks
-- [[Notes/01 AsyncIO/Non-blocking IO|Non-blocking I/O]] — OS selector mechanics underlying the loop
-- [[Notes/01 AsyncIO/index|AsyncIO Map of Content]]
+- [[Notes/AsyncIO/Coroutine|Coroutine]] — Pausable functions executed by the loop
+- [[Notes/AsyncIO/Tasks|Tasks]] — Event loop scheduled tasks
+- [[Notes/AsyncIO/Non-blocking IO|Non-blocking I/O]] — OS selector mechanics underlying the loop
+- [[Notes/AsyncIO/index|AsyncIO Map of Content]]

@@ -13,7 +13,7 @@ aliases:
 # `asyncio.Queue()` in Python
 
 > [!summary]
-> `asyncio.Queue` is a FIFO (First-In, First-Out) synchronization primitive designed for transferring data between **[[Notes/01 AsyncIO/Coroutine|Coroutines]]** running on the same **[[Notes/01 AsyncIO/Event Loop|Event Loop]]**.
+> `asyncio.Queue` is a FIFO (First-In, First-Out) synchronization primitive designed for transferring data between **[[Notes/AsyncIO/Coroutine|Coroutines]]** running on the same **[[Notes/AsyncIO/Event Loop|Event Loop]]**.
 >
 > It provides thread-safe coroutine methods (`put()` and `get()`) that pause execution when the queue is full or empty, managing system backpressure naturally.
 
@@ -121,7 +121,7 @@ if __name__ == "__main__":
 
 ## Related Notes
 
-- [[Notes/01 AsyncIO/Tasks|Tasks]] — Worker tasks consuming from queues
-- [[Notes/01 AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]] — Managing worker pools
-- [[Notes/04 Projects/Real-Time Event Streamer|Capstone Project]] — Using Queue for streaming event dispatch
-- [[Notes/01 AsyncIO/index|AsyncIO Map of Content]]
+- [[Notes/AsyncIO/Tasks|Tasks]] — Worker tasks consuming from queues
+- [[Notes/AsyncIO/asyncio.TaskGroup()|asyncio.TaskGroup()]] — Managing worker pools
+- [[Notes/Projects/Real-Time Event Streamer|Capstone Project]] — Using Queue for streaming event dispatch
+- [[Notes/AsyncIO/index|AsyncIO Map of Content]]

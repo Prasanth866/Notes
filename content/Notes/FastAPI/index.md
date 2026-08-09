@@ -14,9 +14,9 @@ FastAPI is natively built on **ASGI** (Asynchronous Server Gateway Interface) vi
 
 ## Core FastAPI Topics
 
-- **[[Notes/02 FastAPI/WebSockets|WebSockets in FastAPI]]**: Full-duplex persistent connections, handshakes, frame transmission, ping/pong heartbeats, and lifecycle management.
-- **[[Notes/02 FastAPI/Connection Manager|Connection Manager Pattern]]**: Centralized connection pool manager handling client registration, room broadcasting, and disconnect cleanup.
-- **[[Notes/02 FastAPI/Background Tasks|Background Tasks]]**: Running lightweight post-response tasks within FastAPI endpoint handlers without blocking HTTP response cycles.
+- **[[Notes/FastAPI/WebSockets|WebSockets in FastAPI]]**: Full-duplex persistent connections, handshakes, frame transmission, ping/pong heartbeats, and lifecycle management.
+- **[[Notes/FastAPI/Connection Manager|Connection Manager Pattern]]**: Centralized connection pool manager handling client registration, room broadcasting, and disconnect cleanup.
+- **[[Notes/FastAPI/Background Tasks|Background Tasks]]**: Running lightweight post-response tasks within FastAPI endpoint handlers without blocking HTTP response cycles.
 
 ---
 
@@ -50,7 +50,7 @@ FastAPI is natively built on **ASGI** (Asynchronous Server Gateway Interface) vi
 
 ## Related Topics & Guides
 
-- [[Notes/01 AsyncIO/index|AsyncIO Core Concepts]]
-- [[Notes/03 Event Streaming/index|Event Streaming & JSON Protocols]]
-- [[Notes/04 Projects/Real-Time Event Streamer|Capstone Integration Project]]
+- [[Notes/AsyncIO/index|AsyncIO Core Concepts]]
+- [[Notes/Event Streaming/index|Event Streaming & JSON Protocols]]
+- [[Notes/Projects/Real-Time Event Streamer|Capstone Integration Project]]
 - [[index|Digital Garden Home]]

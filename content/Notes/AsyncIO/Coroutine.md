@@ -52,7 +52,7 @@ print(type(coro)) # <class 'coroutine'>
 
 ## Execution & Suspension Lifecycle
 
-Coroutines can only execute when scheduled on an active **[[Notes/01 AsyncIO/Event Loop|Event Loop]]**.
+Coroutines can only execute when scheduled on an active **[[Notes/AsyncIO/Event Loop|Event Loop]]**.
 
 ```
   async def worker()
@@ -75,7 +75,7 @@ Coroutines can only execute when scheduled on an active **[[Notes/01 AsyncIO/Eve
 
 1. **Top-Level Entry**: `asyncio.run(main())` creates an event loop, runs `main()`, and closes the loop.
 2. **Cooperative Awaiting**: `await coro` suspends the calling coroutine until `coro` finishes.
-3. **Concurrent Scheduling**: `asyncio.create_task(coro)` wraps `coro` into a **[[Notes/01 AsyncIO/Tasks|Task]]** for background loop execution.
+3. **Concurrent Scheduling**: `asyncio.create_task(coro)` wraps `coro` into a **[[Notes/AsyncIO/Tasks|Task]]** for background loop execution.
 
 ---
 
@@ -92,7 +92,7 @@ async def process():
 
 1. `process()` pauses immediately at `await`.
 2. It saves its local variable state and stack pointer.
-3. Control returns to the **[[Notes/01 AsyncIO/Event Loop|Event Loop]]**.
+3. Control returns to the **[[Notes/AsyncIO/Event Loop|Event Loop]]**.
 4. The event loop executes other ready tasks during the 2-second delay.
 5. Once the timer elapses, the event loop marks `process()` as **Ready** and resumes execution at Step 2.
 
@@ -104,9 +104,9 @@ The `await` keyword only accepts **awaitable objects**, which implement the `__a
 
 | Awaitable Type        | Purpose                                 | Reference Note                            |
 | :-------------------- | :-------------------------------------- | :---------------------------------------- |
-| **Coroutine Objects** | Returned by `async def` function calls  | [[Notes/01 AsyncIO/Coroutine\|Coroutine]] |
-| **Tasks**             | Event-loop scheduled coroutine wrappers | [[Notes/01 AsyncIO/Tasks\|Tasks]]         |
-| **Futures**           | Low-level result placeholders           | [[Notes/01 AsyncIO/Future\|Future]]       |
+| **Coroutine Objects** | Returned by `async def` function calls  | [[Notes/AsyncIO/Coroutine\|Coroutine]] |
+| **Tasks**             | Event-loop scheduled coroutine wrappers | [[Notes/AsyncIO/Tasks\|Tasks]]         |
+| **Futures**           | Low-level result placeholders           | [[Notes/AsyncIO/Future\|Future]]       |
 
 ---
 
@@ -138,13 +138,13 @@ if __name__ == "__main__":
 ## Mental Model
 
 > **Think of a coroutine as a pausable state machine.**
-> It does not run continuously like a standard synchronous function. Instead, it yields control at every `await` boundary, allowing the **[[Notes/01 AsyncIO/Event Loop|Event Loop]]** to multiplex thousands of concurrent tasks on a single OS thread.
+> It does not run continuously like a standard synchronous function. Instead, it yields control at every `await` boundary, allowing the **[[Notes/AsyncIO/Event Loop|Event Loop]]** to multiplex thousands of concurrent tasks on a single OS thread.
 
 ---
 
 ## Related Notes
 
-- [[Notes/01 AsyncIO/Event Loop|Event Loop]] — The scheduler behind coroutine execution
-- [[Notes/01 AsyncIO/Tasks|Tasks]] — Wrapping coroutines into concurrent tasks
-- [[Notes/01 AsyncIO/Future|Futures]] — Low-level result promises
-- [[Notes/01 AsyncIO/index|AsyncIO Map of Content]]
+- [[Notes/AsyncIO/Event Loop|Event Loop]] — The scheduler behind coroutine execution
+- [[Notes/AsyncIO/Tasks|Tasks]] — Wrapping coroutines into concurrent tasks
+- [[Notes/AsyncIO/Future|Futures]] — Low-level result promises
+- [[Notes/AsyncIO/index|AsyncIO Map of Content]]

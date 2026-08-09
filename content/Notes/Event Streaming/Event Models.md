@@ -114,7 +114,7 @@ print(f"Step: {event_obj.current_step}, Progress: {event_obj.progress}%")
 
 ## Related Notes
 
-- [[Notes/03 Event Streaming/JSON Event Design|JSON Event Protocol Design]] — Principles of envelope design
-- [[Notes/02 FastAPI/WebSockets|FastAPI WebSockets]] — Transporting Pydantic events over sockets
-- [[Notes/04 Projects/Real-Time Event Streamer|Capstone Integration Project]] — Real-world engine
-- [[Notes/03 Event Streaming/index|Event Streaming MOC]]
+- [[Notes/Event Streaming/JSON Event Design|JSON Event Protocol Design]] — Principles of envelope design
+- [[Notes/FastAPI/WebSockets|FastAPI WebSockets]] — Transporting Pydantic events over sockets
+- [[Notes/Projects/Real-Time Event Streamer|Capstone Integration Project]] — Real-world engine
+- [[Notes/Event Streaming/index|Event Streaming MOC]]

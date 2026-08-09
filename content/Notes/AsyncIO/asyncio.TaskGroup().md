@@ -107,7 +107,7 @@ except* KeyError as eg:
 
 ## Related Notes
 
-- [[Notes/01 AsyncIO/asyncio.gather()|asyncio.gather()]] — Legacy/Flexible concurrent execution
-- [[Notes/01 AsyncIO/Tasks|Tasks]] — Underlying task execution objects
-- [[Notes/01 AsyncIO/Coroutine|Coroutine]] — Pausable code executed within task groups
-- [[Notes/01 AsyncIO/index|AsyncIO Map of Content]]
+- [[Notes/AsyncIO/asyncio.gather()|asyncio.gather()]] — Legacy/Flexible concurrent execution
+- [[Notes/AsyncIO/Tasks|Tasks]] — Underlying task execution objects
+- [[Notes/AsyncIO/Coroutine|Coroutine]] — Pausable code executed within task groups
+- [[Notes/AsyncIO/index|AsyncIO Map of Content]]

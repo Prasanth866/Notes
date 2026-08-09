@@ -13,9 +13,9 @@ tags:
 > [!abstract]
 > This capstone project integrates concepts from across the digital garden:
 >
-> - **[[Notes/01 AsyncIO/index|AsyncIO]]**: Non-blocking `asyncio.Queue` and `asyncio.TaskGroup` for asynchronous task execution and event dispatching.
-> - **[[Notes/02 FastAPI/index|FastAPI]]**: High-concurrency WebSocket endpoint and `ConnectionManager` pool broadcasting.
-> - **[[Notes/03 Event Streaming/index|Event Streaming]]**: Pydantic v2 discriminated union event models (`status`, `progress`, `token`, `complete`, `error`).
+> - **[[Notes/AsyncIO/index|AsyncIO]]**: Non-blocking `asyncio.Queue` and `asyncio.TaskGroup` for asynchronous task execution and event dispatching.
+> - **[[Notes/FastAPI/index|FastAPI]]**: High-concurrency WebSocket endpoint and `ConnectionManager` pool broadcasting.
+> - **[[Notes/Event Streaming/index|Event Streaming]]**: Pydantic v2 discriminated union event models (`status`, `progress`, `token`, `complete`, `error`).
 
 ---
 
@@ -162,5 +162,5 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
 ## Verification & Next Steps
 
 - Combine this backend with a client frontend event switcher (`switch (event.event)`).
-- See [[Notes/02 FastAPI/WebSockets|FastAPI WebSockets]] and [[Notes/03 Event Streaming/JSON Event Design|JSON Event Design]] for deep protocol specifications.
+- See [[Notes/FastAPI/WebSockets|FastAPI WebSockets]] and [[Notes/Event Streaming/JSON Event Design|JSON Event Design]] for deep protocol specifications.
 - Return to [[index|Digital Garden Home]].
