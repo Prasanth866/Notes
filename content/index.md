@@ -1,17 +1,19 @@
 ---
 title: "Digital Garden Home"
-description: "Comprehensive notes and practical guides on Python AsyncIO, FastAPI Asynchronous Web Systems, and Event-Driven Architecture."
+description: "Comprehensive notes and practical guides on Python AsyncIO, FastAPI Asynchronous Web Systems, Event-Driven Architecture, and Systems Engineering Roadmaps."
 tags:
   - index
   - digital-garden
   - python
   - fastapi
   - event-streaming
+  - systems-programming
+  - roadmap
 ---
 
 # Welcome to My Digital Garden
 
-Welcome! This digital garden serves as a structured, living repository of knowledge focused on **high-performance Python asynchronous systems**, **FastAPI web backends**, and **event-driven streaming protocols**.
+Welcome! This digital garden serves as a structured, living repository of knowledge focused on **high-performance Python asynchronous systems**, **FastAPI web backends**, **event-driven streaming protocols**, and **systems engineering projects** (C++ networking, autonomous coding agents).
 
 ---
 
@@ -25,6 +27,7 @@ Explore topic clusters through dedicated Maps of Content (MOCs):
 | **02 FastAPI**         | Real-time WebSockets, connection managers, and non-blocking background tasks        | [[Notes/02 FastAPI/index\|FastAPI Systems MOC]]                  |
 | **03 Event Streaming** | JSON event schemas, envelope design, and event-driven architecture                  | [[Notes/03 Event Streaming/index\|Event Streaming MOC]]          |
 | **04 Projects**        | Practical capstone architectures & real-world streaming implementations             | [[Notes/04 Projects/Real-Time Event Streamer\|Capstone Project]] |
+| **05 Roadmap**         | 40-day systems engineering projects: HTTP server in C++ and production coding agent | [[Notes/05 Roadmap/ForgeHTTP\|ForgeHTTP]] · [[Notes/05 Roadmap/CodingAgent\|CodingAgent]] |
 | **00 Meta**            | Garden structure, tagging taxonomies, and note-taking principles                    | [[Notes/00 Meta/index\|Meta & Taxonomy]]                         |
 
 ---
@@ -88,3 +91,8 @@ Explore topic clusters through dedicated Maps of Content (MOCs):
 
 - [[Notes/03 Event Streaming/JSON Event Design|JSON Event Design]] — Structured envelopes vs plain text streams
 - [[Notes/03 Event Streaming/Event Models|Event Models]] — Pydantic v2 discriminated union models for event parsing
+
+### Systems Engineering Roadmaps
+
+- [[Notes/05 Roadmap/ForgeHTTP|ForgeHTTP]] — 40-day roadmap: build an HTTP/1.1 server from scratch in C++ (TCP, epoll, Reactor, reverse proxy, observability)
+- [[Notes/05 Roadmap/CodingAgent|CodingAgent (Mini Devin)]] — 30-day roadmap: production-grade autonomous coding agent (FastAPI, LangGraph, Docker sandbox, AST indexing, guardrails)

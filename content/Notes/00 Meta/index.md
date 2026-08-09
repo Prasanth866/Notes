@@ -22,6 +22,8 @@ Every note in this garden includes structured YAML frontmatter. Tags follow a ca
 - `#fastapi/background` — Starlette & FastAPI background worker processing
 - `#architecture/event-driven` — Streaming protocol design, JSON envelopes, Pydantic models
 - `#project/capstone` — End-to-end integration implementations
+- `#cpp` / `#networking` / `#linux` — C++ systems programming, TCP/IP, Linux OS internals
+- `#roadmap` — Multi-week structured project plans with daily tasks and checkboxes
 
 ---
 
@@ -54,8 +56,12 @@ content/
     │   ├── index.md
     │   ├── Event Models.md
     │   └── JSON Event Design.md
-    └── 04 Projects/                # Capstone implementations
-        └── Real-Time Event Streamer.md
+    ├── 04 Projects/                # Capstone implementations
+    │   └── Real-Time Event Streamer.md
+    └── 05 Roadmap/                 # Systems engineering project roadmaps
+        ├── ForgeHTTP.md            # 40-day: HTTP server in C++ (TCP, epoll, Reactor, proxy)
+        ├── CodingAgent.md          # 30-day: Production coding agent (LangGraph, Docker, FastAPI)
+        └── DBMS.md                 # Database systems notes
 ```
 
 ---
@@ -66,3 +72,13 @@ All notes adhere to strict wikilink hygiene:
 
 1. Every conceptual note must link back to its parent **Map of Content (MOC)** (`[[Notes/01 AsyncIO/index|01 AsyncIO]]`, etc.).
 2. Cross-references link technical dependencies (e.g. `Tasks` linking to `Future` and `Coroutine`).
+3. Roadmap notes in `05 Roadmap/` use Obsidian internal links (`[[TCP]]`, `[[epoll]]`, `[[LangGraph]]`) to connect concepts — create stub notes for these as you learn them.
+
+---
+
+## Roadmaps
+
+| Roadmap | Description | Link |
+|---|---|---|
+| ForgeHTTP | 40-day C++ HTTP server: TCP sockets, epoll event loop, Reactor pattern, static files, reverse proxy, performance profiling | [[Notes/05 Roadmap/ForgeHTTP\|ForgeHTTP]] |
+| CodingAgent | 30-day production coding agent: FastAPI, LangGraph, Docker sandbox with security tests, AST indexing, semantic search, guardrails | [[Notes/05 Roadmap/CodingAgent\|CodingAgent]] |
