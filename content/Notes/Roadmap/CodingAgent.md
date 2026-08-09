@@ -38,7 +38,7 @@ aliases:
 
 ## Week 1 — Foundation
 
-- [ ] **Day 1** — Repo scaffold: `uv`/`poetry`, pre-commit (`ruff` + `mypy`), `pydantic-settings` config, structured JSON logging. Implement `read_file`, `write_file`, `run_shell` with input validation and typed `ToolError` returns. Unit tests for all three tools including error paths.
+- [x] **Day 1** — Repo scaffold: `uv`/`poetry`, pre-commit (`ruff` + `mypy`), `pydantic-settings` config, structured JSON logging. Implement `read_file`, `write_file`, `run_shell` with input validation and typed `ToolError` returns. Unit tests for all three tools including error paths.
 
 - [ ] **Day 2** — Core reasoning loop: system prompt design + task → LLM picks tool → execute → feed result back. Log reasoning trajectories to evaluate decision quality early. Tool dispatch unit tests (mock LLM). Retry/backoff wrapper around LLM API calls. Token/cost tracker per call. Test on one real failing-test task.
 
