@@ -10,6 +10,7 @@ aliases:
   - Mini Devin Roadmap
   - CodingAgent Roadmap
 ---
+
 # 30-Day Plan — Production-Grade (150 hours)
 
 > [!NOTE]
@@ -28,6 +29,7 @@ aliases:
 | `python main.py` | `docker-compose up` — one command, full stack |
 | No CI | GitHub Actions: lint, type-check, tests, image build on every PR |
 | Sandbox trusted by design | Sandbox escape tests written as actual pytest tests |
+| Single edit attempt | Auto re-index after patches to prevent index drift |
 
 > [!IMPORTANT]
 > Out of scope past Day 30: multi-tenant RBAC, Kubernetes, human-in-the-loop UI, gVisor/Firecracker.
@@ -38,7 +40,7 @@ aliases:
 
 - [ ] **Day 1** — Repo scaffold: `uv`/`poetry`, pre-commit (`ruff` + `mypy`), `pydantic-settings` config, structured JSON logging. Implement `read_file`, `write_file`, `run_shell` with input validation and typed `ToolError` returns. Unit tests for all three tools including error paths.
 
-- [ ] **Day 2** — Core reasoning loop: task → LLM picks tool → execute → feed result back. Tool dispatch unit tests (mock LLM). Retry/backoff wrapper around LLM API calls. Token/cost tracker per call. Test on one real failing-test task.
+- [ ] **Day 2** — Core reasoning loop: system prompt design + task → LLM picks tool → execute → feed result back. Log reasoning trajectories to evaluate decision quality early. Tool dispatch unit tests (mock LLM). Retry/backoff wrapper around LLM API calls. Token/cost tracker per call. Test on one real failing-test task.
 
 - [ ] **Day 3** — FastAPI skeleton: routers (`/health`, `/readiness`, `/tasks`, `/ws`), OpenAPI docs at `/docs`, WebSocket endpoint, versioned Pydantic event schemas (`ThoughtEvent`, `ToolCallEvent`, `ToolOutputEvent`, `TaskCompleteEvent`, `ErrorEvent`).
 
@@ -70,7 +72,7 @@ aliases:
   - Memory exhaustion: container OOM-killed, not the host
   - Path traversal: `path=../../etc/passwd` tool call → must return `ToolError`
 
-- [ ] **Day 12** — tree-sitter AST indexer: file tree, module imports, class/function extraction (name, args, line span, docstring). `get_symbol_definition(name)` and `list_file_structure(path)`. Tests against a committed fixture repo.
+- [ ] **Day 12** — tree-sitter AST indexer (Target language: Python): file tree, module imports, class/function extraction (name, args, line span, docstring). `get_symbol_definition(name)` and `list_file_structure(path)`. Tests against a committed Python fixture repo. *(Buffer risk point: allow extra time for grammar extraction).*
 
 - [ ] **Day 13** — Embeddings + `chromadb`: chunk functions/classes from AST output, embed, store. `semantic_search(query, top_k=5)`. Hybrid search: exact match first, semantic fallback. Embedding cost logged per run.
 
@@ -83,17 +85,17 @@ aliases:
 
 ## Week 3 — LangGraph Loop with Bounded Failure Modes
 
-- [ ] **Day 15** — LangGraph typed `AgentState` schema (task_id, plan, current_step, tool_history, reflection_history, retry_count, status). Planning Node with structured-output Pydantic validation. Retry-on-malformed-output (max 3 retries → `failed` state). SQLite-backed checkpoint persistence.
+- [ ] **Day 15** — LangGraph typed `AgentState` schema (`task_id`, `plan`, `current_step`, `tool_history`, `reflection_history`, `retry_count`, `status`). **Context Window Management**: sliding window / history trimming strategy for `tool_history` to prevent blowing context limits on long runs. Planning Node with structured-output Pydantic validation. Retry-on-malformed-output (max 3 retries → `failed` state). SQLite-backed checkpoint persistence. *(Buffer risk point: state schema + checkpointing setup).*
 
 - [ ] **Day 16** — Execution Node: LLM selects tool via `ToolCall(tool_name, args)` structured output. Validate args against tool schema before running. All errors populate `AgentState.last_error` as typed `ToolError(tool_name, code, message)` — never swallowed. Tool results stored in `tool_history`.
 
 - [ ] **Day 17** — Reflection Node: parse pytest output into `TestResult(passed, failed, errors, summary)`. Bounded retry: `retry_count >= MAX_RETRIES` → `failed` state with readable failure report. Exponential backoff (`2^retry` seconds) between retries. Circuit breaker: 3 consecutive API errors → open circuit, fail task with `CircuitOpenError`.
 
-- [ ] **Day 18** — `apply_patch` tool: parse unified diff → dry-run validate → apply to disk. Reject patches that don't apply cleanly, have invalid syntax, or modify files outside workspace. Return typed `PatchError(reason, context)` on rejection.
+- [ ] **Day 18** — `apply_patch` tool & auto re-indexing: parse unified diff → dry-run validate → apply to disk. **Incremental Re-indexing**: automatically re-parse AST + refresh embeddings for modified files post-patch to prevent search index drift. Reject invalid patches with typed `PatchError(reason, context)`.
 
 - [ ] **Day 19** — Per-task token/cost budget: configurable `max_tokens` and `max_cost_usd`. Check before every LLM call — if budget exceeded, emit `BudgetExceededEvent`, write partial result to DB, transition to `failed` with `reason: budget_exceeded`. Expose `tokens_used`, `cost_usd`, `budget_remaining_pct` in task status API.
 
-- [ ] **Day 20** — End-to-end on 2 real bug-fix tasks (real GitHub repos, pre-existing failing tests). Measure pass/fail, retry count, tokens, wall-clock time. Every bug found during testing → write a regression test before fixing.
+- [ ] **Day 20** — End-to-end on 2 real bug-fix tasks (real GitHub repos, pre-existing failing tests). Measure pass/fail, retry count, tokens, wall-clock time. Every bug found during testing → write a regression test before fixing. *(Buffer risk point: real repo test suite friction).*
 
 - [ ] **Day 21** — Guardrails with proof (each must have a test that tries the attack):
   - Path traversal: `../../etc/passwd` and `/workspace/../etc/passwd` → `ToolError`
@@ -112,7 +114,7 @@ aliases:
 
 - [ ] **Day 23** — Prometheus metrics at `GET /metrics`: `agent_tasks_total{status}`, `agent_task_duration_seconds` (histogram, p50/p95/p99), `agent_tool_calls_total{tool_name,status}`, `agent_tokens_used_total{model}`, `agent_cost_usd_total{model}`, `agent_active_tasks` (gauge). Every log line has `task_id`, `tool_name`, `duration_ms`, `status`.
 
-- [ ] **Day 24** — CI pipeline (`.github/workflows/ci.yml`): `ruff check`, `ruff format --check`, `mypy --strict`, `pytest` (unit + integration + security tests), Docker image build. Fail PR if coverage drops below threshold. CI badge + coverage badge in README.
+- [ ] **Day 24** — CI pipeline (`.github/workflows/ci.yml`): `ruff check`, `ruff format --check`, `mypy --strict`, `pytest` (unit + integration + security tests), Docker image build. Fail PR if coverage drops below threshold. CI badge + coverage badge in README. *(Buffer risk point: mypy strict type backlog).*
 
 - [ ] **Day 25** — Containerize the app: multi-stage Dockerfile (builder → minimal runtime), non-root user, all config from env. `docker-compose.yml`: `app` (FastAPI) + `db` (Postgres) + sandbox runtime. `docker-compose up` from a clean checkout → `POST /tasks` works immediately.
 
@@ -140,6 +142,7 @@ aliases:
 ### Foundation
 - [ ] Typed config via `pydantic-settings` (zero hardcoded secrets)
 - [ ] Structured JSON logging with `task_id` on every line
+- [ ] System prompt design & trajectory logging
 - [ ] Tool dispatch tested with mocked LLM
 - [ ] Retry/backoff on LLM API calls
 - [ ] Token/cost tracked and stored per task
@@ -155,16 +158,18 @@ aliases:
 - [ ] Security tests: network, fs escape, fork bomb, OOM, path traversal — all passing
 
 ### Code Intelligence
-- [ ] tree-sitter: symbol extraction, file structure, definition lookup
+- [ ] tree-sitter: symbol extraction, file structure, definition lookup (Python target)
 - [ ] Semantic search via chromadb: natural-language code queries
 - [ ] Hybrid search: exact match preferred, semantic fallback
+- [ ] Auto re-indexing after `apply_patch` modifications
 
 ### Agent Loop
 - [ ] LangGraph typed state with checkpoint persistence
+- [ ] Context window management: history trimming / sliding window in `AgentState`
 - [ ] Planning Node: structured output + retry-on-malformed
 - [ ] Execution Node: typed error taxonomy, no swallowed exceptions
 - [ ] Reflection Node: bounded retries + circuit breaker
-- [ ] `apply_patch`: dry-run validation before write
+- [ ] `apply_patch`: dry-run validation before write + auto re-index
 - [ ] Token/cost budget: hard stop + partial result
 - [ ] Guardrails tested: path traversal, dangerous cmds, secrets, prompt injection
 
@@ -187,16 +192,22 @@ aliases:
 
 ---
 
-## If You Fall Behind
+## High-Risk Points & Fallback Plan
 
-Cut in this order:
+### Timeline Risk Points
+- **Day 12** (tree-sitter setup & extraction): Expect setup friction; restrict scope strictly to Python source files.
+- **Day 15** (LangGraph state & checkpointing): Allocate extra time if using LangGraph for the first time.
+- **Day 20** (Real-repo bug-fix execution): Live test suites are noisy — budget time for environment quirks.
+- **Day 24** (CI mypy strictness): Address type annotations incrementally starting Day 1 to avoid backlog.
+
+### Fallback Order (If Behind Schedule)
 1. Skip Day 26 load test — note as a known gap in README
 2. Trim eval suite from 5 to 3 issues
 3. Skip Langfuse/LangSmith — structured logs still give debuggability
-4. Defer semantic search (Day 13) — exact-match alone still works
+4. Defer semantic search (Day 13) — exact-match symbol search alone still enables code navigation
 
 > [!CAUTION]
-> Do NOT cut: security tests (Days 11, 21, 28) or bounded-retry/circuit-breaker (Day 17). Those are what separate "production grade" from "works on my machine."
+> Do NOT cut: security tests (Days 11, 21, 28), auto re-indexing (Day 18), context window trimming (Day 15), or bounded-retry/circuit-breaker (Day 17). Those are what separate "production grade" from "works on my machine."
 
 ---
 
