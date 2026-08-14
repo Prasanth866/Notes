@@ -60,8 +60,7 @@ content/
     │   └── Real-Time Event Streamer.md
     └── Roadmap/                    # Systems engineering project roadmaps
         ├── ForgeHTTP.md            # 40-day: HTTP server in C++ (TCP, epoll, Reactor, proxy)
-        ├── CodingAgent.md          # 30-day: Production coding agent (LangGraph, Docker, FastAPI)
-        └── DBMS.md                 # Database systems notes
+        └── CodingAgent.md          # 30-day: Production coding agent (LangGraph, Docker, FastAPI)
 ```
 
 ---
