@@ -70,27 +70,27 @@ CI/CD + Productionization
 
 ## Final Feature Set
 
-| Feature | Status |
-|---|---|
-| Tool dispatch with typed errors (`read_file`, `write_file`, `run_shell`) | - [x] |
-| LLM reasoning loop with trajectory logging | - [ ] |
-| FastAPI server (health, readiness, WebSocket, OpenAPI) | - [ ] |
-| Async worker with graceful SIGTERM shutdown | - [ ] |
-| Persistent task store (SQLAlchemy + Alembic) | - [ ] |
-| Docker sandbox with resource limits | - [ ] |
-| Security tests: network escape, fs escape, fork bomb, OOM, path traversal | - [ ] |
-| tree-sitter AST indexer (Python target) | - [ ] |
-| Semantic search via ChromaDB with hybrid fallback | - [ ] |
-| LangGraph agent loop with checkpoint persistence | - [ ] |
-| Bounded retries + circuit breaker + token/cost budget | - [ ] |
-| `apply_patch` with dry-run validation + auto re-index | - [ ] |
-| Guardrails: path traversal, dangerous cmds, secrets, prompt injection | - [ ] |
-| API key auth + per-key rate limiting | - [ ] |
-| Prometheus `/metrics` with p99 latency histogram | - [ ] |
-| CI pipeline: lint, type-check, tests, Docker build | - [ ] |
-| `docker-compose up` one-command deployment | - [ ] |
-| Eval suite with nightly CI and pass-rate tracking | - [ ] |
-| Architecture README with Mermaid diagram + demo recording | - [ ] |
+| Feature                                                                   | Status |
+| ------------------------------------------------------------------------- | ------ |
+| Tool dispatch with typed errors (`read_file`, `write_file`, `run_shell`)  | - [x]  |
+| LLM reasoning loop with trajectory logging                                | - [ ]  |
+| FastAPI server (health, readiness, WebSocket, OpenAPI)                    | - [ ]  |
+| Async worker with graceful SIGTERM shutdown                               | - [ ]  |
+| Persistent task store (SQLAlchemy + Alembic)                              | - [ ]  |
+| Docker sandbox with resource limits                                       | - [ ]  |
+| Security tests: network escape, fs escape, fork bomb, OOM, path traversal | - [ ]  |
+| tree-sitter AST indexer (Python target)                                   | - [ ]  |
+| Semantic search via ChromaDB with hybrid fallback                         | - [ ]  |
+| LangGraph agent loop with checkpoint persistence                          | - [ ]  |
+| Bounded retries + circuit breaker + token/cost budget                     | - [ ]  |
+| `apply_patch` with dry-run validation + auto re-index                     | - [ ]  |
+| Guardrails: path traversal, dangerous cmds, secrets, prompt injection     | - [ ]  |
+| API key auth + per-key rate limiting                                      | - [ ]  |
+| Prometheus `/metrics` with p99 latency histogram                          | - [ ]  |
+| CI pipeline: lint, type-check, tests, Docker build                        | - [ ]  |
+| `docker-compose up` one-command deployment                                | - [ ]  |
+| Eval suite with nightly CI and pass-rate tracking                         | - [ ]  |
+| Architecture README with Mermaid diagram + demo recording                 | - [ ]  |
 
 ---
 
