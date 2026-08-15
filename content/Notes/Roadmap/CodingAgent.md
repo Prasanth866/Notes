@@ -53,7 +53,7 @@ CI/CD + Productionization
 
 ## Learning Objectives
 
-- [ ] Build a typed tool dispatch system with structured error handling
+- [x] Build a typed tool dispatch system with structured error handling
 - [ ] Implement an LLM-powered reasoning loop with trajectory logging
 - [ ] Build a real-time [[FastAPI]] server with [[WebSockets]], task persistence, and graceful shutdown
 - [ ] Implement async task processing with `asyncio.TaskGroup` and bounded queues
@@ -96,25 +96,43 @@ CI/CD + Productionization
 
 ## Architecture Evolution
 
-\`\`\`mermaid
-flowchart TD
-    A[Day 1: Tool Dispatch + Typed Errors] --> B[Day 2: LLM Reasoning Loop]
-    B --> C[Day 3-4: FastAPI + Async Workers]
-    C --> D[Day 5-6: Task Persistence + Frontend]
-    D --> E[Day 7: End-to-End Integration]
-    E --> F[Day 8-9: Docker Sandbox]
-    F --> G[Day 10-11: Security Hardening]
-    G --> H[Day 12-13: Code Intelligence]
-    H --> I[Day 14: Sandbox + Indexer Integration]
-    I --> J[Day 15-16: LangGraph State Machine]
-    J --> K[Day 17-18: Reflection + Patching]
-    K --> L[Day 19-20: Budget + Real-World Testing]
-    L --> M[Day 21: Guardrails with Proof]
-    M --> N[Day 22-23: Auth + Observability]
-    N --> O[Day 24-25: CI + Containerization]
-    O --> P[Day 26-28: Load Testing + Eval + Security Review]
-    P --> Q[Day 29-30: Documentation + Demo]
-\`\`\`
+```mermaid
+flowchart TB
+    A["Day 1 — Tool Dispatch + Typed Errors"]
+    B["Day 2 — LLM Reasoning Loop"]
+    C["Day 3-4 — FastAPI + Async Workers"]
+    D["Day 5-6 — Task Persistence + Frontend"]
+    E["Day 7 — End-to-End Integration"]
+    F["Day 8-9 — Docker Sandbox"]
+    G["Day 10-11 — Security Hardening"]
+    H["Day 12-13 — Code Intelligence"]
+    I["Day 14 — Sandbox + Indexer Integration"]
+    J["Day 15-16 — LangGraph State Machine"]
+    K["Day 17-18 — Reflection + Patching"]
+    L["Day 19-20 — Budget + Real-World Testing"]
+    M["Day 21 — Guardrails with Proof"]
+    N["Day 22-23 — Auth + Observability"]
+    O["Day 24-25 — CI + Containerization"]
+    P["Day 26-28 — Load Testing + Eval + Security Review"]
+    Q["Day 29-30 — Documentation + Demo"]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+    H --> I
+    I --> J
+    J --> K
+    K --> L
+    L --> M
+    M --> N
+    N --> O
+    O --> P
+    P --> Q
+```
 
 ---
 
@@ -167,14 +185,14 @@ Set up the project foundation with strict tooling, typed configuration, and the 
 
 #### Implementation
 
-- [ ] Initialize repo with `uv` or `poetry`, configure `pyproject.toml`
-- [ ] Set up pre-commit hooks: `ruff` + `mypy`
-- [ ] Implement `pydantic-settings` configuration (zero hardcoded secrets)
-- [ ] Implement structured JSON logging
-- [ ] Implement `read_file` tool with path validation and `ToolError` returns
-- [ ] Implement `write_file` tool with path validation and `ToolError` returns
-- [ ] Implement `run_shell` tool with command validation and `ToolError` returns
-- [ ] Write unit tests for all three tools including error paths
+- [x] Initialize repo with `uv` or `poetry`, configure `pyproject.toml`
+- [x] Set up pre-commit hooks: `ruff` + `mypy`
+- [x] Implement `pydantic-settings` configuration (zero hardcoded secrets)
+- [x] Implement structured JSON logging
+- [x] Implement `read_file` tool with path validation and `ToolError` returns
+- [x] Implement `write_file` tool with path validation and `ToolError` returns
+- [x] Implement `run_shell` tool with command validation and `ToolError` returns
+- [x] Write unit tests for all three tools including error paths
 
 #### Experiment
 

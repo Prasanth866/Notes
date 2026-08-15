@@ -89,23 +89,39 @@ Unique Innovation
 
 ## Architecture Evolution
 
-\`\`\`mermaid
-flowchart TD
-    A[Day 1-2: C++ and Linux Foundations] --> B[Day 3-5: TCP Echo Server]
-    B --> C[Day 6-10: HTTP/1.1 Parser]
-    C --> D[Day 11-13: Robust FSM Parser]
-    D --> E[Day 14-16: Static File Server]
-    E --> F[Day 17-19: Thread Pool Concurrency]
-    F --> G[Day 20-23: Non-Blocking + epoll]
-    G --> H[Day 24-27: Reactor Event Loop]
-    H --> I[Day 28-29: Production HTTP Features]
-    I --> J[Day 30: Router + Middleware]
-    J --> K[Day 31-33: Reverse Proxy]
-    K --> L[Day 34: Observability]
-    L --> M[Day 35-36: Performance Engineering]
-    M --> N[Day 37-38: Innovation / Backpressure]
-    N --> O[Day 39-40: Testing + Productionization]
-\`\`\`
+```mermaid
+flowchart TB
+    A["Day 1-2: C++ and Linux Foundations"]
+    B["Day 3-5: TCP Echo Server"]
+    C["Day 6-10: HTTP/1.1 Parser"]
+    D["Day 11-13: Robust FSM Parser"]
+    E["Day 14-16: Static File Server"]
+    F["Day 17-19: Thread Pool Concurrency"]
+    G["Day 20-23: Non-Blocking + epoll"]
+    H["Day 24-27: Reactor Event Loop"]
+    I["Day 28-29: Production HTTP Features"]
+    J["Day 30: Router + Middleware"]
+    K["Day 31-33: Reverse Proxy"]
+    L["Day 34: Observability"]
+    M["Day 35-36: Performance Engineering"]
+    N["Day 37-38: Innovation Or Backpressure"]
+    O["Day 39-40: Testing + Productionization"]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+    H --> I
+    I --> J
+    J --> K
+    K --> L
+    L --> M
+    M --> N
+    N --> O
+```
 
 ---
 
