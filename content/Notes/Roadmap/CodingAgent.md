@@ -54,7 +54,7 @@ CI/CD + Productionization
 ## Learning Objectives
 
 - [x] Build a typed tool dispatch system with structured error handling
-- [ ] Implement an LLM-powered reasoning loop with trajectory logging
+- [x] Implement an LLM-powered reasoning loop with trajectory logging
 - [ ] Build a real-time [[FastAPI]] server with [[WebSockets]], task persistence, and graceful shutdown
 - [ ] Implement async task processing with `asyncio.TaskGroup` and bounded queues
 - [ ] Build a [[Docker]]-based sandbox with proven security (network, filesystem, resource isolation)
@@ -73,7 +73,7 @@ CI/CD + Productionization
 | Feature                                                                   | Status |
 | ------------------------------------------------------------------------- | ------ |
 | Tool dispatch with typed errors (`read_file`, `write_file`, `run_shell`)  | - [x]  |
-| LLM reasoning loop with trajectory logging                                | - [ ]  |
+| LLM reasoning loop with trajectory logging                                | - [x]  |
 | FastAPI server (health, readiness, WebSocket, OpenAPI)                    | - [ ]  |
 | Async worker with graceful SIGTERM shutdown                               | - [ ]  |
 | Persistent task store (SQLAlchemy + Alembic)                              | - [ ]  |
@@ -206,23 +206,23 @@ Intentionally pass invalid paths and commands to each tool. Verify that every fa
 
 #### Questions
 
-- [ ] Why use typed error returns instead of exceptions for tool dispatch?
-- [ ] What is the advantage of `pydantic-settings` over raw `os.environ`?
-- [ ] Why is structured JSON logging preferred over plain text in production?
+- [x] Why use typed error returns instead of exceptions for tool dispatch?
+- [x] What is the advantage of `pydantic-settings` over raw `os.environ`?
+- [x] Why is structured JSON logging preferred over plain text in production?
 
 #### Tests
 
-- [ ] Unit test: `read_file` returns `ToolError` for nonexistent path
-- [ ] Unit test: `write_file` rejects path traversal (`../../etc/passwd`)
-- [ ] Unit test: `run_shell` returns structured output with exit code
-- [ ] Unit test: all tools return typed responses, not raw exceptions
+- [x] Unit test: `read_file` returns `ToolError` for nonexistent path
+- [x] Unit test: `write_file` rejects path traversal (`../../etc/passwd`)
+- [x] Unit test: `run_shell` returns structured output with exit code
+- [x] Unit test: all tools return typed responses, not raw exceptions
 
 #### Definition of Done
 
-- [ ] Repo compiles with `ruff` + `mypy` clean
-- [ ] All three tools have passing unit tests including error paths
-- [ ] Configuration loaded from environment via `pydantic-settings`
-- [ ] Structured JSON logging outputs to stdout
+- [x] Repo compiles with `ruff` + `mypy` clean
+- [x] All three tools have passing unit tests including error paths
+- [x] Configuration loaded from environment via `pydantic-settings`
+- [x] Structured JSON logging outputs to stdout
 
 #### Git Commit
 
@@ -245,12 +245,12 @@ Build the core reasoning loop: system prompt design, LLM tool selection, executi
 
 #### Implementation
 
-- [ ] Design system prompt for tool-using agent behavior
-- [ ] Implement core loop: task description -> LLM selects tool -> dispatch -> feed result back
-- [ ] Log full reasoning trajectories (thought + tool call + result) for evaluation
-- [ ] Implement retry/backoff wrapper around LLM API calls
-- [ ] Implement token/cost tracker per call
-- [ ] Test on one real failing-test task
+- [x] Design system prompt for tool-using agent behavior
+- [x] Implement core loop: task description -> LLM selects tool -> dispatch -> feed result back
+- [x] Log full reasoning trajectories (thought + tool call + result) for evaluation
+- [x] Implement retry/backoff wrapper around LLM API calls
+- [x] Implement token/cost tracker per call
+- [x] Test on one real failing-test task
 
 #### Experiment
 
@@ -271,9 +271,9 @@ Run the reasoning loop on a simple bug-fix task. Examine the trajectory log. Cou
 
 #### Tests
 
-- [ ] Unit test: tool dispatch with mocked LLM returns correct tool call
-- [ ] Unit test: retry wrapper retries on transient errors with backoff
-- [ ] Unit test: token tracker accumulates counts correctly
+- [x] Unit test: tool dispatch with mocked LLM returns correct tool call
+- [x] Unit test: retry wrapper retries on transient errors with backoff
+- [x] Unit test: token tracker accumulates counts correctly
 
 #### Definition of Done
 
