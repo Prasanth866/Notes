@@ -55,7 +55,7 @@ CI/CD + Productionization
 
 - [x] Build a typed tool dispatch system with structured error handling
 - [x] Implement an LLM-powered reasoning loop with trajectory logging
-- [ ] Build a real-time [[FastAPI]] server with [[WebSockets]], task persistence, and graceful shutdown
+- [x] Build a real-time [[FastAPI]] server with [[WebSockets]], task persistence, and graceful shutdown
 - [ ] Implement async task processing with `asyncio.TaskGroup` and bounded queues
 - [ ] Build a [[Docker]]-based sandbox with proven security (network, filesystem, resource isolation)
 - [ ] Implement structural code intelligence using [[tree-sitter]] AST parsing
@@ -277,10 +277,10 @@ Run the reasoning loop on a simple bug-fix task. Examine the trajectory log. Cou
 
 #### Definition of Done
 
-- [ ] Reasoning loop completes a simple task end-to-end
-- [ ] Trajectory logs capture every thought, tool call, and result
-- [ ] Retry/backoff handles transient API failures gracefully
-- [ ] Token/cost tracked and logged per call
+- [x] Reasoning loop completes a simple task end-to-end
+- [x] Trajectory logs capture every thought, tool call, and result
+- [x] Retry/backoff handles transient API failures gracefully
+- [x] Token/cost tracked and logged per call
 
 #### Git Commit
 
@@ -303,11 +303,11 @@ Build the FastAPI server with health endpoints, WebSocket streaming, and version
 
 #### Implementation
 
-- [ ] Create FastAPI application with routers: `/health`, `/readiness`, `/tasks`, `/ws`
-- [ ] Configure OpenAPI docs at `/docs`
-- [ ] Implement WebSocket endpoint for streaming events
-- [ ] Define versioned Pydantic event schemas: `ThoughtEvent`, `ToolCallEvent`, `ToolOutputEvent`, `TaskCompleteEvent`, `ErrorEvent`
-- [ ] Wire WebSocket to emit events as they occur
+- [x] Create FastAPI application with routers: `/health`, `/readiness`, `/tasks`, `/ws`
+- [x] Configure OpenAPI docs at `/docs`
+- [x] Implement WebSocket endpoint for streaming events
+- [x] Define versioned Pydantic event schemas: `ThoughtEvent`, `ToolCallEvent`, `ToolOutputEvent`, `TaskCompleteEvent`, `ErrorEvent`
+- [x] Wire WebSocket to emit events as they occur
 
 #### Experiment
 
@@ -327,15 +327,15 @@ Connect to the WebSocket endpoint with a simple client. Send a task and observe 
 
 #### Tests
 
-- [ ] Integration test: `/health` returns 200
-- [ ] Integration test: WebSocket connection receives events
-- [ ] Unit test: each event schema validates correctly
+- [x] Integration test: `/health` returns 200
+- [x] Integration test: WebSocket connection receives events
+- [x] Unit test: each event schema validates correctly
 
 #### Definition of Done
 
-- [ ] FastAPI server starts and serves `/docs`
-- [ ] WebSocket endpoint streams typed events
-- [ ] Health and readiness endpoints respond correctly
+- [x] FastAPI server starts and serves `/docs`
+- [x] WebSocket endpoint streams typed events
+- [x] Health and readiness endpoints respond correctly
 
 #### Git Commit
 
