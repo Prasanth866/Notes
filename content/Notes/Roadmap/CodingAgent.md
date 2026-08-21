@@ -357,10 +357,10 @@ Implement async task processing with bounded queues and graceful shutdown on SIG
 
 #### Implementation
 
-- [ ] Implement `asyncio.TaskGroup` worker pool with `asyncio.Queue`
-- [ ] Implement graceful shutdown: catch SIGTERM, drain in-flight tasks, then exit
-- [ ] Thread UUID `task_id` through every log line and WebSocket event
-- [ ] Return 503 when queue is full
+- [x] Implement `asyncio.TaskGroup` worker pool with `asyncio.Queue`
+- [x] Implement graceful shutdown: catch SIGTERM, drain in-flight tasks, then exit
+- [x] Thread UUID `task_id` through every log line and WebSocket event
+- [x] Return 503 when queue is full
 
 #### Experiment
 
@@ -380,16 +380,16 @@ Start the server, submit tasks until the queue fills, and verify that the 503 re
 
 #### Tests
 
-- [ ] Unit test: queue-full returns 503
-- [ ] Integration test: SIGTERM triggers graceful drain of in-flight tasks
-- [ ] Unit test: every log line contains `task_id`
+- [x] Unit test: queue-full returns 503
+- [x] Integration test: SIGTERM triggers graceful drain of in-flight tasks
+- [x] Unit test: every log line contains `task_id`
 
 #### Definition of Done
 
-- [ ] Async worker processes tasks from the queue
-- [ ] Graceful shutdown drains in-flight tasks on SIGTERM
-- [ ] 503 returned when queue is full
-- [ ] `task_id` present in all logs and events
+- [x] Async worker processes tasks from the queue
+- [x] Graceful shutdown drains in-flight tasks on SIGTERM
+- [x] 503 returned when queue is full
+- [x] `task_id` present in all logs and events
 
 #### Git Commit
 
