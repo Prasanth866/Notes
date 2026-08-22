@@ -411,11 +411,11 @@ Persist task state to a database so tasks survive crashes and can be queried.
 
 #### Implementation
 
-- [ ] Define `Task` model with SQLAlchemy async: id, status, result, timestamps, token counts
-- [ ] Create initial Alembic migration
-- [ ] Implement `GET /tasks/{id}` to fetch task by ID
-- [ ] Implement `GET /tasks?status=...` to query tasks by status
-- [ ] On startup, mark any interrupted RUNNING tasks as FAILED
+- [x] Define `Task` model with SQLAlchemy async: id, status, result, timestamps, token counts
+- [x] Create initial Alembic migration
+- [x] Implement `GET /tasks/{id}` to fetch task by ID
+- [x] Implement `GET /tasks?status=...` to query tasks by status
+- [x] On startup, mark any interrupted RUNNING tasks as FAILED
 
 #### Experiment
 
@@ -435,15 +435,15 @@ Submit a task, kill the server mid-execution, restart it. Verify that the interr
 
 #### Tests
 
-- [ ] Unit test: `Task` model creates and queries correctly
-- [ ] Integration test: interrupted RUNNING tasks marked FAILED on restart
-- [ ] Integration test: `GET /tasks?status=COMPLETED` returns correct results
+- [x] Unit test: `Task` model creates and queries correctly
+- [x] Integration test: interrupted RUNNING tasks marked FAILED on restart
+- [x] Integration test: `GET /tasks?status=COMPLETED` returns correct results
 
 #### Definition of Done
 
-- [ ] Task model persisted to database with Alembic migration
-- [ ] Task query endpoints return correct results
-- [ ] Crash recovery marks interrupted tasks as FAILED
+- [x] Task model persisted to database with Alembic migration
+- [x] Task query endpoints return correct results
+- [x] Crash recovery marks interrupted tasks as FAILED
 
 #### Git Commit
 
