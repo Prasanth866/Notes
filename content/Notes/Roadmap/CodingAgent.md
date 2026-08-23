@@ -464,10 +464,10 @@ Build a minimal frontend for observing agent behavior and write integration test
 
 #### Implementation
 
-- [ ] Build single-page HTML/JS with event stream pane and terminal pane
-- [ ] Wire frontend to WebSocket endpoint for live event display
-- [ ] Write WebSocket integration tests: submit task -> assert correct event sequence -> assert DB record matches
-- [ ] Store token costs in DB for each completed task
+- [x] Build single-page HTML/JS with event stream pane and terminal pane
+- [x] Wire frontend to WebSocket endpoint for live event display
+- [x] Write WebSocket integration tests: submit task -> assert correct event sequence -> assert DB record matches
+- [x] Store token costs in DB for each completed task
 
 #### Experiment
 
@@ -486,14 +486,14 @@ Open the frontend in a browser, submit a task, and watch the event stream in rea
 
 #### Tests
 
-- [ ] Integration test: submit task via POST -> WebSocket streams events -> DB record matches
-- [ ] Integration test: token costs stored in DB after task completion
+- [x] Integration test: submit task via POST -> WebSocket streams events -> DB record matches
+- [x] Integration test: token costs stored in DB after task completion
 
 #### Definition of Done
 
-- [ ] Frontend displays live event stream from WebSocket
-- [ ] Integration tests verify full event flow from submission to DB storage
-- [ ] Token costs persisted per task
+- [x] Frontend displays live event stream from WebSocket
+- [x] Integration tests verify full event flow from submission to DB storage
+- [x] Token costs persisted per task
 
 #### Git Commit
 
@@ -513,9 +513,9 @@ Wire the Day 2 reasoning loop into the Day 3-6 server. Verify the complete flow 
 
 #### Implementation
 
-- [ ] Integrate the reasoning loop (Day 2) into the FastAPI server (Days 3-6)
-- [ ] Run end-to-end integration test: POST task -> WebSocket streams events -> task completes -> DB record correct
-- [ ] Verify token costs are stored in DB per task
+- [x] Integrate the reasoning loop (Day 2) into the FastAPI server (Days 3-6)
+- [x] Run end-to-end integration test: POST task -> WebSocket streams events -> task completes -> DB record correct
+- [x] Verify token costs are stored in DB per task
 
 #### Experiment
 
@@ -534,14 +534,14 @@ Submit a real bug-fix task through the API and observe it flow through every com
 
 #### Tests
 
-- [ ] End-to-end test: POST task -> WS streams events -> task completes -> DB record correct
-- [ ] End-to-end test: token costs stored correctly
+- [x] End-to-end test: POST task -> WS streams events -> task completes -> DB record correct
+- [x] End-to-end test: token costs stored correctly
 
 #### Definition of Done
 
-- [ ] Full pipeline works: API -> queue -> reasoning loop -> events -> DB
-- [ ] End-to-end integration test passes
-- [ ] All Week 1 components connected and operational
+- [x] Full pipeline works: API -> queue -> reasoning loop -> events -> DB
+- [x] End-to-end integration test passes
+- [x] All Week 1 components connected and operational
 
 #### Git Commit
 
