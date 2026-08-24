@@ -568,9 +568,9 @@ Build a Docker-based workspace manager that creates isolated environments for ea
 
 #### Implementation
 
-- [ ] Implement `WorkspaceManager` with Docker SDK: `create(repo_url, commit_sha)`, `destroy()`, `get()`
-- [ ] Implement GitPython shallow clone into workspace directory
-- [ ] Wrap all Docker errors as typed `WorkspaceError` -- nothing raw leaks to the API layer
+- [x] Implement `WorkspaceManager` with Docker SDK: `create(repo_url, commit_sha)`, `destroy()`, `get()`
+- [x] Implement GitPython shallow clone into workspace directory
+- [x] Wrap all Docker errors as typed `WorkspaceError` -- nothing raw leaks to the API layer
 
 #### Experiment
 
@@ -590,15 +590,15 @@ Create a workspace, clone a small repo into it, list the files, then destroy it.
 
 #### Tests
 
-- [ ] Unit test: `create()` produces a running container with cloned repo
-- [ ] Unit test: `destroy()` removes all container artifacts
-- [ ] Unit test: Docker SDK errors are wrapped as `WorkspaceError`
+- [x] Unit test: `create()` produces a running container with cloned repo
+- [x] Unit test: `destroy()` removes all container artifacts
+- [x] Unit test: Docker SDK errors are wrapped as `WorkspaceError`
 
 #### Definition of Done
 
-- [ ] `WorkspaceManager` creates and destroys workspaces cleanly
-- [ ] GitPython shallow clone works inside containers
-- [ ] All Docker errors wrapped as typed `WorkspaceError`
+- [x] `WorkspaceManager` creates and destroys workspaces cleanly
+- [x] GitPython shallow clone works inside containers
+- [x] All Docker errors wrapped as typed `WorkspaceError`
 
 #### Git Commit
 
