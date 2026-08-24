@@ -56,7 +56,7 @@ CI/CD + Productionization
 - [x] Build a typed tool dispatch system with structured error handling
 - [x] Implement an LLM-powered reasoning loop with trajectory logging
 - [x] Build a real-time [[FastAPI]] server with [[WebSockets]], task persistence, and graceful shutdown
-- [ ] Implement async task processing with `asyncio.TaskGroup` and bounded queues
+- [x] Implement async task processing with `asyncio.TaskGroup` and bounded queues
 - [ ] Build a [[Docker]]-based sandbox with proven security (network, filesystem, resource isolation)
 - [ ] Implement structural code intelligence using [[tree-sitter]] AST parsing
 - [ ] Build semantic code search using embeddings and [[ChromaDB]]
@@ -74,9 +74,9 @@ CI/CD + Productionization
 | ------------------------------------------------------------------------- | ------ |
 | Tool dispatch with typed errors (`read_file`, `write_file`, `run_shell`)  | - [x]  |
 | LLM reasoning loop with trajectory logging                                | - [x]  |
-| FastAPI server (health, readiness, WebSocket, OpenAPI)                    | - [ ]  |
-| Async worker with graceful SIGTERM shutdown                               | - [ ]  |
-| Persistent task store (SQLAlchemy + Alembic)                              | - [ ]  |
+| FastAPI server (health, readiness, WebSocket, OpenAPI)                    | - [x]  |
+| Async worker with graceful SIGTERM shutdown                               | - [x]  |
+| Persistent task store (SQLAlchemy + Alembic)                              | - [x]  |
 | Docker sandbox with resource limits                                       | - [ ]  |
 | Security tests: network escape, fs escape, fork bomb, OOM, path traversal | - [ ]  |
 | tree-sitter AST indexer (Python target)                                   | - [ ]  |
