@@ -674,12 +674,12 @@ Lock down Docker containers with resource limits, read-only filesystems, network
 
 #### Implementation
 
-- [ ] Set `mem_limit` on containers (e.g. 512MB)
-- [ ] Set `cpu_quota` to limit CPU usage
-- [ ] Set `pids_limit=256` to prevent fork bombs
-- [ ] Set filesystem to read-only except `/workspace`
-- [ ] Disable network egress with `network_mode: none`
-- [ ] Run container processes as non-root user
+- [x] Set `mem_limit` on containers (e.g. 512MB)
+- [x] Set `cpu_quota` to limit CPU usage
+- [x] Set `pids_limit=256` to prevent fork bombs
+- [x] Set filesystem to read-only except `/workspace`
+- [x] Disable network egress with `network_mode: none`
+- [x] Run container processes as non-root user
 
 #### Experiment
 
@@ -699,17 +699,17 @@ Attempt to exceed each limit from inside a container. Try to allocate 1GB of mem
 
 #### Tests
 
-- [ ] Unit test: container respects `mem_limit`
-- [ ] Unit test: container respects `pids_limit`
-- [ ] Unit test: filesystem is read-only outside `/workspace`
-- [ ] Unit test: network egress is disabled
+- [x] Unit test: container respects `mem_limit`
+- [x] Unit test: container respects `pids_limit`
+- [x] Unit test: filesystem is read-only outside `/workspace`
+- [x] Unit test: network egress is disabled
 
 #### Definition of Done
 
-- [ ] All resource limits enforced on containers
-- [ ] Network isolation prevents egress
-- [ ] Non-root execution configured
-- [ ] All hardening tests pass
+- [x] All resource limits enforced on containers
+- [x] Network isolation prevents egress
+- [x] Non-root execution configured
+- [x] All hardening tests pass
 
 #### Git Commit
 
