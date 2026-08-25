@@ -620,10 +620,10 @@ Implement async command execution inside Docker containers with output capping a
 
 #### Implementation
 
-- [ ] Implement `execute_command(workspace_id, cmd, timeout_s)` as an async generator
-- [ ] Yield `CommandOutputLine` structs as output arrives
-- [ ] Cap total output at 1MB -- emit `TRUNCATED` sentinel beyond that
-- [ ] Kill command and emit `TIMEOUT` sentinel if `timeout_s` exceeded
+- [x] Implement `execute_command(workspace_id, cmd, timeout_s)` as an async generator
+- [x] Yield `CommandOutputLine` structs as output arrives
+- [x] Cap total output at 1MB -- emit `TRUNCATED` sentinel beyond that
+- [x] Kill command and emit `TIMEOUT` sentinel if `timeout_s` exceeded
 
 #### Experiment
 
@@ -643,15 +643,15 @@ Run a command that produces 10MB of output. Verify that truncation occurs at 1MB
 
 #### Tests
 
-- [ ] Unit test: command output streamed as `CommandOutputLine` structs
-- [ ] Unit test: output exceeding 1MB triggers `TRUNCATED` sentinel
-- [ ] Unit test: command exceeding timeout triggers `TIMEOUT` sentinel
+- [x] Unit test: command output streamed as `CommandOutputLine` structs
+- [x] Unit test: output exceeding 1MB triggers `TRUNCATED` sentinel
+- [x] Unit test: command exceeding timeout triggers `TIMEOUT` sentinel
 
 #### Definition of Done
 
-- [ ] Command execution streams output as async generator
-- [ ] Output capping works at 1MB
-- [ ] Timeout enforcement kills command and emits sentinel
+- [x] Command execution streams output as async generator
+- [x] Output capping works at 1MB
+- [x] Timeout enforcement kills command and emits sentinel
 
 #### Git Commit
 
