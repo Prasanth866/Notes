@@ -57,9 +57,9 @@ CI/CD + Productionization
 - [x] Implement an LLM-powered reasoning loop with trajectory logging
 - [x] Build a real-time [[FastAPI]] server with [[WebSockets]], task persistence, and graceful shutdown
 - [x] Implement async task processing with `asyncio.TaskGroup` and bounded queues
-- [ ] Build a [[Docker]]-based sandbox with proven security (network, filesystem, resource isolation)
-- [ ] Implement structural code intelligence using [[tree-sitter]] AST parsing
-- [ ] Build semantic code search using embeddings and [[pgvector]]
+- [x] Build a [[Docker]]-based sandbox with proven security (network, filesystem, resource isolation)
+- [x] Implement structural code intelligence using [[tree-sitter]] AST parsing
+- [x] Build semantic code search using embeddings and [[pgvector]]
 - [ ] Design a [[LangGraph]] state machine with checkpoint persistence and context window management
 - [ ] Implement bounded failure modes: retries, circuit breakers, token/cost budgets
 - [ ] Build and test security guardrails: path traversal, dangerous commands, secrets scanning, prompt injection
@@ -77,10 +77,10 @@ CI/CD + Productionization
 | FastAPI server (health, readiness, WebSocket, OpenAPI)                    | - [x]  |
 | Async worker with graceful SIGTERM shutdown                               | - [x]  |
 | Persistent task store (SQLAlchemy + Alembic)                              | - [x]  |
-| Docker sandbox with resource limits                                       | - [ ]  |
-| Security tests: network escape, fs escape, fork bomb, OOM, path traversal | - [ ]  |
-| tree-sitter AST indexer (Python target)                                   | - [ ]  |
-| Semantic search via pgvector with hybrid fallback                         | - [ ]  |
+| Docker sandbox with resource limits                                       | - [x]  |
+| Security tests: network escape, fs escape, fork bomb, OOM, path traversal | - [x]  |
+| tree-sitter AST indexer (Python target)                                   | - [x]  |
+| Semantic search via pgvector with hybrid fallback                         | - [x]  |
 | LangGraph agent loop with checkpoint persistence                          | - [ ]  |
 | Bounded retries + circuit breaker + token/cost budget                     | - [ ]  |
 | `apply_patch` with dry-run validation + auto re-index                     | - [ ]  |
@@ -264,10 +264,10 @@ Run the reasoning loop on a simple bug-fix task. Examine the trajectory log. Cou
 
 #### Questions
 
-- [ ] What makes a good system prompt for a tool-using agent?
-- [ ] Why log reasoning trajectories instead of just final results?
-- [ ] What is exponential backoff and why is it necessary for API calls?
-- [ ] How do you estimate cost from token counts?
+- [x] What makes a good system prompt for a tool-using agent?
+- [x] Why log reasoning trajectories instead of just final results?
+- [x] What is exponential backoff and why is it necessary for API calls?
+- [x] How do you estimate cost from token counts?
 
 #### Tests
 
@@ -321,9 +321,9 @@ Connect to the WebSocket endpoint with a simple client. Send a task and observe 
 
 #### Questions
 
-- [ ] Why use WebSockets instead of polling for real-time updates?
-- [ ] What is the purpose of versioned event schemas?
-- [ ] What is the difference between `/health` and `/readiness`?
+- [x] Why use WebSockets instead of polling for real-time updates?
+- [x] What is the purpose of versioned event schemas?
+- [x] What is the difference between `/health` and `/readiness`?
 
 #### Tests
 
@@ -374,9 +374,9 @@ Start the server, submit tasks until the queue fills, and verify that the 503 re
 
 #### Questions
 
-- [ ] What is structured concurrency and why does `asyncio.TaskGroup` enforce it?
-- [ ] Why return 503 instead of silently dropping tasks when the queue is full?
-- [ ] What is the difference between SIGTERM and SIGKILL?
+- [x] What is structured concurrency and why does `asyncio.TaskGroup` enforce it?
+- [x] Why return 503 instead of silently dropping tasks when the queue is full?
+- [x] What is the difference between SIGTERM and SIGKILL?
 
 #### Tests
 
@@ -429,9 +429,9 @@ Submit a task, kill the server mid-execution, restart it. Verify that the interr
 
 #### Questions
 
-- [ ] Why use database persistence instead of in-memory state?
-- [ ] What is the purpose of marking interrupted tasks as FAILED on startup?
-- [ ] What isolation level should the database use for task updates?
+- [x] Why use database persistence instead of in-memory state?
+- [x] What is the purpose of marking interrupted tasks as FAILED on startup?
+- [x] What isolation level should the database use for task updates?
 
 #### Tests
 
@@ -481,8 +481,8 @@ Open the frontend in a browser, submit a task, and watch the event stream in rea
 
 #### Questions
 
-- [ ] What is the minimal viable frontend for debugging an agent?
-- [ ] How do you test WebSocket flows in an automated test suite?
+- [x] What is the minimal viable frontend for debugging an agent?
+- [x] How do you test WebSocket flows in an automated test suite?
 
 #### Tests
 
@@ -529,8 +529,8 @@ Submit a real bug-fix task through the API and observe it flow through every com
 
 #### Questions
 
-- [ ] What integration issues arise when combining async components?
-- [ ] How do you debug a failure in a multi-component pipeline?
+- [x] What integration issues arise when combining async components?
+- [x] How do you debug a failure in a multi-component pipeline?
 
 #### Tests
 
@@ -584,9 +584,9 @@ Create a workspace, clone a small repo into it, list the files, then destroy it.
 
 #### Questions
 
-- [ ] Why use one container per task instead of a shared container?
-- [ ] What is a shallow clone and why is it faster?
-- [ ] Why wrap Docker errors in `WorkspaceError` instead of exposing them?
+- [x] Why use one container per task instead of a shared container?
+- [x] What is a shallow clone and why is it faster?
+- [x] Why wrap Docker errors in `WorkspaceError` instead of exposing them?
 
 #### Tests
 
@@ -637,9 +637,9 @@ Run a command that produces 10MB of output. Verify that truncation occurs at 1MB
 
 #### Questions
 
-- [ ] Why use an async generator instead of collecting all output in memory?
-- [ ] What is the difference between `SIGTERM` and `SIGKILL` for container processes?
-- [ ] Why cap output at 1MB?
+- [x] Why use an async generator instead of collecting all output in memory?
+- [x] What is the difference between `SIGTERM` and `SIGKILL` for container processes?
+- [x] Why cap output at 1MB?
 
 #### Tests
 
@@ -693,9 +693,9 @@ Attempt to exceed each limit from inside a container. Try to allocate 1GB of mem
 
 #### Questions
 
-- [ ] What is `pids_limit` and what attack does it prevent?
-- [ ] Why set the filesystem to read-only except `/workspace`?
-- [ ] What is the difference between `network_mode: none` and dropping network capabilities?
+- [x] What is `pids_limit` and what attack does it prevent?
+- [x] Why set the filesystem to read-only except `/workspace`?
+- [x] What is the difference between `network_mode: none` and dropping network capabilities?
 
 #### Tests
 
@@ -730,11 +730,11 @@ Write security tests that actively attempt to break the sandbox. The sandbox is 
 
 #### Implementation
 
-- [ ] Test network escape: `curl https://8.8.8.8` inside container -- must fail
-- [ ] Test filesystem escape: `open('/etc/crontab', 'w')` inside container -- must get PermissionError
-- [ ] Test fork bomb: must be killed by `pids_limit` within 5 seconds, host unaffected
-- [ ] Test memory exhaustion: container OOM-killed, not the host
-- [ ] Test path traversal: `path=../../etc/passwd` tool call -- must return `ToolError`
+- [x] Test network escape: `curl https://8.8.8.8` inside container -- must fail
+- [x] Test filesystem escape: `open('/etc/crontab', 'w')` inside container -- must get PermissionError
+- [x] Test fork bomb: must be killed by `pids_limit` within 5 seconds, host unaffected
+- [x] Test memory exhaustion: container OOM-killed, not the host
+- [x] Test path traversal: `path=../../etc/passwd` tool call -- must return `ToolError`
 
 #### Experiment
 
@@ -748,23 +748,23 @@ Run all five attack scenarios from inside a container. For each one, verify that
 
 #### Questions
 
-- [ ] Why is it critical to test what should NOT work, not just what should?
-- [ ] What is defense in depth and how does it apply to sandbox security?
-- [ ] What would happen if any of these security tests failed in production?
+- [x] Why is it critical to test what should NOT work, not just what should?
+- [x] What is defense in depth and how does it apply to sandbox security?
+- [x] What would happen if any of these security tests failed in production?
 
 #### Tests
 
-- [ ] Security test: network escape fails
-- [ ] Security test: filesystem escape fails
-- [ ] Security test: fork bomb killed within 5 seconds
-- [ ] Security test: memory exhaustion contained to container
-- [ ] Security test: path traversal returns `ToolError`
+- [x] Security test: network escape fails
+- [x] Security test: filesystem escape fails
+- [x] Security test: fork bomb killed within 5 seconds
+- [x] Security test: memory exhaustion contained to container
+- [x] Security test: path traversal returns `ToolError`
 
 #### Definition of Done
 
-- [ ] All five security tests pass
-- [ ] Host remains unaffected during all attack scenarios
-- [ ] Security tests are part of the CI suite
+- [x] All five security tests pass
+- [x] Host remains unaffected during all attack scenarios
+- [x] Security tests are part of the CI suite
 
 #### Git Commit
 
@@ -786,11 +786,11 @@ Build a structural code indexer using tree-sitter that extracts symbols, imports
 
 #### Implementation
 
-- [ ] Implement tree-sitter parser for Python source files
-- [ ] Extract: file tree, module imports, class/function definitions (name, args, line span, docstring)
-- [ ] Implement `get_symbol_definition(name)` lookup
-- [ ] Implement `list_file_structure(path)` overview
-- [ ] Test against a committed Python fixture repo
+- [x] Implement tree-sitter parser for Python source files
+- [x] Extract: file tree, module imports, class/function definitions (name, args, line span, docstring)
+- [x] Implement `get_symbol_definition(name)` lookup
+- [x] Implement `list_file_structure(path)` overview
+- [x] Test against a committed Python fixture repo
 
 #### Experiment
 
@@ -804,23 +804,23 @@ Index a real Python project (e.g. a small FastAPI application). Query for specif
 
 #### Questions
 
-- [ ] Why use tree-sitter instead of Python's `ast` module?
-- [ ] What is incremental parsing and why does it matter?
-- [ ] How do you handle files with syntax errors?
+- [x] Why use tree-sitter instead of Python's `ast` module?
+- [x] What is incremental parsing and why does it matter?
+- [x] How do you handle files with syntax errors?
 
 #### Tests
 
-- [ ] Unit test: extract function definitions with correct name, args, line span
-- [ ] Unit test: extract class definitions with docstrings
-- [ ] Unit test: `get_symbol_definition` returns correct result
-- [ ] Unit test: `list_file_structure` returns module overview
+- [x] Unit test: extract function definitions with correct name, args, line span
+- [x] Unit test: extract class definitions with docstrings
+- [x] Unit test: `get_symbol_definition` returns correct result
+- [x] Unit test: `list_file_structure` returns module overview
 
 #### Definition of Done
 
-- [ ] tree-sitter indexes Python files correctly
-- [ ] Symbol extraction captures classes, functions, imports
-- [ ] Lookup and structure APIs work against fixture repo
-- [ ] All tests pass
+- [x] tree-sitter indexes Python files correctly
+- [x] Symbol extraction captures classes, functions, imports
+- [x] Lookup and structure APIs work against fixture repo
+- [x] All tests pass
 
 #### Git Commit
 
@@ -845,11 +845,11 @@ Add embedding-based semantic search using pgvector, with hybrid search that pref
 
 #### Implementation
 
-- [ ] Chunk functions and classes from AST output into embedding units
-- [ ] Embed chunks and store in pgvector (PostgreSQL)
-- [ ] Implement `semantic_search(query, top_k=5)` endpoint
-- [ ] Implement hybrid search: exact match preferred, semantic fallback
-- [ ] Log embedding cost per indexing run
+- [x] Chunk functions and classes from AST output into embedding units
+- [x] Embed chunks and store in pgvector (PostgreSQL)
+- [x] Implement `semantic_search(query, top_k=5)` endpoint
+- [x] Implement hybrid search: exact match preferred, semantic fallback
+- [x] Log embedding cost per indexing run
 
 #### Experiment
 
@@ -863,22 +863,22 @@ Index a project, then search for functionality using natural language queries (e
 
 #### Questions
 
-- [ ] Why chunk by AST units (functions/classes) instead of fixed-size windows?
-- [ ] When does exact match outperform semantic search?
-- [ ] What embedding model works best for code?
+- [x] Why chunk by AST units (functions/classes) instead of fixed-size windows?
+- [x] When does exact match outperform semantic search?
+- [x] What embedding model works best for code?
 
 #### Tests
 
-- [ ] Unit test: chunking produces correct units from AST
-- [ ] Unit test: `semantic_search` returns relevant results
-- [ ] Unit test: hybrid search prefers exact match over semantic
+- [x] Unit test: chunking produces correct units from AST
+- [x] Unit test: `semantic_search` returns relevant results
+- [x] Unit test: hybrid search prefers exact match over semantic
 
 #### Definition of Done
 
-- [ ] pgvector stores embeddings of indexed code in PostgreSQL
-- [ ] Semantic search returns relevant results for natural language queries
-- [ ] Hybrid search correctly prioritizes exact matches
-- [ ] Embedding costs logged per run
+- [x] pgvector stores embeddings of indexed code in PostgreSQL
+- [x] Semantic search returns relevant results for natural language queries
+- [x] Hybrid search correctly prioritizes exact matches
+- [x] Embedding costs logged per run
 
 #### Git Commit
 
@@ -898,11 +898,11 @@ Wire the sandbox and code indexer into the agent loop. Verify the full flow from
 
 #### Implementation
 
-- [ ] Wire sandbox creation into the agent loop on task start
-- [ ] Wire AST indexer to run on cloned workspace after creation
-- [ ] Agent uses search tools to navigate codebase during reasoning
-- [ ] Agent runs pytest inside sandbox and returns results
-- [ ] All Day 11 security tests still pass after integration
+- [x] Wire sandbox creation into the agent loop on task start
+- [x] Wire AST indexer to run on cloned workspace after creation
+- [x] Agent uses search tools to navigate codebase during reasoning
+- [x] Agent runs pytest inside sandbox and returns results
+- [x] All Day 11 security tests still pass after integration
 
 #### Experiment
 
@@ -916,19 +916,19 @@ Submit a real bug-fix task through the full pipeline. Watch the agent create a w
 
 #### Questions
 
-- [ ] What is the correct order of operations: clone, index, then reason?
-- [ ] How do you ensure security tests remain valid after integration changes?
+- [x] What is the correct order of operations: clone, index, then reason?
+- [x] How do you ensure security tests remain valid after integration changes?
 
 #### Tests
 
-- [ ] Integration test: submit task -> workspace created -> code indexed -> agent navigates via search -> pytest runs in sandbox -> result returned
-- [ ] Security tests: all Day 11 tests still pass
+- [x] Integration test: submit task -> workspace created -> code indexed -> agent navigates via search -> pytest runs in sandbox -> result returned
+- [x] Security tests: all Day 11 tests still pass
 
 #### Definition of Done
 
-- [ ] Full pipeline: task -> sandbox -> index -> search -> execute -> result
-- [ ] Agent uses structural and semantic search during reasoning
-- [ ] All security tests pass
+- [x] Full pipeline: task -> sandbox -> index -> search -> execute -> result
+- [x] Agent uses structural and semantic search during reasoning
+- [x] All security tests pass
 
 #### Git Commit
 
