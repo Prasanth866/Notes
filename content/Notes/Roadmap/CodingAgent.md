@@ -59,7 +59,7 @@ CI/CD + Productionization
 - [x] Implement async task processing with `asyncio.TaskGroup` and bounded queues
 - [ ] Build a [[Docker]]-based sandbox with proven security (network, filesystem, resource isolation)
 - [ ] Implement structural code intelligence using [[tree-sitter]] AST parsing
-- [ ] Build semantic code search using embeddings and [[ChromaDB]]
+- [ ] Build semantic code search using embeddings and [[pgvector]]
 - [ ] Design a [[LangGraph]] state machine with checkpoint persistence and context window management
 - [ ] Implement bounded failure modes: retries, circuit breakers, token/cost budgets
 - [ ] Build and test security guardrails: path traversal, dangerous commands, secrets scanning, prompt injection
@@ -80,7 +80,7 @@ CI/CD + Productionization
 | Docker sandbox with resource limits                                       | - [ ]  |
 | Security tests: network escape, fs escape, fork bomb, OOM, path traversal | - [ ]  |
 | tree-sitter AST indexer (Python target)                                   | - [ ]  |
-| Semantic search via ChromaDB with hybrid fallback                         | - [ ]  |
+| Semantic search via pgvector with hybrid fallback                         | - [ ]  |
 | LangGraph agent loop with checkpoint persistence                          | - [ ]  |
 | Bounded retries + circuit breaker + token/cost budget                     | - [ ]  |
 | `apply_patch` with dry-run validation + auto re-index                     | - [ ]  |
@@ -834,19 +834,19 @@ Index a real Python project (e.g. a small FastAPI application). Query for specif
 ### Day 13 -- Semantic Search with Embeddings
 
 #### Goal
-Add embedding-based semantic search using ChromaDB, with hybrid search that prefers exact matches and falls back to semantic.
+Add embedding-based semantic search using pgvector, with hybrid search that prefers exact matches and falls back to semantic.
 
 #### Concepts
 
 - [[Embeddings]] -- vector representations of code for similarity search
-- [[ChromaDB]] -- vector database for storing and querying embeddings
+- [[pgvector]] -- PostgreSQL extension for storing and querying vector embeddings
 - [[Hybrid Search]] -- exact match first, semantic fallback
 - [[Chunking]] -- splitting code into meaningful units for embedding
 
 #### Implementation
 
 - [ ] Chunk functions and classes from AST output into embedding units
-- [ ] Embed chunks and store in ChromaDB
+- [ ] Embed chunks and store in pgvector (PostgreSQL)
 - [ ] Implement `semantic_search(query, top_k=5)` endpoint
 - [ ] Implement hybrid search: exact match preferred, semantic fallback
 - [ ] Log embedding cost per indexing run
@@ -875,14 +875,14 @@ Index a project, then search for functionality using natural language queries (e
 
 #### Definition of Done
 
-- [ ] ChromaDB stores embeddings of indexed code
+- [ ] pgvector stores embeddings of indexed code in PostgreSQL
 - [ ] Semantic search returns relevant results for natural language queries
 - [ ] Hybrid search correctly prioritizes exact matches
 - [ ] Embedding costs logged per run
 
 #### Git Commit
 
-`feat: semantic code search with ChromaDB, hybrid exact/semantic fallback`
+`feat: semantic code search with pgvector, hybrid exact/semantic fallback`
 
 ---
 
@@ -1844,7 +1844,7 @@ Follow the README as if you have never seen this project. Note every step that i
 
 ### Code Intelligence
 - [ ] tree-sitter: symbol extraction, file structure, definition lookup (Python target)
-- [ ] Semantic search via ChromaDB: natural-language code queries
+- [ ] Semantic search via pgvector: natural-language code queries
 - [ ] Hybrid search: exact match preferred, semantic fallback
 - [ ] Auto re-indexing after `apply_patch` modifications
 
